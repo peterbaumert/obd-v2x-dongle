@@ -108,7 +108,7 @@ EDGE = 0.8         # keep courtyards this far inside the outline
 
 # design rules (PCBWay standard 4-layer capability, with margin)
 RULES = dict(track=0.15, clearance=0.15, via_d=0.6, via_drill=0.3, min_drill=0.3,
-             annular=0.15, hole_to_hole=0.25, edge=0.4)
+             annular=0.15, hole_to_hole=0.25, edge=0.3)
 
 
 PRO = HW / 'obd-v2x-dongle.kicad_pro'
