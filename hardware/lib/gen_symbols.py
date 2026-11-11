@@ -2,7 +2,7 @@
 
 Pin data sources:
   ESP32-C5-WROOM-1U : Espressif ESP32-C5-WROOM-1/1U datasheet v1.3, Table 3-2
-  EG25-G            : Quectel EG25-G Hardware Design V1.5, Table 5 (Pin Description)
+  EC200U-EU         : Quectel EC200U Series QuecOpen Hardware Design V1.0, Figure 2 / Table 5
   OBD2 J1962        : SAE J1962 / ISO 15031-3 pinout
 
 Run:  python hardware/lib/gen_symbols.py
@@ -74,10 +74,10 @@ esp = symbol(
     left=[(PI, '3V3', 2), (I, 'EN', 3), None,
           (B, 'IO0/XTAL_32K_P', 6), (B, 'IO1/ADC1_CH0', 7), (B, 'IO2/MTMS', 4), (B, 'IO3/MTDI', 5),
           (B, 'IO4/MTCK', 17), (B, 'IO5/MTDO', 16), (B, 'IO6', 8), (B, 'IO7', 9), (B, 'IO8', 10),
-          (B, 'IO9', 11), (B, 'IO10', 12), (B, 'IO15', 19)],
+          (B, 'IO9', 11), (B, 'IO10', 12), (B, 'NC/IO15', 19)],
     right=[(B, 'IO11/TXD0', 25), (B, 'IO12/RXD0', 24), (B, 'IO13/USB_D-', 13), (B, 'IO14/USB_D+', 14),
            (B, 'IO23', 21), (B, 'IO24', 23), (B, 'IO25', 26), (B, 'IO26', 27), (B, 'IO27', 18),
-           (B, 'IO28', 15), None, (P, 'ANT', 31), (NC, 'NC', 20), (NC, 'NC', 22)],
+           (B, 'IO28', 15), None, (B, 'ANT2', 31), (NC, 'NC', 20), (NC, 'NC', 22)],
     bottom=[(PI, 'GND', n, 0) for n in (1, 28, 29, 30, 32)],
     width=16 * G,
 )

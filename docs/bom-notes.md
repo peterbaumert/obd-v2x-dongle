@@ -12,7 +12,7 @@ PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so
 | Ref | Part | Status | Plan |
 |---|---|---|---|
 | U301 | ESP32-C5-WROOM-1U-N16R8-V1.2 (C54951857) | LCSC **21 pcs**, ~$5.84 | Low stock: order soon. Fallbacks: ESP32-C5-WROOM-1-N16R8-V1.2 (PCB antenna, 323 pcs, but no U.FL, so not for the 5.9 GHz external antenna) or consign. All other C5 module variants were 0 on 2026-11-11 |
-| U401 | Quectel EC200UEUAA-N05-SGNSA (C2942341) | LCSC 65 pcs, ~$13 @1 | Replaced EG25-G (~$66 LCSC / $126 Digi-Key). "SGNS" = GNSS variant per Quectel ordering code: confirm GNSS on order. LCC+LGA-144 footprint still to create |
+| U401 | Quectel EC200UEUAA-N05-SGNSA (C2942341) | LCSC 65 pcs, ~$13 @1 | Replaced EG25-G (~$66 LCSC / $126 Digi-Key). "SGNS" = GNSS variant per Quectel ordering code: confirm GNSS on order. |
 | J201 | OBD-II J1962 male plug | **Not available** at LCSC/Digi-Key as a PCB part | Hand-fitted: buy a PCB-pin J1962 male plug separately; footprint once the part is chosen |
 
 ## Changed for availability
@@ -39,3 +39,6 @@ J401 GCT SIM8060-6-0-14-00 (2.2k) · J402–404 Hirose U.FL-R-SMT-1(10) (17k)
 
 - U102 compensation (R106/C105/C106) is a first pass — verify with TI WEBENCH.
 - C411–C416 antenna pi-match caps are DNP until the antennas are tuned.
+- U301: the 5.9 GHz antenna plugs into the module's own U.FL (ANT1, default). Pad 31 (ANT2) is disabled by
+  default and left unconnected; pin 19 (IO15) is the PSRAM chip select on N16R8 and must stay unconnected.
+- U401 footprint follows Quectel's recommended land pattern; keep 3 mm clearance around the module.
