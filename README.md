@@ -15,7 +15,7 @@ OBD-II J1962 plug
 
 ESP32-C5-WROOM-1U ── u.FL ──► 5.9 GHz antenna   (ITS-G5 RX via esphome-its-g5, BLE for setup)
         │ UART
-Quectel EG25-G (LTE Cat 4 + GNSS) ── LTE main/div + GNSS antennas, nano-SIM
+Quectel EC200U-EU (LTE Cat 1 + GNSS) ── LTE main + GNSS antennas (U.FL), nano-SIM
 ```
 
 ### Power management

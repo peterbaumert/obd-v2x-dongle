@@ -82,14 +82,16 @@ esp = symbol(
     width=16 * G,
 )
 
-# ---------------- Quectel EG25-G (LGA-144, used pins) ----------------
-GND_PINS = [8, 9, 19, 22, 36, 46, 48, 50, 51, 52, 53, 54, 56, 72] + list(range(85, 113))
+# ---------------- Quectel EC200U-EU (LCC+LGA 144, used pins) ----------------
+# Source: Quectel EC200U Series QuecOpen Hardware Design V1.0, Table 5. Pin 76 is GND on EC200U.
+GND_PINS = [8, 9, 19, 22, 36, 46, 48, 50, 51, 52, 53, 54, 56, 72, 76] + list(range(85, 113))
 eg25 = symbol(
-    'EG25-G', 'U',
-    'obd-v2x:Quectel_EG25-G',
-    'https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf',
-    'Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.',
-    'LTE cellular modem GNSS Quectel',
+    'EC200U-EU', 'U',
+    'obd-v2x:Quectel_EC200U',
+    'https://python.quectel.com/en/wp-content/uploads/sites/2/2024/11/Quectel_EC200U_Series_QuecOpen_Hardware_Design_V1.0.pdf',
+    'Quectel EC200U-EU LTE Cat 1 module (GNSS variant -SGNSA), LCC+LGA-144 28x31 mm. Logic I/O 1.8 V. '
+    'Unused/RESERVED pins not drawn.',
+    'LTE Cat1 cellular modem GNSS Quectel EC200U',
     left=[(PI, 'VBAT_BB', 59), (PI, 'VBAT_BB', 60), (PI, 'VBAT_RF', 57), (PI, 'VBAT_RF', 58),
           (PO, 'VDD_EXT', 7), None,
           (I, 'PWRKEY', 21), (I, 'RESET_N', 20), (OD, 'STATUS', 61), (O, 'NET_STATUS', 6), (O, 'NET_MODE', 5),
@@ -99,8 +101,8 @@ eg25 = symbol(
     right=[(I, 'RXD', 68), (O, 'TXD', 67), (I, 'RTS', 65), (O, 'CTS', 64), (I, 'DTR', 66), (O, 'RI', 62),
            (O, 'DCD', 63), (I, 'DBG_RXD', 11), (O, 'DBG_TXD', 12), None,
            (PO, 'USIM_VDD', 14), (B, 'USIM_DATA', 15), (O, 'USIM_CLK', 16), (O, 'USIM_RST', 17),
-           (I, 'USIM_PRESENCE', 13), (P, 'USIM_GND', 10), None,
-           (B, 'ANT_MAIN', 49), (I, 'ANT_DIV', 35), (I, 'ANT_GNSS', 47)],
+           (I, 'USIM_DET', 13), (P, 'USIM_GND', 10), None,
+           (B, 'ANT_MAIN', 49), (B, 'ANT_BT/WIFI', 35), (I, 'ANT_GNSS', 47)],
     bottom=[(PI, 'GND', n, 0) for n in GND_PINS],
     width=18 * G,
 )

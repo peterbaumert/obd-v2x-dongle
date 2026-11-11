@@ -12,7 +12,7 @@ PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so
 | Ref | Part | Status | Plan |
 |---|---|---|---|
 | U301 | ESP32-C5-WROOM-1U-N8R4 | **Out of stock** (LCSC 0, Digi-Key 0, restock est. Jan 2028) | Consign: supply modules to PCBWay yourself, or check stock again at order time |
-| U401 | Quectel EG25GGB-256-SGNS | In stock: Digi-Key 639 (~$126 @1), LCSC 38 | OK, but the most expensive part. LGA-144 footprint still to create |
+| U401 | Quectel EC200UEUAA-N05-SGNSA (C2942341) | LCSC 65 pcs, ~$13 @1 | Replaced EG25-G (~$66 LCSC / $126 Digi-Key). "SGNS" = GNSS variant per Quectel ordering code: confirm GNSS on order. LCC+LGA-144 footprint still to create |
 | J201 | OBD-II J1962 male plug | **Not available** at LCSC/Digi-Key as a PCB part | Hand-fitted: buy a PCB-pin J1962 male plug separately; footprint once the part is chosen |
 
 ## Changed for availability
@@ -23,6 +23,7 @@ PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so
 | L101 | Bourns SRP7028A-6R8M | Sunlord MWSA0605S-6R8MT (C408466, 416 pcs) | 0 in stock; footprint changed to L_Sunlord_MWSA0605S |
 | C401 | 220 uF tantalum (generic) | Kemet T495D227K006ATE100 (C2798131, 408 pcs) | first choice 0 in stock; same case D |
 | SW301/302 | TL3342 | TL3342F450QG (C2886897) | in-stock variant, same footprint |
+| U401 | EG25-G (Cat 4, $66+) | EC200U-EU (Cat 1, ~$13) | cost; Cat 1 is plenty for telemetry/V2X upload. LTE diversity antenna chain removed (EC200U has none) |
 
 ## In stock (LCSC, 2026-11-11)
 

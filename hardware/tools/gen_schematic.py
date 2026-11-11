@@ -49,14 +49,13 @@ SOURCING = {
     'J301': ('TYPE-C-31-M-12', 'HRO', 'C165948'),
     'SW301': ('TL3342F450QG', 'E-Switch', 'C2886897'),
     'SW302': ('TL3342F450QG', 'E-Switch', 'C2886897'),
-    'U401': ('EG25GGB-256-SGNS', 'Quectel', 'C8750274'),
+    'U401': ('EC200UEUAA-N05-SGNSA', 'Quectel', 'C2942341'),
     'U402': ('TXS0108EPWR', 'TI', 'C17206'),
     'Q401': ('MMBT3904', 'onsemi', 'C20526'),
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
     'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
-    'J404': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
     'J201': ('TBD (J1962 male, hand-fitted)', '', ''),
 }
@@ -577,9 +576,9 @@ LTE_GLOBAL = {'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STA
 
 
 def lte():
-    sh = Sheet('LTE', 'lte.kicad_sch', SHEETS['lte'], ROOT, 'LTE Cat 4 + GNSS: Quectel EG25-G (1.8 V I/O)')
+    sh = Sheet('LTE', 'lte.kicad_sch', SHEETS['lte'], ROOT, 'LTE Cat 1 + GNSS: Quectel EC200U-EU (1.8 V I/O)')
     X, Y = g(46), g(36)
-    U = sh.part('obd-v2x:EG25-G', 'U401', 'EG25-G', 'obd-v2x:Quectel_EG25-G', X, Y, 0)
+    U = sh.part('obd-v2x:EC200U-EU', 'U401', 'EC200U-EU', 'obd-v2x:Quectel_EC200U', X, Y, 0)
     U.fields = {'ref': (X - g(9), U['59'][1] - g(2.5), 'left'), 'val': (X - g(9), U['59'][1] - g(1.5), 'left')}
     # VBAT pins joined
     xv = U['59'][0] - g(2)
@@ -597,7 +596,7 @@ def lte():
     right = [('68', 'LTE_RXD_1V8'), ('67', 'LTE_TXD_1V8'), ('65', 'LTE_RTS_1V8'), ('64', 'LTE_CTS_1V8'), ('66', None),
              ('62', None), ('63', None), ('11', 'LTE_DBG_RXD'), ('12', 'LTE_DBG_TXD'), ('14', 'SIM_VDD'),
              ('15', 'LTE_USIM_DATA'), ('16', 'LTE_USIM_CLK'), ('17', 'LTE_USIM_RST'), ('13', None),
-             ('49', 'LTE_ANT_MAIN'), ('35', 'LTE_ANT_DIV'), ('47', 'LTE_ANT_GNSS')]
+             ('49', 'LTE_ANT_MAIN'), ('35', None), ('47', 'LTE_ANT_GNSS')]
     lab_row(sh, U, right, 'R', 2, LTE_GLOBAL)
     sh.w(U['10'], (U['10'][0] + g(2), U['10'][1]))
     sh.gnd((U['10'][0] + g(2), U['10'][1]), rot=90)
@@ -689,8 +688,7 @@ def lte():
     # antennas
     sh.text('Antennas (pi-match, shunt caps DNP until tuned)', g(22), g(64), 1.27, True)
     for i, (r, c1, c2, j, src, rf, val) in enumerate((('R409', 'C411', 'C412', 'J402', 'LTE_ANT_MAIN', 'ANT_MAIN_RF', 'U.FL LTE main'),
-                                                      ('R410', 'C413', 'C414', 'J403', 'LTE_ANT_DIV', 'ANT_DIV_RF', 'U.FL LTE div'),
-                                                      ('R411', 'C415', 'C416', 'J404', 'LTE_ANT_GNSS', 'ANT_GNSS_RF', 'U.FL GNSS'))):
+                                                      ('R410', 'C413', 'C414', 'J403', 'LTE_ANT_GNSS', 'ANT_GNSS_RF', 'U.FL GNSS'))):
         x0, y = g(24 + 16 * i), g(69)
         sh.label(src, (x0, y), 'L')
         Rr = rh(sh, 'Device:R', r, '0R', R0402, x0 + g(3), y)

@@ -7,7 +7,7 @@
 
 ## Design constraints
 - ITS-G5 is **receive-only** (ESP32-C5 in undocumented 802.11p mode via esphome-its-g5). Don't add V2X transmit features.
-- EG25-G logic I/O is **1.8 V**; ESP32-C5 is 3.3 V. Everything between them goes through the TXS0108E (U402) or the open-collector NPN drivers (PWRKEY, RESET_N).
+- LTE modem is the Quectel **EC200U-EU** (Cat 1, chosen over EG25-G for cost: ~$13 vs ~$66). Its logic I/O is **1.8 V**; ESP32-C5 is 3.3 V. Everything between them goes through the TXS0108E (U402) or the open-collector NPN drivers (PWRKEY, RESET_N).
 - The dongle must **not** terminate the vehicle CAN bus (no 120 Ω).
 - ESP32-C5 strapping: GPIO28 = BOOT (low = download), GPIO27 must be high at boot (LED data line is fine), GPIO26/25/7 floating OK.
 
@@ -22,3 +22,4 @@
 - Project symbols (incl. rail power symbols) are generated: edit `hardware/lib/gen_symbols.py`, run it.
 - ERC: `kicad-cli sch erc hardware/obd-v2x-dongle.kicad_sch` (expect 0 errors; footprint warnings until the
   custom footprints exist). PDF: `kicad-cli sch export pdf -o docs/schematic.pdf hardware/obd-v2x-dongle.kicad_sch`.
+- EC200U: PWRKEY must be held low >= 2 s to power on; pin 35 is a BT/Wi-Fi-scan antenna (unused), there is no LTE diversity antenna.

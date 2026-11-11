@@ -21,7 +21,7 @@
 			(color 0 0 0 0)
 		)
 		(uuid "01715d65-cdba-4655-b5fc-0dddd6752831")
-		(property "Sheetname" "LTE + GNSS (EG25-G)"
+		(property "Sheetname" "LTE + GNSS (EC200U)"
 			(at 92.54 88.73 0)
 			(show_name no)
 			(do_not_autoplace no)

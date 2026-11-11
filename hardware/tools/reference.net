@@ -57,9 +57,9 @@
 			(name "/Power/")
 			(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			(title_block
-				(title)
+				(title "Power: protection, buck 3.8 V, LDO 3.3 V")
 				(company)
-				(rev)
+				(rev "0.1")
 				(date)
 				(source "power.kicad_sch")
 				(comment
@@ -105,9 +105,9 @@
 			(name "/Vehicle (OBD, CAN, K-Line)/")
 			(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			(title_block
-				(title)
+				(title "Vehicle interface: OBD-II, CAN, K-Line")
 				(company)
-				(rev)
+				(rev "0.1")
 				(date)
 				(source "vehicle.kicad_sch")
 				(comment
@@ -153,9 +153,9 @@
 			(name "/MCU (ESP32-C5, USB)/")
 			(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			(title_block
-				(title)
+				(title "MCU: ESP32-C5 (ITS-G5 RX, CAN FD, BLE), USB-C")
 				(company)
-				(rev)
+				(rev "0.1")
 				(date)
 				(source "mcu.kicad_sch")
 				(comment
@@ -198,12 +198,12 @@
 		)
 		(sheet
 			(number "5")
-			(name "/LTE + GNSS (EG25-G)/")
+			(name "/LTE + GNSS (EC200U)/")
 			(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			(title_block
-				(title)
+				(title "LTE Cat 1 + GNSS: Quectel EC200U-EU (1.8 V I/O)")
 				(company)
-				(rev)
+				(rev "0.1")
 				(date)
 				(source "lte.kicad_sch")
 				(comment
@@ -250,7 +250,6 @@
 			(ref "C101")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -258,7 +257,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -285,7 +285,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "deae45f2-0a42-49af-ab14-81cc8c0ef482")
+			(tstamps "08e728f5-cc76-5527-816e-648f19094c68")
 			(units
 				(unit
 					(name "A")
@@ -304,7 +304,6 @@
 			(ref "C102")
 			(value "10uF 50V")
 			(footprint "Capacitor_SMD:C_1210_3225Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_1210_3225Metric")
@@ -312,7 +311,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -339,7 +339,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "e75b4ddc-df23-48fe-9347-98a28a78ea3a")
+			(tstamps "4d2a8e7c-c31d-55e0-bbe9-ca40ffde0629")
 			(units
 				(unit
 					(name "A")
@@ -358,7 +358,6 @@
 			(ref "C103")
 			(value "100nF 50V")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -366,7 +365,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -393,7 +393,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "bffe1d19-11dd-4575-9ab5-b2594e1212be")
+			(tstamps "1ef2498f-52b4-5a99-ab62-9bb5c582ef76")
 			(units
 				(unit
 					(name "A")
@@ -412,7 +412,6 @@
 			(ref "C104")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -420,7 +419,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -447,7 +447,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "d63a2379-6453-4331-a28b-55b3051a0be4")
+			(tstamps "a95d4df5-681d-540c-b984-c2f4632103de")
 			(units
 				(unit
 					(name "A")
@@ -466,7 +466,6 @@
 			(ref "C105")
 			(value "6.8nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -474,7 +473,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -501,7 +501,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "6ad53fb6-b49d-4d37-9077-6c14e2f2a537")
+			(tstamps "d819eaed-349e-5c97-95e1-c73917a9ae61")
 			(units
 				(unit
 					(name "A")
@@ -520,7 +520,6 @@
 			(ref "C106")
 			(value "47pF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -528,7 +527,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -555,7 +555,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "e5dddbf9-d9bd-47de-8777-e62d83f0c881")
+			(tstamps "e52b9c50-42b8-5fe0-908b-87bff9bc9ae1")
 			(units
 				(unit
 					(name "A")
@@ -574,7 +574,6 @@
 			(ref "C107")
 			(value "47uF 10V")
 			(footprint "Capacitor_SMD:C_1210_3225Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_1210_3225Metric")
@@ -582,7 +581,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -609,7 +609,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "f93ac3d8-0eec-46ac-b222-644a4d6b7835")
+			(tstamps "3e9737d6-ea8f-522f-a3fc-c7ddbd210939")
 			(units
 				(unit
 					(name "A")
@@ -628,7 +628,6 @@
 			(ref "C108")
 			(value "47uF 10V")
 			(footprint "Capacitor_SMD:C_1210_3225Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_1210_3225Metric")
@@ -636,7 +635,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -663,7 +663,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "7185e3de-78c6-486b-8bf2-b21cb6274e2b")
+			(tstamps "253aaccc-119c-55f9-ba59-d6190f4c9cc6")
 			(units
 				(unit
 					(name "A")
@@ -682,7 +682,6 @@
 			(ref "C109")
 			(value "1uF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -690,7 +689,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -717,7 +717,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "8d2c9e30-5252-4037-bbb9-998cf1d57fc0")
+			(tstamps "942d5256-5108-5dfc-8fe8-2ecb8cd8c6b7")
 			(units
 				(unit
 					(name "A")
@@ -736,7 +736,6 @@
 			(ref "C110")
 			(value "10uF")
 			(footprint "Capacitor_SMD:C_0805_2012Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
@@ -744,7 +743,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -771,7 +771,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "45cff580-ee1b-47fc-8278-0994893a7014")
+			(tstamps "6444cd43-0519-5010-be9c-b01a2ee86775")
 			(units
 				(unit
 					(name "A")
@@ -790,7 +790,6 @@
 			(ref "C111")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -798,7 +797,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -825,7 +825,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "0d71846a-e803-4541-899c-f4c6200a46a1")
+			(tstamps "9234062c-8918-5bd3-8ee4-4b1409d9f3ae")
 			(units
 				(unit
 					(name "A")
@@ -844,20 +844,38 @@
 			(ref "D101")
 			(value "SMCJ33CA")
 			(footprint "Diode_SMD:D_SMC")
-			(description "Bidirectional transient-voltage-suppression diode")
 			(fields
+				(field
+					(name "MPN") "SMCJ33CA")
+				(field
+					(name "Manufacturer") "Littelfuse")
+				(field
+					(name "LCSC") "C310048")
 				(field
 					(name "Footprint") "Diode_SMD:D_SMC")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Bidirectional transient-voltage-suppression diode")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "D_TVS")
 				(description "Bidirectional transient-voltage-suppression diode")
+			)
+			(property
+				(name "MPN")
+				(value "SMCJ33CA")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Littelfuse")
+			)
+			(property
+				(name "LCSC")
+				(value "C310048")
 			)
 			(property
 				(name "Sheetname")
@@ -879,7 +897,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "8a53a3cb-8094-42ef-8b3a-1a886dddf654")
+			(tstamps "c10f1f71-98a2-57df-a9d1-b5a9b1780bf4")
 			(units
 				(unit
 					(name "A")
@@ -898,20 +916,38 @@
 			(ref "D102")
 			(value "SS14")
 			(footprint "Diode_SMD:D_SMA")
-			(description "Schottky diode")
 			(fields
+				(field
+					(name "MPN") "SS14")
+				(field
+					(name "Manufacturer") "MDD")
+				(field
+					(name "LCSC") "C2480")
 				(field
 					(name "Footprint") "Diode_SMD:D_SMA")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Schottky diode")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "D_Schottky")
 				(description "Schottky diode")
+			)
+			(property
+				(name "MPN")
+				(value "SS14")
+			)
+			(property
+				(name "Manufacturer")
+				(value "MDD")
+			)
+			(property
+				(name "LCSC")
+				(value "C2480")
 			)
 			(property
 				(name "Sheetname")
@@ -933,7 +969,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "5165fe45-5002-4a21-a70f-21695435e370")
+			(tstamps "e92ffe72-966b-58db-b98c-7ac6cf88a342")
 			(units
 				(unit
 					(name "A")
@@ -952,20 +988,38 @@
 			(ref "D103")
 			(value "B560C")
 			(footprint "Diode_SMD:D_SMC")
-			(description "Schottky diode")
 			(fields
+				(field
+					(name "MPN") "B560C-13-F")
+				(field
+					(name "Manufacturer") "Diodes Inc")
+				(field
+					(name "LCSC") "C85100")
 				(field
 					(name "Footprint") "Diode_SMD:D_SMC")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Schottky diode")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "D_Schottky")
 				(description "Schottky diode")
+			)
+			(property
+				(name "MPN")
+				(value "B560C-13-F")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Diodes Inc")
+			)
+			(property
+				(name "LCSC")
+				(value "C85100")
 			)
 			(property
 				(name "Sheetname")
@@ -987,7 +1041,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "0ef0dc96-d1ad-4434-bf34-3e3732a59103")
+			(tstamps "19f967b8-e75f-5ae7-87a6-61dd59eb003d")
 			(units
 				(unit
 					(name "A")
@@ -1006,20 +1060,38 @@
 			(ref "F101")
 			(value "2A slow")
 			(footprint "Fuse:Fuse_1206_3216Metric")
-			(description "Fuse")
 			(fields
+				(field
+					(name "MPN") "0466002.NRHF")
+				(field
+					(name "Manufacturer") "Littelfuse")
+				(field
+					(name "LCSC") "C3105")
 				(field
 					(name "Footprint") "Fuse:Fuse_1206_3216Metric")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Fuse")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "Fuse")
 				(description "Fuse")
+			)
+			(property
+				(name "MPN")
+				(value "0466002.NRHF")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Littelfuse")
+			)
+			(property
+				(name "LCSC")
+				(value "C3105")
 			)
 			(property
 				(name "Sheetname")
@@ -1041,7 +1113,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "bd86a819-e850-48b7-8782-fdf53ed9b5e9")
+			(tstamps "7e4c9c5c-c2ec-5764-902a-75e8fb7d615d")
 			(units
 				(unit
 					(name "A")
@@ -1058,22 +1130,40 @@
 		)
 		(comp
 			(ref "L101")
-			(value "6.8uH 5A")
-			(footprint "Inductor_SMD:L_Bourns_SRP7028A_7.3x6.6mm")
-			(description "Inductor")
+			(value "6.8uH 4.5A")
+			(footprint "Inductor_SMD:L_Sunlord_MWSA0605S")
 			(fields
 				(field
-					(name "Footprint") "Inductor_SMD:L_Bourns_SRP7028A_7.3x6.6mm")
+					(name "MPN") "MWSA0605S-6R8MT")
+				(field
+					(name "Manufacturer") "Sunlord")
+				(field
+					(name "LCSC") "C408466")
+				(field
+					(name "Footprint") "Inductor_SMD:L_Sunlord_MWSA0605S")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Inductor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "L")
 				(description "Inductor")
+			)
+			(property
+				(name "MPN")
+				(value "MWSA0605S-6R8MT")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Sunlord")
+			)
+			(property
+				(name "LCSC")
+				(value "C408466")
 			)
 			(property
 				(name "Sheetname")
@@ -1095,7 +1185,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "8a868952-29a6-4dcc-814c-a76a22f7629b")
+			(tstamps "cefd74ba-348b-55dc-b156-ab1efe4c6089")
 			(units
 				(unit
 					(name "A")
@@ -1112,22 +1202,40 @@
 		)
 		(comp
 			(ref "Q101")
-			(value "PSMN5R2-60YL")
+			(value "PSMN7R0-60YS")
 			(footprint "Package_TO_SOT_SMD:LFPAK56")
-			(description "N-MOSFET transistor")
+			(datasheet "https://assets.nexperia.com/documents/data-sheet/PSMN5R2-60YL.pdf")
 			(fields
+				(field
+					(name "MPN") "PSMN7R0-60YS,115")
+				(field
+					(name "Manufacturer") "Nexperia")
+				(field
+					(name "LCSC") "C478143")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:LFPAK56")
 				(field
-					(name "Datasheet")
-				)
+					(name "Datasheet") "https://assets.nexperia.com/documents/data-sheet/PSMN5R2-60YL.pdf")
 				(field
-					(name "Description") "N-MOSFET transistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Transistor_FET")
 				(part "PSMN5R2-60YL")
 				(description "100A, 60V Vds, N-Channel MOSFET, 5.2mOhm Ron, LFPAK56")
+			)
+			(property
+				(name "MPN")
+				(value "PSMN7R0-60YS,115")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Nexperia")
+			)
+			(property
+				(name "LCSC")
+				(value "C478143")
 			)
 			(property
 				(name "Sheetname")
@@ -1149,7 +1257,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "3e5c6c93-197b-4a05-80c6-5742bc8bfb86")
+			(tstamps "20f8e38a-06ca-5f16-bfe4-280a812f76b5")
 			(units
 				(unit
 					(name "A")
@@ -1178,19 +1286,37 @@
 			(value "AO3401A")
 			(footprint "Package_TO_SOT_SMD:SOT-23")
 			(datasheet "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf")
-			(description "-4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23")
 			(fields
+				(field
+					(name "MPN") "AO3401A")
+				(field
+					(name "Manufacturer") "AOS")
+				(field
+					(name "LCSC") "C15127")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23")
 				(field
 					(name "Datasheet") "http://www.aosmd.com/pdfs/datasheet/AO3401A.pdf")
 				(field
-					(name "Description") "-4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Transistor_FET")
 				(part "AO3401A")
 				(description "-4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23")
+			)
+			(property
+				(name "MPN")
+				(value "AO3401A")
+			)
+			(property
+				(name "Manufacturer")
+				(value "AOS")
+			)
+			(property
+				(name "LCSC")
+				(value "C15127")
 			)
 			(property
 				(name "Sheetname")
@@ -1212,7 +1338,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "50c91438-f890-4ffb-a600-d1c10d4456b1")
+			(tstamps "7312a37e-f934-5bd5-806b-7d4d4a956e5e")
 			(units
 				(unit
 					(name "A")
@@ -1235,19 +1361,37 @@
 			(value "2N7002")
 			(footprint "Package_TO_SOT_SMD:SOT-23")
 			(datasheet "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF")
-			(description "0.115A Id, 60V Vds, N-Channel MOSFET, SOT-23")
 			(fields
+				(field
+					(name "MPN") "2N7002")
+				(field
+					(name "Manufacturer") "onsemi")
+				(field
+					(name "LCSC") "C8545")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23")
 				(field
 					(name "Datasheet") "https://www.onsemi.com/pub/Collateral/NDS7002A-D.PDF")
 				(field
-					(name "Description") "0.115A Id, 60V Vds, N-Channel MOSFET, SOT-23")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Transistor_FET")
 				(part "2N7002")
 				(description "0.115A Id, 60V Vds, N-Channel MOSFET, SOT-23")
+			)
+			(property
+				(name "MPN")
+				(value "2N7002")
+			)
+			(property
+				(name "Manufacturer")
+				(value "onsemi")
+			)
+			(property
+				(name "LCSC")
+				(value "C8545")
 			)
 			(property
 				(name "Sheetname")
@@ -1269,7 +1413,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "6c6461d8-4153-4471-a358-c162547eef54")
+			(tstamps "06932fc2-3eba-511d-a28d-6ab26b3054ba")
 			(units
 				(unit
 					(name "A")
@@ -1291,7 +1435,6 @@
 			(ref "R101")
 			(value "470k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1299,7 +1442,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1326,7 +1470,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "db62a0ab-f830-4b4e-932e-663c84f24e6a")
+			(tstamps "2b758256-fafd-5ab6-a777-02594d9fd4ab")
 			(units
 				(unit
 					(name "A")
@@ -1345,7 +1489,6 @@
 			(ref "R102")
 			(value "120k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1353,7 +1496,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1380,7 +1524,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "6eee0e73-8c90-4550-8cb5-5ec43755a532")
+			(tstamps "803231aa-ae1a-5be3-afee-107cd7b6a675")
 			(units
 				(unit
 					(name "A")
@@ -1399,7 +1543,6 @@
 			(ref "R103")
 			(value "162k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1407,7 +1550,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1434,7 +1578,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "3e63398d-c1c0-4598-9599-69522238b64e")
+			(tstamps "bc2d54ef-b7ff-5a3a-a384-d32203c79de4")
 			(units
 				(unit
 					(name "A")
@@ -1453,7 +1597,6 @@
 			(ref "R104")
 			(value "37.4k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1461,7 +1604,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1488,7 +1632,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "c944d2c8-4179-45b0-a724-bfd893a831c4")
+			(tstamps "a38dbd09-7ba4-5959-a2f2-0ef63a6a1fbe")
 			(units
 				(unit
 					(name "A")
@@ -1507,7 +1651,6 @@
 			(ref "R105")
 			(value "10k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1515,7 +1658,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1542,7 +1686,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "20c17f66-f92a-40a4-862f-d9e2c82e0bdd")
+			(tstamps "99b81dea-c981-584a-84b2-f6a746a9539f")
 			(units
 				(unit
 					(name "A")
@@ -1561,7 +1705,6 @@
 			(ref "R106")
 			(value "7.5k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1569,7 +1712,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1596,7 +1740,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "4781f584-60d6-423c-a569-137261e28f16")
+			(tstamps "5e20caff-3c7b-569e-8289-06c5320986cf")
 			(units
 				(unit
 					(name "A")
@@ -1615,7 +1759,6 @@
 			(ref "R107")
 			(value "100k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1623,7 +1766,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1650,7 +1794,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "0c0cbbbe-78d8-4c0e-99d1-c8b57d5bda44")
+			(tstamps "90d73aec-11a3-5152-8160-70f700d1437f")
 			(units
 				(unit
 					(name "A")
@@ -1669,7 +1813,6 @@
 			(ref "R108")
 			(value "100k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1677,7 +1820,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1704,7 +1848,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "44e53edc-6f4c-4471-8975-9b3c7a8c4635")
+			(tstamps "07718ec3-2a06-500c-ad03-73bf4d047546")
 			(units
 				(unit
 					(name "A")
@@ -1723,7 +1867,6 @@
 			(ref "R109")
 			(value "100k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1731,7 +1874,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1758,7 +1902,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "fe17a6b3-eab7-48b8-822f-ed19deb6bf38")
+			(tstamps "b0c050e8-2823-5368-84b9-ba9a5a873df1")
 			(units
 				(unit
 					(name "A")
@@ -1777,7 +1921,6 @@
 			(ref "R110")
 			(value "15k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -1785,7 +1928,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -1812,7 +1956,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "fe5c011c-2e31-4a2a-88c9-4ca8c2dbdcd8")
+			(tstamps "dee3f037-2822-5df8-84ba-414d151cd252")
 			(units
 				(unit
 					(name "A")
@@ -1832,19 +1976,37 @@
 			(value "LM74700-Q1")
 			(footprint "Package_TO_SOT_SMD:SOT-23-6")
 			(datasheet "http://www.ti.com/lit/gpn/LM74700-Q1")
-			(description "Low Iq reverse battery protection ideal diode controller, SOT-23-6")
 			(fields
+				(field
+					(name "MPN") "LM74700QDBVRQ1")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C2941042")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23-6")
 				(field
 					(name "Datasheet") "http://www.ti.com/lit/gpn/LM74700-Q1")
 				(field
-					(name "Description") "Low Iq reverse battery protection ideal diode controller, SOT-23-6")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Power_Management")
 				(part "LM74700")
 				(description "Low Iq reverse battery protection ideal diode controller, SOT-23-6")
+			)
+			(property
+				(name "MPN")
+				(value "LM74700QDBVRQ1")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C2941042")
 			)
 			(property
 				(name "Sheetname")
@@ -1866,7 +2028,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "8f3d9237-18ff-42c6-9ec7-068f2ac95cba")
+			(tstamps "9755732f-62b6-5c2f-a0b1-6f2989f19e97")
 			(units
 				(unit
 					(name "A")
@@ -1898,19 +2060,37 @@
 			(value "TPS54360DDA")
 			(footprint "Package_SO:TI_SO-PowerPAD-8_ThermalVias")
 			(datasheet "http://www.ti.com/lit/ds/symlink/tps54360.pdf")
-			(description "3.5A, Step Down DC-DC Converter with Eco-mode, 4.5-60V Input Voltage, PowerSO-8")
 			(fields
+				(field
+					(name "MPN") "TPS54360DDAR")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C44377")
 				(field
 					(name "Footprint") "Package_SO:TI_SO-PowerPAD-8_ThermalVias")
 				(field
 					(name "Datasheet") "http://www.ti.com/lit/ds/symlink/tps54360.pdf")
 				(field
-					(name "Description") "3.5A, Step Down DC-DC Converter with Eco-mode, 4.5-60V Input Voltage, PowerSO-8")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Regulator_Switching")
 				(part "TPS54360DDA")
 				(description "3.5A, Step Down DC-DC Converter with Eco-mode, 4.5-60V Input Voltage, PowerSO-8")
+			)
+			(property
+				(name "MPN")
+				(value "TPS54360DDAR")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C44377")
 			)
 			(property
 				(name "Sheetname")
@@ -1932,7 +2112,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "7204689c-f24a-4c3d-b033-b7f3583f1fe8")
+			(tstamps "46b042fb-2b51-590f-957d-2f168727919c")
 			(units
 				(unit
 					(name "A")
@@ -1973,19 +2153,37 @@
 			(value "TLV75733PDBV")
 			(footprint "Package_TO_SOT_SMD:SOT-23-5")
 			(datasheet "https://www.ti.com/lit/ds/symlink/tlv757p.pdf")
-			(description "1A Low IQ Small Size Low Dropout Voltage Regulator, Fixed Output 3.3V, SOT-23-5")
 			(fields
+				(field
+					(name "MPN") "TLV75733PDBVR")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C485517")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23-5")
 				(field
 					(name "Datasheet") "https://www.ti.com/lit/ds/symlink/tlv757p.pdf")
 				(field
-					(name "Description") "1A Low IQ Small Size Low Dropout Voltage Regulator, Fixed Output 3.3V, SOT-23-5")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Regulator_Linear")
 				(part "TLV75733PDBV")
 				(description "1A Low IQ Small Size Low Dropout Voltage Regulator, Fixed Output 3.3V, SOT-23-5")
+			)
+			(property
+				(name "MPN")
+				(value "TLV75733PDBVR")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C485517")
 			)
 			(property
 				(name "Sheetname")
@@ -2007,7 +2205,7 @@
 				(names "/Power/")
 				(tstamps "/c67045ad-ad78-40ef-adb2-4c081ee4501d/")
 			)
-			(tstamps "46a41137-9a5b-4658-a7d1-1f4317daa814")
+			(tstamps "85bdc108-fb1f-58ba-9573-1837ae3ae96f")
 			(units
 				(unit
 					(name "A")
@@ -2035,7 +2233,6 @@
 			(ref "C201")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2043,7 +2240,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2070,7 +2268,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "13ef4b94-94c9-46cb-9060-8affa78e49cb")
+			(tstamps "a2adcdfa-26e9-5946-91a7-da0227545885")
 			(units
 				(unit
 					(name "A")
@@ -2089,7 +2287,6 @@
 			(ref "C202")
 			(value "100nF 50V")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2097,7 +2294,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2124,7 +2322,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "b76d1ad0-1c13-4c17-a6df-c607eb54202a")
+			(tstamps "1651dd81-1612-5368-8284-3fe6da504161")
 			(units
 				(unit
 					(name "A")
@@ -2143,7 +2341,6 @@
 			(ref "C203")
 			(value "220pF 50V")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2151,7 +2348,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2178,7 +2376,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "6053f131-04b5-4e61-bf89-710cb5d838db")
+			(tstamps "cc83cd01-aa32-52e8-aeb9-d826b914cbf5")
 			(units
 				(unit
 					(name "A")
@@ -2198,19 +2396,37 @@
 			(value "NUP2105L")
 			(footprint "Package_TO_SOT_SMD:SOT-23")
 			(datasheet "https://www.onsemi.com/pub_link/Collateral/NUP2105L-D.PDF")
-			(description "Dual Line CAN Bus Protector, 24Vrwm")
 			(fields
+				(field
+					(name "MPN") "SZNUP2105LT1G")
+				(field
+					(name "Manufacturer") "onsemi")
+				(field
+					(name "LCSC") "C233494")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23")
 				(field
 					(name "Datasheet") "https://www.onsemi.com/pub_link/Collateral/NUP2105L-D.PDF")
 				(field
-					(name "Description") "Dual Line CAN Bus Protector, 24Vrwm")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Power_Protection")
 				(part "NUP2105L")
 				(description "Dual Line CAN Bus Protector, 24Vrwm")
+			)
+			(property
+				(name "MPN")
+				(value "SZNUP2105LT1G")
+			)
+			(property
+				(name "Manufacturer")
+				(value "onsemi")
+			)
+			(property
+				(name "LCSC")
+				(value "C233494")
 			)
 			(property
 				(name "Sheetname")
@@ -2232,7 +2448,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "9d71c6db-a80b-45b6-a61d-77cd6f47c18b")
+			(tstamps "a2dc75ff-9b9e-5159-b32d-a25a961cf4fd")
 			(units
 				(unit
 					(name "A")
@@ -2254,20 +2470,38 @@
 			(ref "D202")
 			(value "B0540WS")
 			(footprint "Diode_SMD:D_SOD-323")
-			(description "Schottky diode")
 			(fields
+				(field
+					(name "MPN") "B0540WS-7")
+				(field
+					(name "Manufacturer") "Diodes Inc")
+				(field
+					(name "LCSC") "C52754523")
 				(field
 					(name "Footprint") "Diode_SMD:D_SOD-323")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Schottky diode")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "D_Schottky")
 				(description "Schottky diode")
+			)
+			(property
+				(name "MPN")
+				(value "B0540WS-7")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Diodes Inc")
+			)
+			(property
+				(name "LCSC")
+				(value "C52754523")
 			)
 			(property
 				(name "Sheetname")
@@ -2289,7 +2523,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "00f672df-4d9c-4195-baa5-6436b38567c5")
+			(tstamps "dd183c07-f1c1-5151-b213-e0a36b5f93e2")
 			(units
 				(unit
 					(name "A")
@@ -2308,20 +2542,38 @@
 			(ref "D203")
 			(value "PESD1LIN")
 			(footprint "Diode_SMD:D_SOD-323")
-			(description "Bidirectional transient-voltage-suppression diode")
 			(fields
+				(field
+					(name "MPN") "PESD1LIN,115")
+				(field
+					(name "Manufacturer") "Nexperia")
+				(field
+					(name "LCSC") "C58901")
 				(field
 					(name "Footprint") "Diode_SMD:D_SOD-323")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Bidirectional transient-voltage-suppression diode")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
 				(part "D_TVS")
 				(description "Bidirectional transient-voltage-suppression diode")
+			)
+			(property
+				(name "MPN")
+				(value "PESD1LIN,115")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Nexperia")
+			)
+			(property
+				(name "LCSC")
+				(value "C58901")
 			)
 			(property
 				(name "Sheetname")
@@ -2343,7 +2595,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "253042e4-3368-4b39-acd7-afa055f08b14")
+			(tstamps "c78ed482-52ae-5d21-846d-6753dab292a2")
 			(units
 				(unit
 					(name "A")
@@ -2363,19 +2615,39 @@
 			(value "OBD2_J1962_Plug")
 			(footprint "obd-v2x:OBD2_J1962_Plug_PCB")
 			(datasheet "https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II_diagnostic_connector")
-			(description "OBD-II (SAE J1962) 16-pin male plug, vehicle side pinout")
 			(fields
+				(field
+					(name "MPN") "TBD (J1962 male, hand-fitted)")
+				(field
+					(name "Manufacturer")
+				)
+				(field
+					(name "LCSC")
+				)
 				(field
 					(name "Footprint") "obd-v2x:OBD2_J1962_Plug_PCB")
 				(field
 					(name "Datasheet") "https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II_diagnostic_connector")
 				(field
-					(name "Description") "OBD-II (SAE J1962) 16-pin male plug, vehicle side pinout")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "obd-v2x")
 				(part "OBD2_J1962_Plug")
 				(description "OBD-II (SAE J1962) 16-pin male plug, vehicle side pinout")
+			)
+			(property
+				(name "MPN")
+				(value "TBD (J1962 male, hand-fitted)")
+			)
+			(property
+				(name "Manufacturer")
+				(value "")
+			)
+			(property
+				(name "LCSC")
+				(value "")
 			)
 			(property
 				(name "Sheetname")
@@ -2393,7 +2665,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "72434564-a142-42e6-8457-7b12852e6e20")
+			(tstamps "d47ce013-17e2-5d4c-8cc5-c82896195e93")
 			(units
 				(unit
 					(name "A")
@@ -2402,31 +2674,13 @@
 							(num "1")
 						)
 						(pin
-							(num "2")
-						)
-						(pin
 							(num "3")
-						)
-						(pin
-							(num "4")
-						)
-						(pin
-							(num "5")
-						)
-						(pin
-							(num "6")
-						)
-						(pin
-							(num "7")
 						)
 						(pin
 							(num "8")
 						)
 						(pin
 							(num "9")
-						)
-						(pin
-							(num "10")
 						)
 						(pin
 							(num "11")
@@ -2438,13 +2692,31 @@
 							(num "13")
 						)
 						(pin
-							(num "14")
+							(num "2")
+						)
+						(pin
+							(num "10")
 						)
 						(pin
 							(num "15")
 						)
 						(pin
 							(num "16")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "14")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "4")
 						)
 					)
 				)
@@ -2454,7 +2726,6 @@
 			(ref "R201")
 			(value "10k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -2462,7 +2733,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2489,7 +2761,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "172cb546-b638-48f5-a833-9bf45721ebb7")
+			(tstamps "2f5f3aea-7328-5acd-8757-348212951935")
 			(units
 				(unit
 					(name "A")
@@ -2508,7 +2780,6 @@
 			(ref "R202")
 			(value "4.7k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -2516,7 +2787,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2543,7 +2815,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "97797f45-fb55-4caa-a889-48d1454e87ad")
+			(tstamps "f380bfdb-c5f2-5dc8-aee9-692c530e3a6b")
 			(units
 				(unit
 					(name "A")
@@ -2562,7 +2834,6 @@
 			(ref "R203")
 			(value "100k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -2570,7 +2841,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2597,7 +2869,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "50ae0675-e56e-44bb-97cb-b497c5d57b31")
+			(tstamps "064b0b66-edbb-505b-857b-0cb668a627f4")
 			(units
 				(unit
 					(name "A")
@@ -2616,7 +2888,6 @@
 			(ref "R204")
 			(value "510 0.5W")
 			(footprint "Resistor_SMD:R_1206_3216Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_1206_3216Metric")
@@ -2624,7 +2895,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2651,7 +2923,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "b11cf03a-89e6-4f44-b9b1-e4db5eb19ffc")
+			(tstamps "7a91946d-748c-50fe-aacf-a79a563f4bb0")
 			(units
 				(unit
 					(name "A")
@@ -2671,19 +2943,37 @@
 			(value "TCAN334")
 			(footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
 			(datasheet "http://www.ti.com/lit/ds/symlink/tcan337.pdf")
-			(description "High-Speed CAN Transceiver, 1Mbps, 3.3V supply, low power standby mode, shutdown mode, SOT-23-8/SOIC-8")
 			(fields
+				(field
+					(name "MPN") "TCAN334DR")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C2871143")
 				(field
 					(name "Footprint") "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
 				(field
 					(name "Datasheet") "http://www.ti.com/lit/ds/symlink/tcan337.pdf")
 				(field
-					(name "Description") "High-Speed CAN Transceiver, 1Mbps, 3.3V supply, low power standby mode, shutdown mode, SOT-23-8/SOIC-8")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Interface_CAN_LIN")
 				(part "TCAN334")
 				(description "High-Speed CAN Transceiver, 1Mbps, 3.3V supply, low power standby mode, shutdown mode, SOT-23-8/SOIC-8")
+			)
+			(property
+				(name "MPN")
+				(value "TCAN334DR")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C2871143")
 			)
 			(property
 				(name "Sheetname")
@@ -2705,7 +2995,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "ad31899b-5018-4a26-812c-fa8953677982")
+			(tstamps "d74ed372-2f35-54fb-acad-c3789fc8eb91")
 			(units
 				(unit
 					(name "A")
@@ -2743,19 +3033,37 @@
 			(value "TJA1021T/20")
 			(footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
 			(datasheet "https://www.nxp.com/docs/en/data-sheet/TJA1021.pdf")
-			(description "LIN 2.2A / SAE J2602 transceiver, SOIC-8")
 			(fields
+				(field
+					(name "MPN") "TJA1021T/20/CM,118")
+				(field
+					(name "Manufacturer") "NXP")
+				(field
+					(name "LCSC") "C128810")
 				(field
 					(name "Footprint") "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")
 				(field
 					(name "Datasheet") "https://www.nxp.com/docs/en/data-sheet/TJA1021.pdf")
 				(field
-					(name "Description") "LIN 2.2A / SAE J2602 transceiver, SOIC-8")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Interface_CAN_LIN")
 				(part "TJA1021xT")
 				(description "LIN 2.2A / SAE J2602 transceiver, SOIC-8")
+			)
+			(property
+				(name "MPN")
+				(value "TJA1021T/20/CM,118")
+			)
+			(property
+				(name "Manufacturer")
+				(value "NXP")
+			)
+			(property
+				(name "LCSC")
+				(value "C128810")
 			)
 			(property
 				(name "Sheetname")
@@ -2777,7 +3085,7 @@
 				(names "/Vehicle (OBD, CAN, K-Line)/")
 				(tstamps "/fa1dd39e-b547-4d98-ad46-16b1323df42c/")
 			)
-			(tstamps "2b835bd5-425f-45ce-8c32-134c08ef4125")
+			(tstamps "155c4722-94b4-52fd-8bfc-973652e98d49")
 			(units
 				(unit
 					(name "A")
@@ -2814,7 +3122,6 @@
 			(ref "C301")
 			(value "1uF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2822,7 +3129,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2849,7 +3157,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "d820ac47-a6eb-4c2a-b552-f34ea26a8a2c")
+			(tstamps "5f4a415f-ad3a-54b6-b3b5-6f4e5cbf5b10")
 			(units
 				(unit
 					(name "A")
@@ -2868,7 +3176,6 @@
 			(ref "C302")
 			(value "10uF")
 			(footprint "Capacitor_SMD:C_0805_2012Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
@@ -2876,7 +3183,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2903,7 +3211,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "d70cc9a9-4b73-4f9d-bd3d-3377a1a6a1fe")
+			(tstamps "e0f2737a-0278-5223-aca7-4e7e87f2ae01")
 			(units
 				(unit
 					(name "A")
@@ -2922,7 +3230,6 @@
 			(ref "C303")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2930,7 +3237,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -2957,7 +3265,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "a6d40c2b-d0f9-4655-8c80-8cbc71fa25f7")
+			(tstamps "b64f37dc-faf7-5637-958d-88c28620f1ce")
 			(units
 				(unit
 					(name "A")
@@ -2976,7 +3284,6 @@
 			(ref "C304")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -2984,7 +3291,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3011,7 +3319,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "90f85b44-d43f-478b-9900-b2b73d0cef93")
+			(tstamps "19099c63-3f05-5da0-aae9-aab4222db9f0")
 			(units
 				(unit
 					(name "A")
@@ -3031,19 +3339,37 @@
 			(value "SK6812MINI")
 			(footprint "LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm")
 			(datasheet "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
-			(description "RGB LED with integrated controller")
 			(fields
+				(field
+					(name "MPN") "SK6812MINI-E")
+				(field
+					(name "Manufacturer") "OPSCO")
+				(field
+					(name "LCSC") "C5149201")
 				(field
 					(name "Footprint") "LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm")
 				(field
 					(name "Datasheet") "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
 				(field
-					(name "Description") "RGB LED with integrated controller")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "LED")
 				(part "SK6812MINI")
 				(description "RGB LED with integrated controller")
+			)
+			(property
+				(name "MPN")
+				(value "SK6812MINI-E")
+			)
+			(property
+				(name "Manufacturer")
+				(value "OPSCO")
+			)
+			(property
+				(name "LCSC")
+				(value "C5149201")
 			)
 			(property
 				(name "Sheetname")
@@ -3065,7 +3391,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "53427dba-280f-4e81-a8b0-6161a72fde0d")
+			(tstamps "dcb87447-4bac-5a49-a624-7df90c92718b")
 			(units
 				(unit
 					(name "A")
@@ -3091,19 +3417,37 @@
 			(value "USB-C")
 			(footprint "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
 			(datasheet "https://www.usb.org/sites/default/files/documents/usb_type-c.zip")
-			(description "USB 2.0-only 16P Type-C Receptacle connector")
 			(fields
+				(field
+					(name "MPN") "TYPE-C-31-M-12")
+				(field
+					(name "Manufacturer") "HRO")
+				(field
+					(name "LCSC") "C165948")
 				(field
 					(name "Footprint") "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12")
 				(field
 					(name "Datasheet") "https://www.usb.org/sites/default/files/documents/usb_type-c.zip")
 				(field
-					(name "Description") "USB 2.0-only 16P Type-C Receptacle connector")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
 				(part "USB_C_Receptacle_USB2.0_16P")
 				(description "USB 2.0-only 16P Type-C Receptacle connector")
+			)
+			(property
+				(name "MPN")
+				(value "TYPE-C-31-M-12")
+			)
+			(property
+				(name "Manufacturer")
+				(value "HRO")
+			)
+			(property
+				(name "LCSC")
+				(value "C165948")
 			)
 			(property
 				(name "Sheetname")
@@ -3125,7 +3469,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "889d815c-b90c-4438-acb8-03c77c84c6a9")
+			(tstamps "9aaba27a-a2b0-5249-9d5b-2d855435bb34")
 			(units
 				(unit
 					(name "A")
@@ -3189,7 +3533,6 @@
 			(ref "R301")
 			(value "10k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -3197,7 +3540,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3224,7 +3568,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "def18994-aedc-44e3-ad03-d6bec988c24f")
+			(tstamps "044e0049-b25f-56f0-80fa-2b0a89b5ef17")
 			(units
 				(unit
 					(name "A")
@@ -3243,7 +3587,6 @@
 			(ref "R302")
 			(value "10k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -3251,7 +3594,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3278,7 +3622,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "0de070b9-d1a3-4cf3-8e7a-e363165273b5")
+			(tstamps "7d409b81-20ab-5c1c-a54e-e72dad40b37d")
 			(units
 				(unit
 					(name "A")
@@ -3297,7 +3641,6 @@
 			(ref "R303")
 			(value "5.1k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -3305,7 +3648,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3332,7 +3676,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "f1ed0bd3-4feb-41e5-b945-c6dcb8ac1bba")
+			(tstamps "f91ea65d-a2e2-5321-a1ba-ee0775d62892")
 			(units
 				(unit
 					(name "A")
@@ -3351,7 +3695,6 @@
 			(ref "R304")
 			(value "5.1k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -3359,7 +3702,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3386,7 +3730,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "2e38dd0b-3ede-4f6c-8089-68f2f075653a")
+			(tstamps "ef6e3c1a-2a6b-5362-910d-021fe5019017")
 			(units
 				(unit
 					(name "A")
@@ -3405,20 +3749,38 @@
 			(ref "SW301")
 			(value "RESET")
 			(footprint "Button_Switch_SMD:SW_SPST_TL3342")
-			(description "Push button switch, generic, two pins")
 			(fields
+				(field
+					(name "MPN") "TL3342F450QG")
+				(field
+					(name "Manufacturer") "E-Switch")
+				(field
+					(name "LCSC") "C2886897")
 				(field
 					(name "Footprint") "Button_Switch_SMD:SW_SPST_TL3342")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Push button switch, generic, two pins")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Switch")
 				(part "SW_Push")
 				(description "Push button switch, generic, two pins")
+			)
+			(property
+				(name "MPN")
+				(value "TL3342F450QG")
+			)
+			(property
+				(name "Manufacturer")
+				(value "E-Switch")
+			)
+			(property
+				(name "LCSC")
+				(value "C2886897")
 			)
 			(property
 				(name "Sheetname")
@@ -3436,7 +3798,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "d0737549-f18e-4d6d-a5b5-b391c055be15")
+			(tstamps "9213fdcb-f102-5db2-b204-fdf168f11583")
 			(units
 				(unit
 					(name "A")
@@ -3455,20 +3817,38 @@
 			(ref "SW302")
 			(value "BOOT")
 			(footprint "Button_Switch_SMD:SW_SPST_TL3342")
-			(description "Push button switch, generic, two pins")
 			(fields
+				(field
+					(name "MPN") "TL3342F450QG")
+				(field
+					(name "Manufacturer") "E-Switch")
+				(field
+					(name "LCSC") "C2886897")
 				(field
 					(name "Footprint") "Button_Switch_SMD:SW_SPST_TL3342")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Push button switch, generic, two pins")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Switch")
 				(part "SW_Push")
 				(description "Push button switch, generic, two pins")
+			)
+			(property
+				(name "MPN")
+				(value "TL3342F450QG")
+			)
+			(property
+				(name "Manufacturer")
+				(value "E-Switch")
+			)
+			(property
+				(name "LCSC")
+				(value "C2886897")
 			)
 			(property
 				(name "Sheetname")
@@ -3486,7 +3866,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "199f2468-7260-4c3d-9adf-da20440c8d07")
+			(tstamps "6a081786-9619-508a-8ed7-a9a85ff4e806")
 			(units
 				(unit
 					(name "A")
@@ -3505,7 +3885,6 @@
 			(ref "TP301")
 			(value "UART0_TX")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -3513,7 +3892,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -3540,7 +3920,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "909c451b-06f9-4162-bd72-294b15255f3b")
+			(tstamps "28a779cd-1938-581a-a81a-0278dfb7cfe6")
 			(units
 				(unit
 					(name "A")
@@ -3556,7 +3936,6 @@
 			(ref "TP302")
 			(value "UART0_RX")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -3564,7 +3943,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -3591,7 +3971,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "da31dcfe-c4c9-42eb-9e37-acf7852cd238")
+			(tstamps "d3cbbda6-0806-58e3-ba0c-56528b1d2f59")
 			(units
 				(unit
 					(name "A")
@@ -3607,7 +3987,6 @@
 			(ref "TP303")
 			(value "GND")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -3615,7 +3994,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -3642,7 +4022,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "b2808959-26c4-425d-9bdb-58c5d36b33b1")
+			(tstamps "4d5cdbcb-64d0-589c-943b-b694546352ae")
 			(units
 				(unit
 					(name "A")
@@ -3659,19 +4039,37 @@
 			(value "ESP32-C5-WROOM-1U-N8R4")
 			(footprint "obd-v2x:ESP32-C5-WROOM-1U")
 			(datasheet "https://documentation.espressif.com/esp32-c5-wroom-1_wroom-1u_datasheet_en.pdf")
-			(description "ESP32-C5 module, dual-band Wi-Fi 6 / BLE 5 / 802.15.4, CAN FD, external antenna (U.FL)")
 			(fields
+				(field
+					(name "MPN") "ESP32-C5-WROOM-1U-N8R4")
+				(field
+					(name "Manufacturer") "Espressif")
+				(field
+					(name "LCSC") "C49308183")
 				(field
 					(name "Footprint") "obd-v2x:ESP32-C5-WROOM-1U")
 				(field
 					(name "Datasheet") "https://documentation.espressif.com/esp32-c5-wroom-1_wroom-1u_datasheet_en.pdf")
 				(field
-					(name "Description") "ESP32-C5 module, dual-band Wi-Fi 6 / BLE 5 / 802.15.4, CAN FD, external antenna (U.FL)")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "obd-v2x")
 				(part "ESP32-C5-WROOM-1U")
 				(description "ESP32-C5 module, dual-band Wi-Fi 6 / BLE 5 / 802.15.4, CAN FD, external antenna (U.FL)")
+			)
+			(property
+				(name "MPN")
+				(value "ESP32-C5-WROOM-1U-N8R4")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Espressif")
+			)
+			(property
+				(name "LCSC")
+				(value "C49308183")
 			)
 			(property
 				(name "Sheetname")
@@ -3689,7 +4087,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "62479c0d-3ac3-4ec1-be58-fa227300c350")
+			(tstamps "cf22413a-bade-5f55-9e52-4cf0103c8e70")
 			(units
 				(unit
 					(name "A")
@@ -3799,19 +4197,37 @@
 			(value "USBLC6-2SC6")
 			(footprint "Package_TO_SOT_SMD:SOT-23-6")
 			(datasheet "https://www.st.com/resource/en/datasheet/usblc6-2.pdf")
-			(description "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6")
 			(fields
+				(field
+					(name "MPN") "USBLC6-2SC6")
+				(field
+					(name "Manufacturer") "ST")
+				(field
+					(name "LCSC") "C2827654")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23-6")
 				(field
 					(name "Datasheet") "https://www.st.com/resource/en/datasheet/usblc6-2.pdf")
 				(field
-					(name "Description") "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Power_Protection")
 				(part "USBLC6-2SC6")
 				(description "Very low capacitance ESD protection diode, 2 data-line, SOT-23-6")
+			)
+			(property
+				(name "MPN")
+				(value "USBLC6-2SC6")
+			)
+			(property
+				(name "Manufacturer")
+				(value "ST")
+			)
+			(property
+				(name "LCSC")
+				(value "C2827654")
 			)
 			(property
 				(name "Sheetname")
@@ -3833,7 +4249,7 @@
 				(names "/MCU (ESP32-C5, USB)/")
 				(tstamps "/6ff62bc4-23e3-4296-bf60-cd67ba8c0f07/")
 			)
-			(tstamps "fb7fd0ff-ec22-4966-a76a-30c555005b66")
+			(tstamps "0faa0867-abca-5b37-b7dd-3b6a9b73eb90")
 			(units
 				(unit
 					(name "A")
@@ -3864,15 +4280,21 @@
 			(ref "C401")
 			(value "220uF 6.3V")
 			(footprint "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D")
-			(description "Polarized capacitor")
 			(fields
+				(field
+					(name "MPN") "T495D227K006ATE100")
+				(field
+					(name "Manufacturer") "Kemet")
+				(field
+					(name "LCSC") "C2798131")
 				(field
 					(name "Footprint") "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Polarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3880,8 +4302,20 @@
 				(description "Polarized capacitor")
 			)
 			(property
+				(name "MPN")
+				(value "T495D227K006ATE100")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Kemet")
+			)
+			(property
+				(name "LCSC")
+				(value "C2798131")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -3896,10 +4330,10 @@
 				(value "CP_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "237014d7-3fbd-4a8e-b890-7d81c8bb29dd")
+			(tstamps "4638d9fc-7508-5b9d-9764-257c1624294d")
 			(units
 				(unit
 					(name "A")
@@ -3918,7 +4352,6 @@
 			(ref "C402")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -3926,7 +4359,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3935,7 +4369,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -3950,10 +4384,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "35e58492-ace3-4ff7-8eab-b115b9932c84")
+			(tstamps "1d57a114-17f3-534a-8d56-25a708c87160")
 			(units
 				(unit
 					(name "A")
@@ -3972,7 +4406,6 @@
 			(ref "C403")
 			(value "33pF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -3980,7 +4413,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -3989,7 +4423,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4004,10 +4438,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "88365494-6c54-42d9-b04c-785813011b2b")
+			(tstamps "d05de8a2-ca05-590c-9c6a-a3826c505eb4")
 			(units
 				(unit
 					(name "A")
@@ -4026,7 +4460,6 @@
 			(ref "C404")
 			(value "10pF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4034,7 +4467,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4043,7 +4477,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4058,10 +4492,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "7ee11b24-3c60-43ad-b612-82161ae29d1a")
+			(tstamps "ac9b07db-3815-5427-b932-e206690e97c4")
 			(units
 				(unit
 					(name "A")
@@ -4080,7 +4514,6 @@
 			(ref "C405")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -4088,7 +4521,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4097,7 +4531,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4112,10 +4546,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "04c50434-aa19-4e2d-9ab1-51787b57cd61")
+			(tstamps "979f4277-bcd1-5aa1-b3b8-43fcc6a108d4")
 			(units
 				(unit
 					(name "A")
@@ -4134,7 +4568,6 @@
 			(ref "C406")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0603_1608Metric")
@@ -4142,7 +4575,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4151,7 +4585,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4166,10 +4600,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "b9473e90-f53e-4a2b-bd3f-bd419b531fd0")
+			(tstamps "515653ee-46d1-5da8-b5ca-bd4080b77978")
 			(units
 				(unit
 					(name "A")
@@ -4188,7 +4622,6 @@
 			(ref "C407")
 			(value "33pF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4196,7 +4629,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4205,7 +4639,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4220,10 +4654,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "861afcbf-426c-458b-b004-df61d56b695a")
+			(tstamps "d0767929-8d80-52c2-aaad-a23b89c87d7c")
 			(units
 				(unit
 					(name "A")
@@ -4242,7 +4676,6 @@
 			(ref "C408")
 			(value "33pF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4250,7 +4683,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4259,7 +4693,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4274,10 +4708,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "204dfd54-2689-45e1-823e-6a9d7b9dcd86")
+			(tstamps "afb647a4-9cc8-59b4-b150-aefd36723c2f")
 			(units
 				(unit
 					(name "A")
@@ -4296,7 +4730,6 @@
 			(ref "C409")
 			(value "33pF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4304,7 +4737,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4313,7 +4747,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4328,10 +4762,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "85811636-c436-48ce-a12d-bc4429f7b283")
+			(tstamps "6f95f555-d984-5c4e-9f86-583186037eef")
 			(units
 				(unit
 					(name "A")
@@ -4350,7 +4784,6 @@
 			(ref "C410")
 			(value "100nF")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4358,7 +4791,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4367,7 +4801,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4382,10 +4816,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "62cae8df-8e56-46a9-be1b-768ba4db1872")
+			(tstamps "b5bd461c-6490-5768-bbea-7c0c38868ef8")
 			(units
 				(unit
 					(name "A")
@@ -4404,7 +4838,6 @@
 			(ref "C411")
 			(value "DNP")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4412,7 +4845,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4421,11 +4855,14 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
 				(value "lte.kicad_sch")
+			)
+			(property
+				(name "dnp")
 			)
 			(property
 				(name "ki_keywords")
@@ -4436,10 +4873,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "2874f5dd-a933-4f08-85ca-9320d0cd8da4")
+			(tstamps "dca34767-df4a-5ca6-bec5-064842fe31a0")
 			(units
 				(unit
 					(name "A")
@@ -4458,7 +4895,6 @@
 			(ref "C412")
 			(value "DNP")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4466,7 +4902,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4475,11 +4912,14 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
 				(value "lte.kicad_sch")
+			)
+			(property
+				(name "dnp")
 			)
 			(property
 				(name "ki_keywords")
@@ -4490,10 +4930,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "668c5c0f-5096-425a-a1f9-cfa7ebc1f748")
+			(tstamps "fe933c8a-564f-5301-9576-1a347361f5d8")
 			(units
 				(unit
 					(name "A")
@@ -4512,7 +4952,6 @@
 			(ref "C413")
 			(value "DNP")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4520,7 +4959,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4529,11 +4969,14 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
 				(value "lte.kicad_sch")
+			)
+			(property
+				(name "dnp")
 			)
 			(property
 				(name "ki_keywords")
@@ -4544,10 +4987,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "60f63b4f-3c40-4e5e-828f-471014f3aa61")
+			(tstamps "cd213476-d830-5e64-8245-d0c7822b9b64")
 			(units
 				(unit
 					(name "A")
@@ -4566,7 +5009,6 @@
 			(ref "C414")
 			(value "DNP")
 			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
 			(fields
 				(field
 					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
@@ -4574,7 +5016,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Unpolarized capacitor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -4583,11 +5026,14 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
 				(value "lte.kicad_sch")
+			)
+			(property
+				(name "dnp")
 			)
 			(property
 				(name "ki_keywords")
@@ -4598,118 +5044,10 @@
 				(value "C_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "f1aad248-d867-4c96-964a-16508e083fc0")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "2")
-						)
-					)
-				)
-			)
-		)
-		(comp
-			(ref "C415")
-			(value "DNP")
-			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
-			(fields
-				(field
-					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description") "Unpolarized capacitor")
-			)
-			(libsource
-				(lib "Device")
-				(part "C")
-				(description "Unpolarized capacitor")
-			)
-			(property
-				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
-			)
-			(property
-				(name "Sheetfile")
-				(value "lte.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "cap capacitor")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "C_*")
-			)
-			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
-				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
-			)
-			(tstamps "4bec1e94-42c5-4653-af66-eff59a4e094b")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "2")
-						)
-					)
-				)
-			)
-		)
-		(comp
-			(ref "C416")
-			(value "DNP")
-			(footprint "Capacitor_SMD:C_0402_1005Metric")
-			(description "Unpolarized capacitor")
-			(fields
-				(field
-					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description") "Unpolarized capacitor")
-			)
-			(libsource
-				(lib "Device")
-				(part "C")
-				(description "Unpolarized capacitor")
-			)
-			(property
-				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
-			)
-			(property
-				(name "Sheetfile")
-				(value "lte.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "cap capacitor")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "C_*")
-			)
-			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
-				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
-			)
-			(tstamps "00068939-a877-49e2-a0e0-1883f166c03a")
+			(tstamps "60cc92d2-460f-56d9-8f6b-19ba427db008")
 			(units
 				(unit
 					(name "A")
@@ -4728,15 +5066,21 @@
 			(ref "J401")
 			(value "Nano-SIM")
 			(footprint "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00")
-			(description "SIM Card")
 			(fields
+				(field
+					(name "MPN") "SIM8060-6-0-14-00-A")
+				(field
+					(name "Manufacturer") "GCT")
+				(field
+					(name "LCSC") "C6296715")
 				(field
 					(name "Footprint") "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "SIM Card")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -4744,8 +5088,20 @@
 				(description "SIM Card")
 			)
 			(property
+				(name "MPN")
+				(value "SIM8060-6-0-14-00-A")
+			)
+			(property
+				(name "Manufacturer")
+				(value "GCT")
+			)
+			(property
+				(name "LCSC")
+				(value "C6296715")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4760,10 +5116,10 @@
 				(value "*SIM*Card*Holder*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "65b80680-31eb-4df8-a54d-979e1d643279")
+			(tstamps "24958086-3a8f-5486-836a-53c810797048")
 			(units
 				(unit
 					(name "A")
@@ -4794,15 +5150,21 @@
 			(ref "J402")
 			(value "U.FL LTE main")
 			(footprint "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
-			(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
 			(fields
+				(field
+					(name "MPN") "U.FL-R-SMT-1(10)")
+				(field
+					(name "Manufacturer") "Hirose")
+				(field
+					(name "LCSC") "C88373")
 				(field
 					(name "Footprint") "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -4810,8 +5172,20 @@
 				(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
 			)
 			(property
+				(name "MPN")
+				(value "U.FL-R-SMT-1(10)")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Hirose")
+			)
+			(property
+				(name "LCSC")
+				(value "C88373")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4826,10 +5200,10 @@
 				(value "*BNC* *SMA* *SMB* *SMC* *Cinch* *LEMO* *UMRF* *MCX* *U.FL*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "9498e98a-0cb8-4e1c-9ff8-04b53d9348ea")
+			(tstamps "9b34dbef-bd8d-5c06-bd1c-c6155469c60d")
 			(units
 				(unit
 					(name "A")
@@ -4846,71 +5220,23 @@
 		)
 		(comp
 			(ref "J403")
-			(value "U.FL LTE div")
-			(footprint "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
-			(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
-			(fields
-				(field
-					(name "Footprint") "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description") "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
-			)
-			(libsource
-				(lib "Connector")
-				(part "Conn_Coaxial")
-				(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
-			)
-			(property
-				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
-			)
-			(property
-				(name "Sheetfile")
-				(value "lte.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "BNC SMA SMB SMC LEMO coaxial connector CINCH RCA MCX MMCX U.FL UMRF")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "*BNC* *SMA* *SMB* *SMC* *Cinch* *LEMO* *UMRF* *MCX* *U.FL*")
-			)
-			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
-				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
-			)
-			(tstamps "4f2a7d48-b598-4d55-b5a2-f694e5fc6c83")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "2")
-						)
-					)
-				)
-			)
-		)
-		(comp
-			(ref "J404")
 			(value "U.FL GNSS")
 			(footprint "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
-			(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
 			(fields
+				(field
+					(name "MPN") "U.FL-R-SMT-1(10)")
+				(field
+					(name "Manufacturer") "Hirose")
+				(field
+					(name "LCSC") "C88373")
 				(field
 					(name "Footprint") "Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical")
 				(field
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -4918,8 +5244,20 @@
 				(description "coaxial connector (BNC, SMA, SMB, SMC, Cinch/RCA, LEMO, ...)")
 			)
 			(property
+				(name "MPN")
+				(value "U.FL-R-SMT-1(10)")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Hirose")
+			)
+			(property
+				(name "LCSC")
+				(value "C88373")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4934,10 +5272,10 @@
 				(value "*BNC* *SMA* *SMB* *SMC* *Cinch* *LEMO* *UMRF* *MCX* *U.FL*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "5dcd1896-13a2-47f7-8840-a1ee6f4ff1e5")
+			(tstamps "45f9a658-680e-5754-b358-2f1ff3f4e420")
 			(units
 				(unit
 					(name "A")
@@ -4957,14 +5295,20 @@
 			(value "MMBT3904")
 			(footprint "Package_TO_SOT_SMD:SOT-23")
 			(datasheet "https://www.onsemi.com/pdf/datasheet/pzt3904-d.pdf")
-			(description "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
 			(fields
+				(field
+					(name "MPN") "MMBT3904")
+				(field
+					(name "Manufacturer") "onsemi")
+				(field
+					(name "LCSC") "C20526")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23")
 				(field
 					(name "Datasheet") "https://www.onsemi.com/pdf/datasheet/pzt3904-d.pdf")
 				(field
-					(name "Description") "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Transistor_BJT")
@@ -4972,8 +5316,20 @@
 				(description "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
 			)
 			(property
+				(name "MPN")
+				(value "MMBT3904")
+			)
+			(property
+				(name "Manufacturer")
+				(value "onsemi")
+			)
+			(property
+				(name "LCSC")
+				(value "C20526")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -4988,10 +5344,10 @@
 				(value "SOT?23*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "562b545e-6020-40a2-b1b6-eceef2974f66")
+			(tstamps "63866b42-6e3f-5728-86a8-93aa22add9f7")
 			(units
 				(unit
 					(name "A")
@@ -5014,14 +5370,20 @@
 			(value "MMBT3904")
 			(footprint "Package_TO_SOT_SMD:SOT-23")
 			(datasheet "https://www.onsemi.com/pdf/datasheet/pzt3904-d.pdf")
-			(description "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
 			(fields
+				(field
+					(name "MPN") "MMBT3904")
+				(field
+					(name "Manufacturer") "onsemi")
+				(field
+					(name "LCSC") "C20526")
 				(field
 					(name "Footprint") "Package_TO_SOT_SMD:SOT-23")
 				(field
 					(name "Datasheet") "https://www.onsemi.com/pdf/datasheet/pzt3904-d.pdf")
 				(field
-					(name "Description") "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Transistor_BJT")
@@ -5029,8 +5391,20 @@
 				(description "0.2A Ic, 40V Vce, Small Signal NPN Transistor, SOT-23")
 			)
 			(property
+				(name "MPN")
+				(value "MMBT3904")
+			)
+			(property
+				(name "Manufacturer")
+				(value "onsemi")
+			)
+			(property
+				(name "LCSC")
+				(value "C20526")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5045,10 +5419,10 @@
 				(value "SOT?23*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "2dacce27-31b8-46ef-8b57-ca5c2512c2b9")
+			(tstamps "c398370a-b3c8-5e43-b8bc-bc817740f76a")
 			(units
 				(unit
 					(name "A")
@@ -5070,7 +5444,6 @@
 			(ref "R401")
 			(value "4.7k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -5078,7 +5451,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5087,7 +5461,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5102,10 +5476,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "c767f712-c346-42e3-a2e4-73ee6056a67b")
+			(tstamps "c8246f5d-fb68-5876-ad82-dafe64095fd0")
 			(units
 				(unit
 					(name "A")
@@ -5124,7 +5498,6 @@
 			(ref "R402")
 			(value "47k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -5132,7 +5505,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5141,7 +5515,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5156,10 +5530,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "f6acab6b-278f-4b08-824a-2cd277dc671f")
+			(tstamps "e63eec76-8143-5960-8365-c41962ff4cd6")
 			(units
 				(unit
 					(name "A")
@@ -5178,7 +5552,6 @@
 			(ref "R403")
 			(value "4.7k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -5186,7 +5559,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5195,7 +5569,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5210,10 +5584,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "4485ea67-050a-4a85-95c0-1d729e7ddbc0")
+			(tstamps "44edc541-11be-5b53-8ae8-cbd91106fa7e")
 			(units
 				(unit
 					(name "A")
@@ -5232,7 +5606,6 @@
 			(ref "R404")
 			(value "47k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0603_1608Metric")
@@ -5240,7 +5613,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5249,7 +5623,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5264,10 +5638,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "05b8a5fc-cc2e-4a59-b758-a68a1b796683")
+			(tstamps "43fc1cbc-e44d-5bbe-8bba-5c266a3867eb")
 			(units
 				(unit
 					(name "A")
@@ -5286,7 +5660,6 @@
 			(ref "R405")
 			(value "22R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5294,7 +5667,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5303,7 +5677,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5318,10 +5692,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "bb16e256-fa5a-4858-b62e-c441b20282ad")
+			(tstamps "778b7699-e641-5cc9-9d27-c8111ac26b32")
 			(units
 				(unit
 					(name "A")
@@ -5340,7 +5714,6 @@
 			(ref "R406")
 			(value "22R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5348,7 +5721,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5357,7 +5731,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5372,10 +5746,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "2f8b93ca-2459-4b62-b16f-8e865235fa03")
+			(tstamps "bdd802d0-c7f8-5ff3-ab1c-33ef5a193b6d")
 			(units
 				(unit
 					(name "A")
@@ -5394,7 +5768,6 @@
 			(ref "R407")
 			(value "22R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5402,7 +5775,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5411,7 +5785,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5426,10 +5800,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "49a9468b-5f1f-407c-83ba-3177c1cd6f91")
+			(tstamps "b93650c3-2606-52c0-8096-61a06161c0f2")
 			(units
 				(unit
 					(name "A")
@@ -5448,7 +5822,6 @@
 			(ref "R408")
 			(value "15k")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5456,7 +5829,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5465,7 +5839,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5480,10 +5854,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "7f02bb52-eb98-40d6-b576-f41e1b718e22")
+			(tstamps "b954ad1b-4eab-5f3c-ab07-1c873bbb5109")
 			(units
 				(unit
 					(name "A")
@@ -5502,7 +5876,6 @@
 			(ref "R409")
 			(value "0R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5510,7 +5883,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5519,7 +5893,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5534,10 +5908,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "a802f02e-ffb1-4436-a8fc-034fa19c0fd1")
+			(tstamps "e86443f8-15b8-5b1a-8f43-c3dfd0f3ab40")
 			(units
 				(unit
 					(name "A")
@@ -5556,7 +5930,6 @@
 			(ref "R410")
 			(value "0R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
 			(fields
 				(field
 					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
@@ -5564,7 +5937,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "Resistor")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Device")
@@ -5573,7 +5947,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5588,64 +5962,10 @@
 				(value "R_*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "c0c65dbb-4847-476b-a045-38ec5b72ce9e")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "2")
-						)
-					)
-				)
-			)
-		)
-		(comp
-			(ref "R411")
-			(value "0R")
-			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(description "Resistor")
-			(fields
-				(field
-					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description") "Resistor")
-			)
-			(libsource
-				(lib "Device")
-				(part "R")
-				(description "Resistor")
-			)
-			(property
-				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
-			)
-			(property
-				(name "Sheetfile")
-				(value "lte.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "R res resistor")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "R_*")
-			)
-			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
-				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
-			)
-			(tstamps "2238a5da-b6e8-4e81-8410-d1e41ec04654")
+			(tstamps "6dab8953-5842-5f98-acd0-8888b5617afe")
 			(units
 				(unit
 					(name "A")
@@ -5664,7 +5984,6 @@
 			(ref "TP401")
 			(value "LTE_USB_VBUS")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5672,7 +5991,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5681,7 +6001,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5696,10 +6016,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "26dc47b7-6e28-468e-9464-9da64a7da68d")
+			(tstamps "f648c9d6-9df7-50f7-bcd2-16b530e00ff6")
 			(units
 				(unit
 					(name "A")
@@ -5715,7 +6035,6 @@
 			(ref "TP402")
 			(value "LTE_USB_DP")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5723,7 +6042,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5732,7 +6052,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5747,10 +6067,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "fdcff302-5e8f-42a6-ab52-4f526189ff12")
+			(tstamps "fb6e1b5a-edee-52b2-9622-cd3eed203e18")
 			(units
 				(unit
 					(name "A")
@@ -5766,7 +6086,6 @@
 			(ref "TP403")
 			(value "LTE_USB_DM")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5774,7 +6093,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5783,7 +6103,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5798,10 +6118,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "c0035662-8f4e-4fa1-814e-a38640c2f793")
+			(tstamps "84d71fe6-f19f-5fd3-a909-5156bac5f6fe")
 			(units
 				(unit
 					(name "A")
@@ -5817,7 +6137,6 @@
 			(ref "TP404")
 			(value "LTE_USB_BOOT")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5825,7 +6144,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5834,7 +6154,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5849,10 +6169,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "53dea599-0389-4a77-bfdb-8b4030d3915e")
+			(tstamps "368b0466-58a0-5a92-b467-ecf794700fc8")
 			(units
 				(unit
 					(name "A")
@@ -5868,7 +6188,6 @@
 			(ref "TP405")
 			(value "LTE_DBG_TXD")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5876,7 +6195,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5885,7 +6205,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5900,10 +6220,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "6fc8a172-7156-442e-b45b-c7a048783687")
+			(tstamps "1bf8d2c0-48cc-525e-9375-5da67d24da95")
 			(units
 				(unit
 					(name "A")
@@ -5919,7 +6239,6 @@
 			(ref "TP406")
 			(value "LTE_DBG_RXD")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5927,7 +6246,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5936,7 +6256,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -5951,10 +6271,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "639e6da3-7cb3-44d8-a2b9-601055f4aa36")
+			(tstamps "c9223890-a698-5d88-8d5a-e9201da96de9")
 			(units
 				(unit
 					(name "A")
@@ -5970,7 +6290,6 @@
 			(ref "TP407")
 			(value "LTE_1V8")
 			(footprint "TestPoint:TestPoint_Pad_D1.0mm")
-			(description "test point")
 			(fields
 				(field
 					(name "Footprint") "TestPoint:TestPoint_Pad_D1.0mm")
@@ -5978,7 +6297,8 @@
 					(name "Datasheet")
 				)
 				(field
-					(name "Description") "test point")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Connector")
@@ -5987,7 +6307,7 @@
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -6002,10 +6322,10 @@
 				(value "Pin* Test*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "f266d2e1-af37-4ae0-808a-4d464ffe1b46")
+			(tstamps "c5c27215-87ae-5375-9d10-162d97854219")
 			(units
 				(unit
 					(name "A")
@@ -6019,26 +6339,44 @@
 		)
 		(comp
 			(ref "U401")
-			(value "EG25-G")
-			(footprint "obd-v2x:Quectel_EG25-G")
-			(datasheet "https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf")
-			(description "Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+			(value "EC200U-EU")
+			(footprint "obd-v2x:Quectel_EC200U")
+			(datasheet "https://python.quectel.com/en/wp-content/uploads/sites/2/2024/11/Quectel_EC200U_Series_QuecOpen_Hardware_Design_V1.0.pdf")
 			(fields
 				(field
-					(name "Footprint") "obd-v2x:Quectel_EG25-G")
+					(name "MPN") "EC200UEUAA-N05-SGNSA")
 				(field
-					(name "Datasheet") "https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf")
+					(name "Manufacturer") "Quectel")
 				(field
-					(name "Description") "Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+					(name "LCSC") "C2942341")
+				(field
+					(name "Footprint") "obd-v2x:Quectel_EC200U")
+				(field
+					(name "Datasheet") "https://python.quectel.com/en/wp-content/uploads/sites/2/2024/11/Quectel_EC200U_Series_QuecOpen_Hardware_Design_V1.0.pdf")
+				(field
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "obd-v2x")
-				(part "EG25-G")
-				(description "Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+				(part "EC200U-EU")
+				(description "Quectel EC200U-EU LTE Cat 1 module (GNSS variant -SGNSA), LCC+LGA-144 28x31 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+			)
+			(property
+				(name "MPN")
+				(value "EC200UEUAA-N05-SGNSA")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Quectel")
+			)
+			(property
+				(name "LCSC")
+				(value "C2942341")
 			)
 			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -6046,13 +6384,13 @@
 			)
 			(property
 				(name "ki_keywords")
-				(value "LTE cellular modem GNSS Quectel")
+				(value "LTE Cat1 cellular modem GNSS Quectel EC200U")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "5b915138-9cd8-441a-af0b-ecc5036b7cda")
+			(tstamps "f55f86f4-aba6-58ee-8a1b-af0e9fae7c58")
 			(units
 				(unit
 					(name "A")
@@ -6121,13 +6459,13 @@
 							(num "9")
 						)
 						(pin
-							(num "106")
-						)
-						(pin
 							(num "107")
 						)
 						(pin
 							(num "108")
+						)
+						(pin
+							(num "76")
 						)
 						(pin
 							(num "109")
@@ -6142,10 +6480,10 @@
 							(num "112")
 						)
 						(pin
-							(num "19")
+							(num "103")
 						)
 						(pin
-							(num "104")
+							(num "19")
 						)
 						(pin
 							(num "22")
@@ -6166,6 +6504,9 @@
 							(num "51")
 						)
 						(pin
+							(num "52")
+						)
+						(pin
 							(num "53")
 						)
 						(pin
@@ -6175,7 +6516,7 @@
 							(num "56")
 						)
 						(pin
-							(num "52")
+							(num "93")
 						)
 						(pin
 							(num "72")
@@ -6205,10 +6546,10 @@
 							(num "92")
 						)
 						(pin
-							(num "93")
+							(num "94")
 						)
 						(pin
-							(num "94")
+							(num "95")
 						)
 						(pin
 							(num "96")
@@ -6232,13 +6573,13 @@
 							(num "102")
 						)
 						(pin
-							(num "103")
-						)
-						(pin
-							(num "95")
+							(num "104")
 						)
 						(pin
 							(num "105")
+						)
+						(pin
+							(num "106")
 						)
 						(pin
 							(num "68")
@@ -6303,14 +6644,20 @@
 			(value "TXS0108EPW")
 			(footprint "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm")
 			(datasheet "www.ti.com/lit/ds/symlink/txs0108e.pdf")
-			(description "Bidirectional  level-shifting voltage translator, TSSOP-20")
 			(fields
+				(field
+					(name "MPN") "TXS0108EPWR")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C17206")
 				(field
 					(name "Footprint") "Package_SO:TSSOP-20_4.4x6.5mm_P0.65mm")
 				(field
 					(name "Datasheet") "www.ti.com/lit/ds/symlink/txs0108e.pdf")
 				(field
-					(name "Description") "Bidirectional  level-shifting voltage translator, TSSOP-20")
+					(name "Description")
+				)
 			)
 			(libsource
 				(lib "Logic_LevelTranslator")
@@ -6318,8 +6665,20 @@
 				(description "Bidirectional  level-shifting voltage translator, TSSOP-20")
 			)
 			(property
+				(name "MPN")
+				(value "TXS0108EPWR")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C17206")
+			)
+			(property
 				(name "Sheetname")
-				(value "LTE + GNSS (EG25-G)")
+				(value "LTE + GNSS (EC200U)")
 			)
 			(property
 				(name "Sheetfile")
@@ -6334,10 +6693,10 @@
 				(value "*SSOP*4.4x6.5mm*P0.65mm*")
 			)
 			(sheetpath
-				(names "/LTE + GNSS (EG25-G)/")
+				(names "/LTE + GNSS (EC200U)/")
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
-			(tstamps "263fa08e-763a-4a87-b256-dd04fd12f39a")
+			(tstamps "715cd188-e37e-54f0-a2ea-860d6f55c4dc")
 			(units
 				(unit
 					(name "A")
@@ -7645,20 +8004,20 @@
 		)
 		(libpart
 			(lib "obd-v2x")
-			(part "EG25-G")
-			(description "Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
-			(docs "https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf")
+			(part "EC200U-EU")
+			(description "Quectel EC200U-EU LTE Cat 1 module (GNSS variant -SGNSA), LCC+LGA-144 28x31 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+			(docs "https://python.quectel.com/en/wp-content/uploads/sites/2/2024/11/Quectel_EC200U_Series_QuecOpen_Hardware_Design_V1.0.pdf")
 			(fields
 				(field
 					(name "Reference") "U")
 				(field
-					(name "Value") "EG25-G")
+					(name "Value") "EC200U-EU")
 				(field
-					(name "Footprint") "obd-v2x:Quectel_EG25-G")
+					(name "Footprint") "obd-v2x:Quectel_EC200U")
 				(field
-					(name "Datasheet") "https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf")
+					(name "Datasheet") "https://python.quectel.com/en/wp-content/uploads/sites/2/2024/11/Quectel_EC200U_Series_QuecOpen_Hardware_Design_V1.0.pdf")
 				(field
-					(name "Description") "Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
+					(name "Description") "Quectel EC200U-EU LTE Cat 1 module (GNSS variant -SGNSA), LCC+LGA-144 28x31 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.")
 			)
 			(pins
 				(pin
@@ -7718,7 +8077,7 @@
 				)
 				(pin
 					(num "13")
-					(name "USIM_PRESENCE")
+					(name "USIM_DET")
 					(type "input")
 				)
 				(pin
@@ -7763,8 +8122,8 @@
 				)
 				(pin
 					(num "35")
-					(name "ANT_DIV")
-					(type "input")
+					(name "ANT_BT/WIFI")
+					(type "bidirectional")
 				)
 				(pin
 					(num "36")
@@ -7908,6 +8267,11 @@
 				)
 				(pin
 					(num "72")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "76")
 					(name "GND")
 					(type "power_in")
 				)
@@ -8470,86 +8834,556 @@
 		)
 		(net
 			(code "2")
-			(name "ANT_DIV_RF")
+			(name "/LTE + GNSS (EC200U)/LTE_ANT_GNSS")
 			(class "Default")
 			(node
-				(ref "C414")
+				(ref "C413")
 				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J403")
-				(pin "1")
-				(pinfunction "In_1")
 				(pintype "passive")
 			)
 			(node
 				(ref "R410")
-				(pin "2")
+				(pin "1")
 				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "47")
+				(pinfunction "ANT_GNSS_47")
+				(pintype "input")
 			)
 		)
 		(net
 			(code "3")
-			(name "ANT_GNSS_RF")
+			(name "/LTE + GNSS (EC200U)/LTE_ANT_MAIN")
 			(class "Default")
 			(node
-				(ref "C416")
+				(ref "C411")
 				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J404")
-				(pin "1")
-				(pinfunction "In_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R411")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "4")
-			(name "ANT_MAIN_RF")
-			(class "Default")
-			(node
-				(ref "C412")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J402")
-				(pin "1")
-				(pinfunction "In_1")
 				(pintype "passive")
 			)
 			(node
 				(ref "R409")
-				(pin "2")
+				(pin "1")
 				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "49")
+				(pinfunction "ANT_MAIN_49")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "4")
+			(name "/LTE + GNSS (EC200U)/LTE_CTS_1V8")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "64")
+				(pinfunction "CTS_64")
+				(pintype "output")
+			)
+			(node
+				(ref "U402")
+				(pin "5")
+				(pinfunction "A4_5")
+				(pintype "bidirectional")
 			)
 		)
 		(net
 			(code "5")
-			(name "BUCK_BOOT")
+			(name "/LTE + GNSS (EC200U)/LTE_DBG_RXD")
 			(class "Default")
 			(node
-				(ref "C104")
+				(ref "TP406")
 				(pin "1")
+				(pinfunction "1_1")
 				(pintype "passive")
 			)
 			(node
-				(ref "U102")
-				(pin "1")
-				(pinfunction "BOOT_1")
+				(ref "U401")
+				(pin "11")
+				(pinfunction "DBG_RXD_11")
 				(pintype "input")
 			)
 		)
 		(net
 			(code "6")
-			(name "BUCK_COMP")
+			(name "/LTE + GNSS (EC200U)/LTE_DBG_TXD")
+			(class "Default")
+			(node
+				(ref "TP405")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "12")
+				(pinfunction "DBG_TXD_12")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "7")
+			(name "/LTE + GNSS (EC200U)/LTE_PWRKEY")
+			(class "Default")
+			(node
+				(ref "Q401")
+				(pin "3")
+				(pinfunction "C_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "21")
+				(pinfunction "PWRKEY_21")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "8")
+			(name "/LTE + GNSS (EC200U)/LTE_RESET_N")
+			(class "Default")
+			(node
+				(ref "Q402")
+				(pin "3")
+				(pinfunction "C_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "20")
+				(pinfunction "RESET_N_20")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "9")
+			(name "/LTE + GNSS (EC200U)/LTE_RTS_1V8")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "65")
+				(pinfunction "RTS_65")
+				(pintype "input")
+			)
+			(node
+				(ref "U402")
+				(pin "4")
+				(pinfunction "A3_4")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "10")
+			(name "/LTE + GNSS (EC200U)/LTE_RXD_1V8")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "68")
+				(pinfunction "RXD_68")
+				(pintype "input")
+			)
+			(node
+				(ref "U402")
+				(pin "1")
+				(pinfunction "A1_1")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "11")
+			(name "/LTE + GNSS (EC200U)/LTE_STATUS")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "61")
+				(pinfunction "STATUS_61")
+				(pintype "open_collector")
+			)
+			(node
+				(ref "U402")
+				(pin "6")
+				(pinfunction "A5_6")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "12")
+			(name "/LTE + GNSS (EC200U)/LTE_TXD_1V8")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "67")
+				(pinfunction "TXD_67")
+				(pintype "output")
+			)
+			(node
+				(ref "U402")
+				(pin "3")
+				(pinfunction "A2_3")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "13")
+			(name "/LTE + GNSS (EC200U)/LTE_USB_BOOT")
+			(class "Default")
+			(node
+				(ref "TP404")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "115")
+				(pinfunction "USB_BOOT_115")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "14")
+			(name "/LTE + GNSS (EC200U)/LTE_USB_DM")
+			(class "Default")
+			(node
+				(ref "TP403")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "70")
+				(pinfunction "USB_DM_70")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "15")
+			(name "/LTE + GNSS (EC200U)/LTE_USB_DP")
+			(class "Default")
+			(node
+				(ref "TP402")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "69")
+				(pinfunction "USB_DP_69")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "16")
+			(name "/LTE + GNSS (EC200U)/LTE_USB_VBUS")
+			(class "Default")
+			(node
+				(ref "TP401")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "71")
+				(pinfunction "USB_VBUS_71")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "17")
+			(name "/LTE + GNSS (EC200U)/LTE_USIM_CLK")
+			(class "Default")
+			(node
+				(ref "R406")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "16")
+				(pinfunction "USIM_CLK_16")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "18")
+			(name "/LTE + GNSS (EC200U)/LTE_USIM_DATA")
+			(class "Default")
+			(node
+				(ref "R405")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R408")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "15")
+				(pinfunction "USIM_DATA_15")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "19")
+			(name "/LTE + GNSS (EC200U)/LTE_USIM_RST")
+			(class "Default")
+			(node
+				(ref "R407")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "17")
+				(pinfunction "USIM_RST_17")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "20")
+			(name "/LTE + GNSS (EC200U)/SIM_CLK")
+			(class "Default")
+			(node
+				(ref "C408")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J401")
+				(pin "3")
+				(pinfunction "CLK_3")
+				(pintype "input")
+			)
+			(node
+				(ref "R406")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "21")
+			(name "/LTE + GNSS (EC200U)/SIM_IO")
+			(class "Default")
+			(node
+				(ref "C407")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J401")
+				(pin "7")
+				(pinfunction "I/O_7")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "R405")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "22")
+			(name "/LTE + GNSS (EC200U)/SIM_RST")
+			(class "Default")
+			(node
+				(ref "C409")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J401")
+				(pin "2")
+				(pinfunction "RST_2")
+				(pintype "input")
+			)
+			(node
+				(ref "R407")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "23")
+			(name "/LTE + GNSS (EC200U)/SIM_VDD")
+			(class "Default")
+			(node
+				(ref "C410")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J401")
+				(pin "1")
+				(pinfunction "VCC_1")
+				(pintype "power_in")
+			)
+			(node
+				(ref "R408")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U401")
+				(pin "14")
+				(pinfunction "USIM_VDD_14")
+				(pintype "power_out")
+			)
+		)
+		(net
+			(code "24")
+			(name "/MCU (ESP32-C5, USB)/ESP_BOOT")
+			(class "Default")
+			(node
+				(ref "R302")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "SW302")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U301")
+				(pin "15")
+				(pinfunction "IO28_15")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "25")
+			(name "/MCU (ESP32-C5, USB)/LED_DIN")
+			(class "Default")
+			(node
+				(ref "D301")
+				(pin "3")
+				(pinfunction "DIN_3")
+				(pintype "input")
+			)
+			(node
+				(ref "U301")
+				(pin "18")
+				(pinfunction "IO27_18")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "26")
+			(name "/MCU (ESP32-C5, USB)/UART0_RX")
+			(class "Default")
+			(node
+				(ref "TP302")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U301")
+				(pin "24")
+				(pinfunction "IO12/RXD0_24")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "27")
+			(name "/MCU (ESP32-C5, USB)/UART0_TX")
+			(class "Default")
+			(node
+				(ref "TP301")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U301")
+				(pin "25")
+				(pinfunction "IO11/TXD0_25")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "28")
+			(name "/MCU (ESP32-C5, USB)/USB_DN")
+			(class "Default")
+			(node
+				(ref "J301")
+				(pin "A7")
+				(pinfunction "D-_A7")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "J301")
+				(pin "B7")
+				(pinfunction "D-_B7")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U301")
+				(pin "13")
+				(pinfunction "IO13/USB_D-_13")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U302")
+				(pin "3")
+				(pinfunction "I/O2_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U302")
+				(pin "4")
+				(pinfunction "I/O2_4")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "29")
+			(name "/MCU (ESP32-C5, USB)/USB_DP")
+			(class "Default")
+			(node
+				(ref "J301")
+				(pin "A6")
+				(pinfunction "D+_A6")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "J301")
+				(pin "B6")
+				(pinfunction "D+_B6")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U301")
+				(pin "14")
+				(pinfunction "IO14/USB_D+_14")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U302")
+				(pin "1")
+				(pinfunction "I/O1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U302")
+				(pin "6")
+				(pinfunction "I/O1_6")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "30")
+			(name "/Power/BUCK_COMP")
 			(class "Default")
 			(node
 				(ref "C106")
@@ -8569,23 +9403,8 @@
 			)
 		)
 		(net
-			(code "7")
-			(name "BUCK_COMP_RC")
-			(class "Default")
-			(node
-				(ref "C105")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R106")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "8")
-			(name "BUCK_EN")
+			(code "31")
+			(name "/Power/BUCK_EN")
 			(class "Default")
 			(node
 				(ref "R101")
@@ -8605,8 +9424,8 @@
 			)
 		)
 		(net
-			(code "9")
-			(name "BUCK_FB")
+			(code "32")
+			(name "/Power/BUCK_FB")
 			(class "Default")
 			(node
 				(ref "R104")
@@ -8626,97 +9445,58 @@
 			)
 		)
 		(net
-			(code "10")
-			(name "BUCK_RT")
+			(code "33")
+			(name "/Power/VBAT_F")
 			(class "Default")
 			(node
-				(ref "R103")
-				(pin "1")
+				(ref "C101")
+				(pin "2")
 				(pintype "passive")
 			)
 			(node
-				(ref "U102")
-				(pin "4")
-				(pinfunction "RT/CLK_4")
+				(ref "D101")
+				(pin "1")
+				(pinfunction "A1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "F101")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "Q101")
+				(pin "1")
+				(pinfunction "S_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "Q101")
+				(pin "2")
+				(pinfunction "S_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "Q101")
+				(pin "3")
+				(pinfunction "S_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U101")
+				(pin "3")
+				(pinfunction "EN_3")
 				(pintype "input")
 			)
-		)
-		(net
-			(code "11")
-			(name "BUCK_SW")
-			(class "Default")
 			(node
-				(ref "C104")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "D103")
-				(pin "1")
-				(pinfunction "K_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "L101")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U102")
-				(pin "8")
-				(pinfunction "SW_8")
-				(pintype "output")
-			)
-		)
-		(net
-			(code "12")
-			(name "CAN_H")
-			(class "Default")
-			(node
-				(ref "D201")
-				(pin "1")
-				(pinfunction "K_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J201")
+				(ref "U101")
 				(pin "6")
-				(pinfunction "CAN_H_6")
-				(pintype "passive")
-			)
-			(node
-				(ref "U201")
-				(pin "7")
-				(pinfunction "CANH_7")
-				(pintype "bidirectional")
+				(pinfunction "ANODE_6")
+				(pintype "power_in")
 			)
 		)
 		(net
-			(code "13")
-			(name "CAN_L")
-			(class "Default")
-			(node
-				(ref "D201")
-				(pin "2")
-				(pinfunction "K_2")
-				(pintype "passive")
-			)
-			(node
-				(ref "J201")
-				(pin "14")
-				(pinfunction "CAN_L_14")
-				(pintype "passive")
-			)
-			(node
-				(ref "U201")
-				(pin "6")
-				(pinfunction "CANL_6")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "14")
+			(code "34")
 			(name "CAN_RX")
 			(class "Default")
 			(node
@@ -8733,7 +9513,7 @@
 			)
 		)
 		(net
-			(code "15")
+			(code "35")
 			(name "CAN_STB")
 			(class "Default")
 			(node
@@ -8755,7 +9535,7 @@
 			)
 		)
 		(net
-			(code "16")
+			(code "36")
 			(name "CAN_TX")
 			(class "Default")
 			(node
@@ -8772,56 +9552,7 @@
 			)
 		)
 		(net
-			(code "17")
-			(name "ESP_BOOT")
-			(class "Default")
-			(node
-				(ref "R302")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "SW302")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U301")
-				(pin "15")
-				(pinfunction "IO28_15")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "18")
-			(name "ESP_EN")
-			(class "Default")
-			(node
-				(ref "C301")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R301")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "SW301")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U301")
-				(pin "3")
-				(pinfunction "EN_3")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "19")
+			(code "37")
 			(name "GND")
 			(class "Default")
 			(node
@@ -8975,16 +9706,6 @@
 				(pintype "passive")
 			)
 			(node
-				(ref "C415")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "C416")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
 				(ref "D101")
 				(pin "2")
 				(pinfunction "A2_2")
@@ -9070,12 +9791,6 @@
 			)
 			(node
 				(ref "J403")
-				(pin "2")
-				(pinfunction "Ext_2")
-				(pintype "passive")
-			)
-			(node
-				(ref "J404")
 				(pin "2")
 				(pinfunction "Ext_2")
 				(pintype "passive")
@@ -9402,6 +10117,12 @@
 			)
 			(node
 				(ref "U401")
+				(pin "76")
+				(pinfunction "GND_76")
+				(pintype "power_in")
+			)
+			(node
+				(ref "U401")
 				(pin "8")
 				(pinfunction "GND_8")
 				(pintype "power_in")
@@ -9510,23 +10231,7 @@
 			)
 		)
 		(net
-			(code "20")
-			(name "KL_PU")
-			(class "Default")
-			(node
-				(ref "D202")
-				(pin "1")
-				(pinfunction "K_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R204")
-				(pin "1")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "21")
+			(code "38")
 			(name "KL_RX")
 			(class "Default")
 			(node
@@ -9548,7 +10253,7 @@
 			)
 		)
 		(net
-			(code "22")
+			(code "39")
 			(name "KL_SLP_N")
 			(class "Default")
 			(node
@@ -9570,7 +10275,7 @@
 			)
 		)
 		(net
-			(code "23")
+			(code "40")
 			(name "KL_TX")
 			(class "Default")
 			(node
@@ -9587,90 +10292,7 @@
 			)
 		)
 		(net
-			(code "24")
-			(name "K_LINE")
-			(class "Default")
-			(node
-				(ref "C203")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "D203")
-				(pin "1")
-				(pinfunction "A1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J201")
-				(pin "7")
-				(pinfunction "K_LINE_7")
-				(pintype "passive")
-			)
-			(node
-				(ref "R204")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "U202")
-				(pin "6")
-				(pinfunction "LIN_6")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "25")
-			(name "LED_DIN")
-			(class "Default")
-			(node
-				(ref "D301")
-				(pin "3")
-				(pinfunction "DIN_3")
-				(pintype "input")
-			)
-			(node
-				(ref "U301")
-				(pin "18")
-				(pinfunction "IO27_18")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "26")
-			(name "LM_GATE")
-			(class "Default")
-			(node
-				(ref "Q101")
-				(pin "4")
-				(pinfunction "G_4")
-				(pintype "passive")
-			)
-			(node
-				(ref "U101")
-				(pin "5")
-				(pinfunction "GATE_5")
-				(pintype "output")
-			)
-		)
-		(net
-			(code "27")
-			(name "LM_VCAP")
-			(class "Default")
-			(node
-				(ref "C101")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U101")
-				(pin "1")
-				(pinfunction "VCAP_1")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "28")
+			(code "41")
 			(name "LTE_1V8")
 			(class "Default")
 			(node
@@ -9704,138 +10326,7 @@
 			)
 		)
 		(net
-			(code "29")
-			(name "LTE_ANT_DIV")
-			(class "Default")
-			(node
-				(ref "C413")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R410")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "35")
-				(pinfunction "ANT_DIV_35")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "30")
-			(name "LTE_ANT_GNSS")
-			(class "Default")
-			(node
-				(ref "C415")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R411")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "47")
-				(pinfunction "ANT_GNSS_47")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "31")
-			(name "LTE_ANT_MAIN")
-			(class "Default")
-			(node
-				(ref "C411")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R409")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "49")
-				(pinfunction "ANT_MAIN_49")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "32")
-			(name "LTE_CTS_1V8")
-			(class "Default")
-			(node
-				(ref "U401")
-				(pin "64")
-				(pinfunction "CTS_64")
-				(pintype "output")
-			)
-			(node
-				(ref "U402")
-				(pin "5")
-				(pinfunction "A4_5")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "33")
-			(name "LTE_DBG_RXD")
-			(class "Default")
-			(node
-				(ref "TP406")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "11")
-				(pinfunction "DBG_RXD_11")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "34")
-			(name "LTE_DBG_TXD")
-			(class "Default")
-			(node
-				(ref "TP405")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "12")
-				(pinfunction "DBG_TXD_12")
-				(pintype "output")
-			)
-		)
-		(net
-			(code "35")
-			(name "LTE_PWRKEY")
-			(class "Default")
-			(node
-				(ref "Q401")
-				(pin "3")
-				(pinfunction "C_3")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "21")
-				(pinfunction "PWRKEY_21")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "36")
+			(code "42")
 			(name "LTE_PWRKEY_CTL")
 			(class "Default")
 			(node
@@ -9851,7 +10342,7 @@
 			)
 		)
 		(net
-			(code "37")
+			(code "43")
 			(name "LTE_PWR_EN")
 			(class "Default")
 			(node
@@ -9873,7 +10364,7 @@
 			)
 		)
 		(net
-			(code "38")
+			(code "44")
 			(name "LTE_RESET_CTL")
 			(class "Default")
 			(node
@@ -9889,75 +10380,7 @@
 			)
 		)
 		(net
-			(code "39")
-			(name "LTE_RESET_N")
-			(class "Default")
-			(node
-				(ref "Q402")
-				(pin "3")
-				(pinfunction "C_3")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "20")
-				(pinfunction "RESET_N_20")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "40")
-			(name "LTE_RTS_1V8")
-			(class "Default")
-			(node
-				(ref "U401")
-				(pin "65")
-				(pinfunction "RTS_65")
-				(pintype "input")
-			)
-			(node
-				(ref "U402")
-				(pin "4")
-				(pinfunction "A3_4")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "41")
-			(name "LTE_RXD_1V8")
-			(class "Default")
-			(node
-				(ref "U401")
-				(pin "68")
-				(pinfunction "RXD_68")
-				(pintype "input")
-			)
-			(node
-				(ref "U402")
-				(pin "1")
-				(pinfunction "A1_1")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "42")
-			(name "LTE_STATUS")
-			(class "Default")
-			(node
-				(ref "U401")
-				(pin "61")
-				(pinfunction "STATUS_61")
-				(pintype "open_collector")
-			)
-			(node
-				(ref "U402")
-				(pin "6")
-				(pinfunction "A5_6")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "43")
+			(code "45")
 			(name "LTE_STATUS_3V3")
 			(class "Default")
 			(node
@@ -9974,8 +10397,305 @@
 			)
 		)
 		(net
-			(code "44")
-			(name "LTE_SW_G")
+			(code "46")
+			(name "MCU_CTS_LTE")
+			(class "Default")
+			(node
+				(ref "U301")
+				(pin "26")
+				(pinfunction "IO25_26")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U402")
+				(pin "16")
+				(pinfunction "B4_16")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "47")
+			(name "MCU_RTS_LTE")
+			(class "Default")
+			(node
+				(ref "U301")
+				(pin "27")
+				(pinfunction "IO26_27")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U402")
+				(pin "17")
+				(pinfunction "B3_17")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "48")
+			(name "MCU_RX_LTE")
+			(class "Default")
+			(node
+				(ref "U301")
+				(pin "23")
+				(pinfunction "IO24_23")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U402")
+				(pin "18")
+				(pinfunction "B2_18")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "49")
+			(name "MCU_TX_LTE")
+			(class "Default")
+			(node
+				(ref "U301")
+				(pin "21")
+				(pinfunction "IO23_21")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U402")
+				(pin "20")
+				(pinfunction "B1_20")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "50")
+			(name "Net-(C105-Pad1)")
+			(class "Default")
+			(node
+				(ref "C105")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R106")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "51")
+			(name "Net-(D103-K)")
+			(class "Default")
+			(node
+				(ref "C104")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "D103")
+				(pin "1")
+				(pinfunction "K_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "L101")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U102")
+				(pin "8")
+				(pinfunction "SW_8")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "52")
+			(name "Net-(D202-K)")
+			(class "Default")
+			(node
+				(ref "D202")
+				(pin "1")
+				(pinfunction "K_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R204")
+				(pin "1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "53")
+			(name "Net-(D203-A1)")
+			(class "Default")
+			(node
+				(ref "C203")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "D203")
+				(pin "1")
+				(pinfunction "A1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J201")
+				(pin "7")
+				(pinfunction "K_LINE_7")
+				(pintype "passive")
+			)
+			(node
+				(ref "R204")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U202")
+				(pin "6")
+				(pinfunction "LIN_6")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "54")
+			(name "Net-(J201-CAN_H)")
+			(class "Default")
+			(node
+				(ref "D201")
+				(pin "1")
+				(pinfunction "K_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J201")
+				(pin "6")
+				(pinfunction "CAN_H_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "U201")
+				(pin "7")
+				(pinfunction "CANH_7")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "55")
+			(name "Net-(J201-CAN_L)")
+			(class "Default")
+			(node
+				(ref "D201")
+				(pin "2")
+				(pinfunction "K_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J201")
+				(pin "14")
+				(pinfunction "CAN_L_14")
+				(pintype "passive")
+			)
+			(node
+				(ref "U201")
+				(pin "6")
+				(pinfunction "CANL_6")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "56")
+			(name "Net-(J301-CC1)")
+			(class "Default")
+			(node
+				(ref "J301")
+				(pin "A5")
+				(pinfunction "CC1_A5")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "R303")
+				(pin "1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "57")
+			(name "Net-(J301-CC2)")
+			(class "Default")
+			(node
+				(ref "J301")
+				(pin "B5")
+				(pinfunction "CC2_B5")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "R304")
+				(pin "1")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "58")
+			(name "Net-(J402-In)")
+			(class "Default")
+			(node
+				(ref "C412")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J402")
+				(pin "1")
+				(pinfunction "In_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R409")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "59")
+			(name "Net-(J403-In)")
+			(class "Default")
+			(node
+				(ref "C414")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J403")
+				(pin "1")
+				(pinfunction "In_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R410")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "60")
+			(name "Net-(Q101-G)")
+			(class "Default")
+			(node
+				(ref "Q101")
+				(pin "4")
+				(pinfunction "G_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U101")
+				(pin "5")
+				(pinfunction "GATE_5")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "61")
+			(name "Net-(Q102-G)")
 			(class "Default")
 			(node
 				(ref "Q102")
@@ -9996,230 +10716,8 @@
 			)
 		)
 		(net
-			(code "45")
-			(name "LTE_TXD_1V8")
-			(class "Default")
-			(node
-				(ref "U401")
-				(pin "67")
-				(pinfunction "TXD_67")
-				(pintype "output")
-			)
-			(node
-				(ref "U402")
-				(pin "3")
-				(pinfunction "A2_3")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "46")
-			(name "LTE_USB_BOOT")
-			(class "Default")
-			(node
-				(ref "TP404")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "115")
-				(pinfunction "USB_BOOT_115")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "47")
-			(name "LTE_USB_DM")
-			(class "Default")
-			(node
-				(ref "TP403")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "70")
-				(pinfunction "USB_DM_70")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "48")
-			(name "LTE_USB_DP")
-			(class "Default")
-			(node
-				(ref "TP402")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "69")
-				(pinfunction "USB_DP_69")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "49")
-			(name "LTE_USB_VBUS")
-			(class "Default")
-			(node
-				(ref "TP401")
-				(pin "1")
-				(pinfunction "1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "71")
-				(pinfunction "USB_VBUS_71")
-				(pintype "input")
-			)
-		)
-		(net
-			(code "50")
-			(name "LTE_USIM_CLK")
-			(class "Default")
-			(node
-				(ref "R406")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "16")
-				(pinfunction "USIM_CLK_16")
-				(pintype "output")
-			)
-		)
-		(net
-			(code "51")
-			(name "LTE_USIM_DATA")
-			(class "Default")
-			(node
-				(ref "R405")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R408")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "15")
-				(pinfunction "USIM_DATA_15")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "52")
-			(name "LTE_USIM_RST")
-			(class "Default")
-			(node
-				(ref "R407")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "17")
-				(pinfunction "USIM_RST_17")
-				(pintype "output")
-			)
-		)
-		(net
-			(code "53")
-			(name "MCU_CTS_LTE")
-			(class "Default")
-			(node
-				(ref "U301")
-				(pin "26")
-				(pinfunction "IO25_26")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U402")
-				(pin "16")
-				(pinfunction "B4_16")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "54")
-			(name "MCU_RTS_LTE")
-			(class "Default")
-			(node
-				(ref "U301")
-				(pin "27")
-				(pinfunction "IO26_27")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U402")
-				(pin "17")
-				(pinfunction "B3_17")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "55")
-			(name "MCU_RX_LTE")
-			(class "Default")
-			(node
-				(ref "U301")
-				(pin "23")
-				(pinfunction "IO24_23")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U402")
-				(pin "18")
-				(pinfunction "B2_18")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "56")
-			(name "MCU_TX_LTE")
-			(class "Default")
-			(node
-				(ref "U301")
-				(pin "21")
-				(pinfunction "IO23_21")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U402")
-				(pin "20")
-				(pinfunction "B1_20")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "57")
-			(name "OBD_VBAT")
-			(class "Default")
-			(node
-				(ref "F101")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J201")
-				(pin "16")
-				(pinfunction "VBAT_16")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "58")
-			(name "PWRKEY_B")
+			(code "62")
+			(name "Net-(Q401-B)")
 			(class "Default")
 			(node
 				(ref "Q401")
@@ -10239,8 +10737,8 @@
 			)
 		)
 		(net
-			(code "59")
-			(name "RESET_B")
+			(code "63")
+			(name "Net-(Q402-B)")
 			(class "Default")
 			(node
 				(ref "Q402")
@@ -10260,284 +10758,98 @@
 			)
 		)
 		(net
-			(code "60")
-			(name "SIM_CLK")
-			(class "Default")
-			(node
-				(ref "C408")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J401")
-				(pin "3")
-				(pinfunction "CLK_3")
-				(pintype "input")
-			)
-			(node
-				(ref "R406")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "61")
-			(name "SIM_IO")
-			(class "Default")
-			(node
-				(ref "C407")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J401")
-				(pin "7")
-				(pinfunction "I/O_7")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "R405")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "62")
-			(name "SIM_RST")
-			(class "Default")
-			(node
-				(ref "C409")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J401")
-				(pin "2")
-				(pinfunction "RST_2")
-				(pintype "input")
-			)
-			(node
-				(ref "R407")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "63")
-			(name "SIM_VDD")
-			(class "Default")
-			(node
-				(ref "C410")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J401")
-				(pin "1")
-				(pinfunction "VCC_1")
-				(pintype "power_in")
-			)
-			(node
-				(ref "R408")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U401")
-				(pin "14")
-				(pinfunction "USIM_VDD_14")
-				(pintype "power_out")
-			)
-		)
-		(net
 			(code "64")
-			(name "UART0_RX")
+			(name "Net-(U101-VCAP)")
 			(class "Default")
 			(node
-				(ref "TP302")
+				(ref "C101")
 				(pin "1")
-				(pinfunction "1_1")
 				(pintype "passive")
 			)
 			(node
-				(ref "U301")
-				(pin "24")
-				(pinfunction "IO12/RXD0_24")
-				(pintype "bidirectional")
+				(ref "U101")
+				(pin "1")
+				(pinfunction "VCAP_1")
+				(pintype "passive")
 			)
 		)
 		(net
 			(code "65")
-			(name "UART0_TX")
+			(name "Net-(U102-BOOT)")
 			(class "Default")
 			(node
-				(ref "TP301")
+				(ref "C104")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U102")
+				(pin "1")
+				(pinfunction "BOOT_1")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "66")
+			(name "Net-(U102-RT{slash}CLK)")
+			(class "Default")
+			(node
+				(ref "R103")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U102")
+				(pin "4")
+				(pinfunction "RT/CLK_4")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "67")
+			(name "Net-(U301-EN)")
+			(class "Default")
+			(node
+				(ref "C301")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R301")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "SW301")
 				(pin "1")
 				(pinfunction "1_1")
 				(pintype "passive")
 			)
 			(node
 				(ref "U301")
-				(pin "25")
-				(pinfunction "IO11/TXD0_25")
-				(pintype "bidirectional")
-			)
-		)
-		(net
-			(code "66")
-			(name "USB_CC1")
-			(class "Default")
-			(node
-				(ref "J301")
-				(pin "A5")
-				(pinfunction "CC1_A5")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "R303")
-				(pin "1")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "67")
-			(name "USB_CC2")
-			(class "Default")
-			(node
-				(ref "J301")
-				(pin "B5")
-				(pinfunction "CC2_B5")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "R304")
-				(pin "1")
-				(pintype "passive")
+				(pin "3")
+				(pinfunction "EN_3")
+				(pintype "input")
 			)
 		)
 		(net
 			(code "68")
-			(name "USB_DN")
+			(name "OBD_VBAT")
 			(class "Default")
 			(node
-				(ref "J301")
-				(pin "A7")
-				(pinfunction "D-_A7")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "J301")
-				(pin "B7")
-				(pinfunction "D-_B7")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U301")
-				(pin "13")
-				(pinfunction "IO13/USB_D-_13")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U302")
-				(pin "3")
-				(pinfunction "I/O2_3")
+				(ref "F101")
+				(pin "1")
 				(pintype "passive")
 			)
 			(node
-				(ref "U302")
-				(pin "4")
-				(pinfunction "I/O2_4")
+				(ref "J201")
+				(pin "16")
+				(pinfunction "VBAT_16")
 				(pintype "passive")
 			)
 		)
 		(net
 			(code "69")
-			(name "USB_DP")
-			(class "Default")
-			(node
-				(ref "J301")
-				(pin "A6")
-				(pinfunction "D+_A6")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "J301")
-				(pin "B6")
-				(pinfunction "D+_B6")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U301")
-				(pin "14")
-				(pinfunction "IO14/USB_D+_14")
-				(pintype "bidirectional")
-			)
-			(node
-				(ref "U302")
-				(pin "1")
-				(pinfunction "I/O1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "U302")
-				(pin "6")
-				(pinfunction "I/O1_6")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "70")
-			(name "VBAT_F")
-			(class "Default")
-			(node
-				(ref "C101")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "D101")
-				(pin "1")
-				(pinfunction "A1_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "F101")
-				(pin "2")
-				(pintype "passive")
-			)
-			(node
-				(ref "Q101")
-				(pin "1")
-				(pinfunction "S_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "Q101")
-				(pin "2")
-				(pinfunction "S_2")
-				(pintype "passive")
-			)
-			(node
-				(ref "Q101")
-				(pin "3")
-				(pinfunction "S_3")
-				(pintype "passive")
-			)
-			(node
-				(ref "U101")
-				(pin "3")
-				(pinfunction "EN_3")
-				(pintype "input")
-			)
-			(node
-				(ref "U101")
-				(pin "6")
-				(pinfunction "ANODE_6")
-				(pintype "power_in")
-			)
-		)
-		(net
-			(code "71")
 			(name "VBAT_LTE")
 			(class "Default")
 			(node
@@ -10592,7 +10904,7 @@
 			)
 		)
 		(net
-			(code "72")
+			(code "70")
 			(name "VBUS_USB")
 			(class "Default")
 			(node
@@ -10633,7 +10945,7 @@
 			)
 		)
 		(net
-			(code "73")
+			(code "71")
 			(name "VIN_PROT")
 			(class "Default")
 			(node
@@ -10705,7 +11017,7 @@
 			)
 		)
 		(net
-			(code "74")
+			(code "72")
 			(name "VSENSE")
 			(class "Default")
 			(node
@@ -10731,7 +11043,7 @@
 			)
 		)
 		(net
-			(code "75")
+			(code "73")
 			(name "VSYS_3V8")
 			(class "Default")
 			(node
@@ -10796,7 +11108,7 @@
 			)
 		)
 		(net
-			(code "76")
+			(code "74")
 			(name "unconnected-(D301-DOUT-Pad1)")
 			(class "Default")
 			(node
@@ -10807,7 +11119,7 @@
 			)
 		)
 		(net
-			(code "77")
+			(code "75")
 			(name "unconnected-(J201-J1850+-Pad2)")
 			(class "Default")
 			(node
@@ -10818,7 +11130,7 @@
 			)
 		)
 		(net
-			(code "78")
+			(code "76")
 			(name "unconnected-(J201-J1850--Pad10)")
 			(class "Default")
 			(node
@@ -10829,7 +11141,7 @@
 			)
 		)
 		(net
-			(code "79")
+			(code "77")
 			(name "unconnected-(J201-L_LINE-Pad15)")
 			(class "Default")
 			(node
@@ -10840,7 +11152,7 @@
 			)
 		)
 		(net
-			(code "80")
+			(code "78")
 			(name "unconnected-(J201-OEM1-Pad1)")
 			(class "Default")
 			(node
@@ -10851,7 +11163,7 @@
 			)
 		)
 		(net
-			(code "81")
+			(code "79")
 			(name "unconnected-(J201-OEM3-Pad3)")
 			(class "Default")
 			(node
@@ -10862,7 +11174,7 @@
 			)
 		)
 		(net
-			(code "82")
+			(code "80")
 			(name "unconnected-(J201-OEM8-Pad8)")
 			(class "Default")
 			(node
@@ -10873,7 +11185,7 @@
 			)
 		)
 		(net
-			(code "83")
+			(code "81")
 			(name "unconnected-(J201-OEM9-Pad9)")
 			(class "Default")
 			(node
@@ -10884,7 +11196,7 @@
 			)
 		)
 		(net
-			(code "84")
+			(code "82")
 			(name "unconnected-(J201-OEM11-Pad11)")
 			(class "Default")
 			(node
@@ -10895,7 +11207,7 @@
 			)
 		)
 		(net
-			(code "85")
+			(code "83")
 			(name "unconnected-(J201-OEM12-Pad12)")
 			(class "Default")
 			(node
@@ -10906,7 +11218,7 @@
 			)
 		)
 		(net
-			(code "86")
+			(code "84")
 			(name "unconnected-(J201-OEM13-Pad13)")
 			(class "Default")
 			(node
@@ -10917,7 +11229,7 @@
 			)
 		)
 		(net
-			(code "87")
+			(code "85")
 			(name "unconnected-(J301-SBU1-PadA8)")
 			(class "Default")
 			(node
@@ -10928,7 +11240,7 @@
 			)
 		)
 		(net
-			(code "88")
+			(code "86")
 			(name "unconnected-(J301-SBU2-PadB8)")
 			(class "Default")
 			(node
@@ -10939,7 +11251,7 @@
 			)
 		)
 		(net
-			(code "89")
+			(code "87")
 			(name "unconnected-(J401-VPP-Pad6)")
 			(class "Default")
 			(node
@@ -10950,7 +11262,7 @@
 			)
 		)
 		(net
-			(code "90")
+			(code "88")
 			(name "unconnected-(U103-NC-Pad4)")
 			(class "Default")
 			(node
@@ -10961,7 +11273,7 @@
 			)
 		)
 		(net
-			(code "91")
+			(code "89")
 			(name "unconnected-(U202-INH-Pad8)")
 			(class "Default")
 			(node
@@ -10972,7 +11284,7 @@
 			)
 		)
 		(net
-			(code "92")
+			(code "90")
 			(name "unconnected-(U301-ANT-Pad31)")
 			(class "Default")
 			(node
@@ -10983,7 +11295,7 @@
 			)
 		)
 		(net
-			(code "93")
+			(code "91")
 			(name "unconnected-(U301-IO15-Pad19)")
 			(class "Default")
 			(node
@@ -10994,7 +11306,7 @@
 			)
 		)
 		(net
-			(code "94")
+			(code "92")
 			(name "unconnected-(U301-NC-Pad20)")
 			(class "Default")
 			(node
@@ -11005,7 +11317,7 @@
 			)
 		)
 		(net
-			(code "95")
+			(code "93")
 			(name "unconnected-(U301-NC-Pad22)")
 			(class "Default")
 			(node
@@ -11016,7 +11328,7 @@
 			)
 		)
 		(net
-			(code "96")
+			(code "94")
 			(name "unconnected-(U401-ADC0-Pad45)")
 			(class "Default")
 			(node
@@ -11027,7 +11339,7 @@
 			)
 		)
 		(net
-			(code "97")
+			(code "95")
 			(name "unconnected-(U401-ADC1-Pad44)")
 			(class "Default")
 			(node
@@ -11038,7 +11350,18 @@
 			)
 		)
 		(net
-			(code "98")
+			(code "96")
+			(name "unconnected-(U401-ANT_BT{slash}WIFI-Pad35)")
+			(class "Default")
+			(node
+				(ref "U401")
+				(pin "35")
+				(pinfunction "ANT_BT/WIFI_35")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "97")
 			(name "unconnected-(U401-AP_READY-Pad2)")
 			(class "Default")
 			(node
@@ -11049,7 +11372,7 @@
 			)
 		)
 		(net
-			(code "99")
+			(code "98")
 			(name "unconnected-(U401-DCD-Pad63)")
 			(class "Default")
 			(node
@@ -11060,7 +11383,7 @@
 			)
 		)
 		(net
-			(code "100")
+			(code "99")
 			(name "unconnected-(U401-DTR-Pad66)")
 			(class "Default")
 			(node
@@ -11071,7 +11394,7 @@
 			)
 		)
 		(net
-			(code "101")
+			(code "100")
 			(name "unconnected-(U401-NET_MODE-Pad5)")
 			(class "Default")
 			(node
@@ -11082,7 +11405,7 @@
 			)
 		)
 		(net
-			(code "102")
+			(code "101")
 			(name "unconnected-(U401-NET_STATUS-Pad6)")
 			(class "Default")
 			(node
@@ -11093,7 +11416,7 @@
 			)
 		)
 		(net
-			(code "103")
+			(code "102")
 			(name "unconnected-(U401-RI-Pad62)")
 			(class "Default")
 			(node
@@ -11104,18 +11427,18 @@
 			)
 		)
 		(net
-			(code "104")
-			(name "unconnected-(U401-USIM_PRESENCE-Pad13)")
+			(code "103")
+			(name "unconnected-(U401-USIM_DET-Pad13)")
 			(class "Default")
 			(node
 				(ref "U401")
 				(pin "13")
-				(pinfunction "USIM_PRESENCE_13")
+				(pinfunction "USIM_DET_13")
 				(pintype "input+no_connect")
 			)
 		)
 		(net
-			(code "105")
+			(code "104")
 			(name "unconnected-(U401-WAKEUP_IN-Pad1)")
 			(class "Default")
 			(node
@@ -11126,7 +11449,7 @@
 			)
 		)
 		(net
-			(code "106")
+			(code "105")
 			(name "unconnected-(U401-W_DISABLE#-Pad4)")
 			(class "Default")
 			(node
@@ -11137,7 +11460,7 @@
 			)
 		)
 		(net
-			(code "107")
+			(code "106")
 			(name "unconnected-(U402-A6-Pad7)")
 			(class "Default")
 			(node
@@ -11148,7 +11471,7 @@
 			)
 		)
 		(net
-			(code "108")
+			(code "107")
 			(name "unconnected-(U402-A7-Pad8)")
 			(class "Default")
 			(node
@@ -11159,7 +11482,7 @@
 			)
 		)
 		(net
-			(code "109")
+			(code "108")
 			(name "unconnected-(U402-A8-Pad9)")
 			(class "Default")
 			(node
@@ -11170,7 +11493,7 @@
 			)
 		)
 		(net
-			(code "110")
+			(code "109")
 			(name "unconnected-(U402-B6-Pad14)")
 			(class "Default")
 			(node
@@ -11181,7 +11504,7 @@
 			)
 		)
 		(net
-			(code "111")
+			(code "110")
 			(name "unconnected-(U402-B7-Pad13)")
 			(class "Default")
 			(node
@@ -11192,7 +11515,7 @@
 			)
 		)
 		(net
-			(code "112")
+			(code "111")
 			(name "unconnected-(U402-B8-Pad12)")
 			(class "Default")
 			(node
