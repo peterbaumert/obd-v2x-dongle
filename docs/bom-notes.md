@@ -1,16 +1,39 @@
 # BOM / sourcing notes
 
-Status: schematic v0.1. Stock not yet checked against PCBWay.
+Full BOM: [`bom.csv`](bom.csv) (exported from the schematic; MPN / Manufacturer / LCSC fields come from
+`SOURCING` in `hardware/tools/gen_schematic.py`).
 
-| Ref | Part | Sourcing risk | Notes |
+Stock checked **2026-11-11** with `python hardware/tools/check_stock.py` (LCSC via the JLCPCB parts API) plus
+Digi-Key for the critical parts. LCSC, Digi-Key and Mouser are PCBWay's main sources; the final word is the
+PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so PCBWay can pick in-stock parts.
+
+## Needs attention
+
+| Ref | Part | Status | Plan |
 |---|---|---|---|
-| U401 | Quectel EG25-G (EG25GGB) | Medium | Sold via Digi-Key/Mouser; LGA-144 needs a custom footprint (Hardware Design V1.5 §7.2). |
-| U301 | ESP32-C5-WROOM-1U-N8R4 | Low–medium | Newer module, check stock. 1U footprint still to create (WROOM-1 SparkFun footprint in `lib/obd-v2x.pretty` as reference). |
-| J201 | OBD-II J1962 male plug | **High** | PCB-mount J1962 plugs are rare; may be consigned or a wired plug. Footprint TBD once part chosen. |
-| J401 | GCT SIM8060-6-0-14-00 nano-SIM | Low | |
-| U102 | TI TPS54360DDA | Low | Compensation values (R106/C105/C106) are first-pass — verify with TI WEBENCH. |
-| U101 / Q101 | TI LM74700-Q1 + Nexperia PSMN5R2-60YL | Low | Ideal-diode reverse protection. |
-| U201 | TI TCAN334 | Low | |
-| U202 | NXP TJA1021T/20 | Low | Used as K-Line transceiver (10.4 kbit/s, within LIN 20 kbit/s slope). |
-| U402 | TI TXS0108EPW | Low | |
-| C411–C416 | Antenna π-match | — | DNP until antennas are tuned. |
+| U301 | ESP32-C5-WROOM-1U-N8R4 | **Out of stock** (LCSC 0, Digi-Key 0, restock est. Jan 2028) | Consign: supply modules to PCBWay yourself, or check stock again at order time |
+| U401 | Quectel EG25GGB-256-SGNS | In stock: Digi-Key 639 (~$126 @1), LCSC 38 | OK, but the most expensive part. LGA-144 footprint still to create |
+| J201 | OBD-II J1962 male plug | **Not available** at LCSC/Digi-Key as a PCB part | Hand-fitted: buy a PCB-pin J1962 male plug separately; footprint once the part is chosen |
+
+## Changed for availability
+
+| Ref | Was | Now | Why |
+|---|---|---|---|
+| Q101 | PSMN5R2-60YL | PSMN7R0-60YS,115 (C478143, 739 pcs) | only 21 in stock; same LFPAK56 footprint, 7 mOhm is fine at ~1 A |
+| L101 | Bourns SRP7028A-6R8M | Sunlord MWSA0605S-6R8MT (C408466, 416 pcs) | 0 in stock; footprint changed to L_Sunlord_MWSA0605S |
+| C401 | 220 uF tantalum (generic) | Kemet T495D227K006ATE100 (C2798131, 408 pcs) | first choice 0 in stock; same case D |
+| SW301/302 | TL3342 | TL3342F450QG (C2886897) | in-stock variant, same footprint |
+
+## In stock (LCSC, 2026-11-11)
+
+F101 0466002.NRHF (55k) · D101 SMCJ33CA (94k) · U101 LM74700QDBVRQ1 (3.8k) · D102 SS14 (1.5M) ·
+U102 TPS54360DDAR (4.6k) · D103 B560C-13-F (65k) · U103 TLV75733PDBVR (24k) · Q102 AO3401A (1.6M) ·
+Q103 2N7002 (6M) · U201 TCAN334DR (235) · D201 SZNUP2105LT1G (271k) · U202 TJA1021T/20 (25k) ·
+D202 B0540WS (785) · D203 PESD1LIN (104k) · D301 SK6812MINI-E (210k) · U302 USBLC6-2SC6 (220k) ·
+J301 HRO TYPE-C-31-M-12 (283k) · U402 TXS0108EPWR (93k) · Q401/402 MMBT3904 (4.2M) ·
+J401 GCT SIM8060-6-0-14-00 (2.2k) · J402–404 Hirose U.FL-R-SMT-1(10) (17k)
+
+## Design notes
+
+- U102 compensation (R106/C105/C106) is a first pass — verify with TI WEBENCH.
+- C411–C416 antenna pi-match caps are DNP until the antennas are tuned.

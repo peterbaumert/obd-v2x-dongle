@@ -24,6 +24,43 @@ C0402, C0603, C0805, C1210 = ('Capacitor_SMD:C_0402_1005Metric', 'Capacitor_SMD:
                               'Capacitor_SMD:C_0805_2012Metric', 'Capacitor_SMD:C_1210_3225Metric')
 SOT23 = 'Package_TO_SOT_SMD:SOT-23'
 
+# Sourcing (checked 2026-11-11 with tools/check_stock.py; LCSC = one of PCBWay's suppliers).
+# ref: (MPN, Manufacturer, LCSC#)
+SOURCING = {
+    'F101': ('0466002.NRHF', 'Littelfuse', 'C3105'),
+    'D101': ('SMCJ33CA', 'Littelfuse', 'C310048'),
+    'U101': ('LM74700QDBVRQ1', 'TI', 'C2941042'),
+    'Q101': ('PSMN7R0-60YS,115', 'Nexperia', 'C478143'),
+    'D102': ('SS14', 'MDD', 'C2480'),
+    'U102': ('TPS54360DDAR', 'TI', 'C44377'),
+    'D103': ('B560C-13-F', 'Diodes Inc', 'C85100'),
+    'L101': ('MWSA0605S-6R8MT', 'Sunlord', 'C408466'),
+    'U103': ('TLV75733PDBVR', 'TI', 'C485517'),
+    'Q102': ('AO3401A', 'AOS', 'C15127'),
+    'Q103': ('2N7002', 'onsemi', 'C8545'),
+    'U201': ('TCAN334DR', 'TI', 'C2871143'),
+    'D201': ('SZNUP2105LT1G', 'onsemi', 'C233494'),
+    'U202': ('TJA1021T/20/CM,118', 'NXP', 'C128810'),
+    'D202': ('B0540WS-7', 'Diodes Inc', 'C52754523'),
+    'D203': ('PESD1LIN,115', 'Nexperia', 'C58901'),
+    'U301': ('ESP32-C5-WROOM-1U-N8R4', 'Espressif', 'C49308183'),
+    'D301': ('SK6812MINI-E', 'OPSCO', 'C5149201'),
+    'U302': ('USBLC6-2SC6', 'ST', 'C2827654'),
+    'J301': ('TYPE-C-31-M-12', 'HRO', 'C165948'),
+    'SW301': ('TL3342F450QG', 'E-Switch', 'C2886897'),
+    'SW302': ('TL3342F450QG', 'E-Switch', 'C2886897'),
+    'U401': ('EG25GGB-256-SGNS', 'Quectel', 'C8750274'),
+    'U402': ('TXS0108EPWR', 'TI', 'C17206'),
+    'Q401': ('MMBT3904', 'onsemi', 'C20526'),
+    'Q402': ('MMBT3904', 'onsemi', 'C20526'),
+    'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
+    'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
+    'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
+    'J404': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
+    'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
+    'J201': ('TBD (J1962 male, hand-fitted)', '', ''),
+}
+
 
 def V(x, y):
     """Field placement for a vertical 2-pin part (text to the right)."""
@@ -95,7 +132,7 @@ def power():
     sh.gnd(D['A2'])
 
     X = g(34)
-    Q = sh.part('Transistor_FET:PSMN5R2-60YL', 'Q101', 'PSMN5R2-60YL', 'Package_TO_SOT_SMD:LFPAK56',
+    Q = sh.part('Transistor_FET:PSMN5R2-60YL', 'Q101', 'PSMN7R0-60YS', 'Package_TO_SOT_SMD:LFPAK56',
                 X, y0 + 2.54, 270, 'x', fields={'ref': (X - 3.81, y0 - 5.08, 'right'), 'val': (X - 3.81, y0 - 2.54, 'right')})
     assert Q['S'][1] == y0 and Q['D'][1] == y0 and Q['G'][1] > y0, (Q['S'], Q['D'], Q['G'])
     U = sh.part('Power_Management:LM74700', 'U101', 'LM74700-Q1', 'Package_TO_SOT_SMD:SOT-23-6',
@@ -171,7 +208,7 @@ def power():
     Dc = dv(sh, 'Device:D_Schottky', 'D103', 'B560C', 'Diode_SMD:D_SMC', xd, B['SW'][1] + g(2), 'K')
     sh.w((xd, B['SW'][1]), Dc['K'])
     sh.gnd(Dc['A'])
-    L = rh(sh, 'Device:L', 'L101', '6.8uH 5A', 'Inductor_SMD:L_Bourns_SRP7028A_7.3x6.6mm', xd + g(2), B['SW'][1])
+    L = rh(sh, 'Device:L', 'L101', '6.8uH 4.5A', 'Inductor_SMD:L_Sunlord_MWSA0605S', xd + g(2), B['SW'][1])
     sh.w((xd, B['SW'][1]), L[1])
     yo = B['SW'][1]
     xo = L[2][0]
@@ -689,6 +726,10 @@ if __name__ == '__main__':
     cli = Path.home() / 'AppData/Local/Programs/KiCad/10.0/bin/kicad-cli.exe'
     for name in only:
         sh = globals()[name]()
+        for p in sh.parts:
+            if p.ref in SOURCING:
+                mpn, mfr, lcsc = SOURCING[p.ref]
+                p.extra = {'MPN': mpn, 'Manufacturer': mfr, 'LCSC': lcsc}
         sh.write()
         # let KiCad re-save in its own latest format (avoids the "older version" banner)
         subprocess.run([str(cli), 'sch', 'upgrade', str(HW / sh.file)], check=True, capture_output=True)

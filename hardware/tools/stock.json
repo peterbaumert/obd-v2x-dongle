@@ -1,0 +1,198 @@
+[
+ {
+  "refs": "F101",
+  "desc": "Fuse 2 A slow-blow 1206",
+  "mpn": "0466002.NRHF",
+  "lcsc": "C3105",
+  "stock": 55167
+ },
+ {
+  "refs": "D101",
+  "desc": "TVS 33 V bidir SMC",
+  "mpn": "SMCJ33CA/TR13",
+  "lcsc": "C310048",
+  "stock": 93800
+ },
+ {
+  "refs": "U101",
+  "desc": "Ideal diode controller",
+  "mpn": "LM74700QDBVRQ1",
+  "lcsc": "C2941042",
+  "stock": 3827
+ },
+ {
+  "refs": "Q101",
+  "desc": "N-MOSFET 60 V LFPAK56",
+  "mpn": "PSMN5R2-60YLX",
+  "lcsc": "C553306",
+  "stock": 21
+ },
+ {
+  "refs": "D102",
+  "desc": "Schottky 1 A SMA",
+  "mpn": "SS14",
+  "lcsc": "C2480",
+  "stock": 1521448
+ },
+ {
+  "refs": "U102",
+  "desc": "Buck 60 V 3.5 A",
+  "mpn": "TPS54360DDAR",
+  "lcsc": "C44377",
+  "stock": 4650
+ },
+ {
+  "refs": "D103",
+  "desc": "Schottky 5 A 60 V SMC",
+  "mpn": "B560C-13-F",
+  "lcsc": "C85100",
+  "stock": 65392
+ },
+ {
+  "refs": "L101",
+  "desc": "Inductor 6.8 uH 5 A",
+  "mpn": "SRP7028A-6R8M",
+  "lcsc": "C1331994",
+  "stock": 0
+ },
+ {
+  "refs": "U103",
+  "desc": "LDO 3.3 V 1 A",
+  "mpn": "TLV75733PDBVR",
+  "lcsc": "C485517",
+  "stock": 24270
+ },
+ {
+  "refs": "Q102",
+  "desc": "P-MOSFET SOT-23",
+  "mpn": "AO3401A",
+  "lcsc": "C15127",
+  "stock": 1615286
+ },
+ {
+  "refs": "Q103",
+  "desc": "N-MOSFET SOT-23",
+  "mpn": "2N7002",
+  "lcsc": "C8545",
+  "stock": 6112224
+ },
+ {
+  "refs": "U201",
+  "desc": "CAN transceiver 3.3 V",
+  "mpn": "TCAN334DR",
+  "lcsc": "C2871143",
+  "stock": 235
+ },
+ {
+  "refs": "D201",
+  "desc": "CAN ESD",
+  "mpn": "SZNUP2105LT1G",
+  "lcsc": "C233494",
+  "stock": 271290
+ },
+ {
+  "refs": "U202",
+  "desc": "LIN transceiver (K-Line)",
+  "mpn": "TJA1021T/20/CM,118",
+  "lcsc": "C128810",
+  "stock": 24681
+ },
+ {
+  "refs": "D202",
+  "desc": "Schottky SOD-323",
+  "mpn": "B0540WS-7-HXY",
+  "lcsc": "C52754523",
+  "stock": 785
+ },
+ {
+  "refs": "D203",
+  "desc": "LIN ESD SOD-323",
+  "mpn": "PESD1LIN,115",
+  "lcsc": "C58901",
+  "stock": 103841
+ },
+ {
+  "refs": "U301",
+  "desc": "ESP32-C5 module, U.FL",
+  "mpn": "ESP32-C5-WROOM-1U-N8R4",
+  "lcsc": "C49308183",
+  "stock": 0
+ },
+ {
+  "refs": "D301",
+  "desc": "RGB LED",
+  "mpn": "SK6812MINI-E",
+  "lcsc": "C5149201",
+  "stock": 209678
+ },
+ {
+  "refs": "U302",
+  "desc": "USB ESD",
+  "mpn": "USBLC6-2SC6",
+  "lcsc": "C2827654",
+  "stock": 219999
+ },
+ {
+  "refs": "J301",
+  "desc": "USB-C 16P",
+  "mpn": "TYPE-C-31-M-12",
+  "lcsc": "C165948",
+  "stock": 282866
+ },
+ {
+  "refs": "SW301,SW302",
+  "desc": "Tactile switch",
+  "mpn": "TL3342F450QG",
+  "lcsc": "C2886897",
+  "stock": 602
+ },
+ {
+  "refs": "U401",
+  "desc": "LTE Cat 4 module",
+  "mpn": "EG25GGB-256-SGNS",
+  "lcsc": "C8750274",
+  "stock": 38
+ },
+ {
+  "refs": "U402",
+  "desc": "Level shifter 8 ch",
+  "mpn": "TXS0108EPWR",
+  "lcsc": "C17206",
+  "stock": 92798
+ },
+ {
+  "refs": "Q401,Q402",
+  "desc": "NPN SOT-23",
+  "mpn": "MMBT3904(RANGE:100-300)",
+  "lcsc": "C20526",
+  "stock": 4223841
+ },
+ {
+  "refs": "J401",
+  "desc": "Nano-SIM holder",
+  "mpn": "SIM8060-6-0-14-00-A",
+  "lcsc": "C6296715",
+  "stock": 2171
+ },
+ {
+  "refs": "J402-J404",
+  "desc": "U.FL connector",
+  "mpn": "U.FL-R-SMT-1(10)",
+  "lcsc": "C88373",
+  "stock": 16892
+ },
+ {
+  "refs": "C401",
+  "desc": "220 uF 6.3 V tantalum D",
+  "mpn": "T491D227K006AT",
+  "lcsc": "C1956432",
+  "stock": 0
+ },
+ {
+  "refs": "J201",
+  "desc": "OBD-II J1962 male plug",
+  "mpn": "j1962m",
+  "lcsc": "C9900060145",
+  "stock": 0
+ }
+]
