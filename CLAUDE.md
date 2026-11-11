@@ -28,7 +28,7 @@
 
 ## PCB
 - 52 x 74 mm, 4 layers (In1/In2 GND planes), parts on both sides; OBD plug at the front edge, housing overhangs 12 mm.
-- The board was bootstrapped by `hardware/tools/gen_pcb.py` (KiCad's Python: `%LOCALAPPDATA%\Programs\KiCad.0in\python.exe`).
+- The board was bootstrapped by `hardware/tools/gen_pcb.py` (KiCad's Python: `%LOCALAPPDATA%\Programs\KiCad\10.0\bin\python.exe`).
   It refuses to overwrite an existing board; `--force` regenerates and **loses all routing/manual moves**.
   From routing on, edit `obd-v2x-dongle.kicad_pcb` in KiCad; schematic changes via Tools > Update PCB from Schematic.
 - Check: `kicad-cli pcb drc --schematic-parity --refill-zones hardware/obd-v2x-dongle.kicad_pcb` (parity must be 0).
