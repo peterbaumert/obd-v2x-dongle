@@ -109,7 +109,7 @@ class Grid:
             c = (tomm(t.GetEnd().x), tomm(t.GetEnd().y))
             w = tomm(t.GetWidth()) / 2
             self.mark_seg(masks[i], a, c, w + r_tr)
-            self.mark_seg(vmask, a, c, w + r_via)
+            self.mark_seg(vmask, a, c, w + r_via + 0.05)   # grid-rounding margin
         # non-GND zones of other nets (e.g. none now) block their layer
         for z in b.Zones():
             if z.GetNetname() in ('GND', netname) or z.GetIsRuleArea():
