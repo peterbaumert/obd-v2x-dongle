@@ -29,6 +29,8 @@ Quectel EC200U-EU (LTE Cat 1 + GNSS) ── LTE main + GNSS antennas (U.FL), nan
 
 52 x 74 mm, 4 layers, parts on both sides. Top: power, LTE modem, U.FL antennas. Bottom: CAN/K-Line, ESP32-C5, SIM, USB-C.
 
+Design review and open decisions: [`docs/design-review.md`](docs/design-review.md).
+
 ## Repo layout
 
 | Path | Contents |

@@ -44,7 +44,7 @@ SOURCING = {
     'D202': ('B0540WS-7', 'Diodes Inc', 'C52754523'),
     'D203': ('PESD1LIN,115', 'Nexperia', 'C58901'),
     'U301': ('ESP32-C5-WROOM-1U-N16R8-V1.2', 'Espressif', 'C54951857'),
-    'D301': ('SK6812MINI-E', 'OPSCO', 'C5149201'),
+    'D301': ('SK6812MINI-HS', 'OPSCO', 'C2922787'),   # top-emitting 3535 (the -E is reverse-mount, other footprint)
     'U302': ('USBLC6-2SC6', 'ST', 'C2827654'),
     'J301': ('TYPE-C-31-M-12', 'HRO', 'C165948'),
     'SW301': ('TL3342F450QG', 'E-Switch', 'C2886897'),
@@ -289,11 +289,11 @@ def power():
     sh.gnd(Rpd[2])
 
     # ---------------- battery sense
-    sh.text('Battery sense (VSENSE = VIN x 0.13)', g(82), yl - g(6), 1.5, True)
+    sh.text('Battery sense (VSENSE = VIN / 11, full scale ~35 V)', g(82), yl - g(6), 1.5, True)
     xs = g(88)
     Rs1 = rv(sh, 'Device:R', 'R109', '100k', R0603, xs, yl - g(2))
     sh.rail('VIN_PROT', Rs1[1])
-    Rs2 = rv(sh, 'Device:R', 'R110', '15k', R0603, xs, Rs1[2][1] + g(2))
+    Rs2 = rv(sh, 'Device:R', 'R110', '10k', R0603, xs, Rs1[2][1] + g(2))
     sh.w(Rs1[2], Rs2[1])
     sh.gnd(Rs2[2])
     yn = Rs1[2][1] + g(1)

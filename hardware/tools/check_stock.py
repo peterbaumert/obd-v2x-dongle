@@ -30,7 +30,7 @@ BOM = [
     ('D202', 'Schottky SOD-323', ['B0540WS-7', 'B0540WS']),
     ('D203', 'LIN ESD SOD-323', ['PESD1LIN,115', 'PESD1LIN']),
     ('U301', 'ESP32-C5 module, U.FL', ['ESP32-C5-WROOM-1U-N16R8-V1.2', 'ESP32-C5-WROOM-1U-N8R8-V1.2', 'ESP32-C5-WROOM-1U-N8R4']),
-    ('D301', 'RGB LED', ['SK6812MINI', 'SK6812MINI-E']),
+    ('D301', 'RGB LED', ['SK6812MINI-HS', 'SK6812MINI']),
     ('U302', 'USB ESD', ['USBLC6-2SC6']),
     ('J301', 'USB-C 16P', ['TYPE-C-31-M-12']),
     ('SW301,SW302', 'Tactile switch', ['TL3342F160QG', 'TL3342']),

@@ -120,7 +120,7 @@
       },
       {
         "netclass": "Power",
-        "pattern": "VBAT_F"
+        "pattern": "*VBAT_F"
       },
       {
         "netclass": "Power",

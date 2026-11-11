@@ -114,7 +114,7 @@ RULES = dict(track=0.15, clearance=0.15, via_d=0.6, via_drill=0.3, min_drill=0.3
 PRO = HW / 'obd-v2x-dongle.kicad_pro'
 NETCLASSES = [
     # name, track, clearance, via_d, via_drill, net-name patterns
-    ('Power', 0.6, 0.2, 0.8, 0.4, ['OBD_VBAT', 'VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
+    ('Power', 0.6, 0.2, 0.8, 0.4, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
                                   'Net-(D202-K)']),   # USB VBUS (<0.5 A) stays default class
     # 50 ohm placeholder: confirm width/gap with PCBWay's impedance calculator for the ordered stack-up
     ('RF', 0.35, 0.25, 0.6, 0.3, ['*LTE_ANT_*', 'Net-(J402-In)', 'Net-(J403-In)']),

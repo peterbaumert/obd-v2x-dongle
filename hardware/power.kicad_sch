@@ -3433,18 +3433,6 @@
 		)
 		(uuid "37ac35c5-02e6-5bca-a5ee-3e860d181d00")
 	)
-	(text "Battery sense (VSENSE = VIN x 0.13)"
-		(exclude_from_sim no)
-		(at 208.28 111.76 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "60c50e35-2e6e-5741-8f92-d4a2619d7d78")
-	)
 	(text "LDO 3.3 V (logic)"
 		(exclude_from_sim no)
 		(at 12.7 111.76 0)
@@ -3480,6 +3468,18 @@
 			(justify left)
 		)
 		(uuid "db9d946c-3c29-5482-bff8-fc83f02ad5db")
+	)
+	(text "Battery sense (VSENSE = VIN / 11, full scale ~35 V)"
+		(exclude_from_sim no)
+		(at 208.28 111.76 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "dcf4f2ae-9ecc-51e1-bd29-3e0d272a579e")
 	)
 	(junction
 		(at 147.32 134.62)
@@ -9714,7 +9714,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "15k"
+		(property "Value" "10k"
 			(at 225.552 139.7 0)
 			(show_name no)
 			(do_not_autoplace no)

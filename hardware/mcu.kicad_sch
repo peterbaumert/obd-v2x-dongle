@@ -6876,7 +6876,7 @@
 				)
 			)
 		)
-		(property "MPN" "SK6812MINI-E"
+		(property "MPN" "SK6812MINI-HS"
 			(at 248.92 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -6898,7 +6898,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C5149201"
+		(property "LCSC" "C2922787"
 			(at 248.92 91.44 0)
 			(hide yes)
 			(show_name no)
