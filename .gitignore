@@ -1,0 +1,19 @@
+# KiCad backups, caches and local state
+*-backups/
+*.kicad_prl
+*.lck
+\#auto_saved_files#
+_autosave-*
+fp-info-cache
+*.bak
+*.bck
+*-bak
+
+# Fabrication outputs (generate in CI / on release)
+hardware/fab/
+*.zip
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
