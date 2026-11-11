@@ -1,0 +1,126 @@
+"""Generate hardware/lib/obd-v2x.kicad_sym (project symbol library).
+
+Pin data sources:
+  ESP32-C5-WROOM-1U : Espressif ESP32-C5-WROOM-1/1U datasheet v1.3, Table 3-2
+  EG25-G            : Quectel EG25-G Hardware Design V1.5, Table 5 (Pin Description)
+  OBD2 J1962        : SAE J1962 / ISO 15031-3 pinout
+
+Run:  python hardware/lib/gen_symbols.py
+"""
+from pathlib import Path
+
+G = 2.54
+FONT = '(effects (font (size 1.27 1.27)))'
+
+
+def pin(ptype, name, number, x, y, angle, hide=False):
+    h = ' (hide yes)' if hide else ''
+    return (f'\t\t\t(pin {ptype} line (at {x:.2f} {y:.2f} {angle}) (length 2.54){h}\n'
+            f'\t\t\t\t(name "{name}" {FONT})\n'
+            f'\t\t\t\t(number "{number}" {FONT})\n\t\t\t)\n')
+
+
+def prop(key, val, x, y, hide=False):
+    eff = '(effects (font (size 1.27 1.27)) (hide yes))' if hide else FONT
+    return f'\t\t(property "{key}" "{val}" (at {x:.2f} {y:.2f} 0) {eff})\n'
+
+
+def symbol(name, ref, fp, ds, desc, kw, left, right, bottom=(), top=(), width=12 * G):
+    """left/right: list of (type, name, number) top->bottom; None = gap.
+    bottom/top: list of (type, name, number, column) — pins with same column stack."""
+    rows = max(len(left), len(right))
+    half_w = width / 2
+    y_top = (rows / 2) * G + G
+    y_bot = y_top - (rows + 1) * G
+    y_top = round(y_top / G) * G
+    y_bot = round(y_bot / G) * G
+    s = f'\t(symbol "{name}" (pin_names (offset 1.016)) (exclude_from_sim no) (in_bom yes) (on_board yes)\n'
+    s += prop('Reference', ref, -half_w, y_top + G)
+    s += prop('Value', name, half_w - 4 * G, y_top + G)
+    s += prop('Footprint', fp, 0, y_bot - 2 * G, True)
+    s += prop('Datasheet', ds, 0, y_bot - 3 * G, True)
+    s += prop('Description', desc, 0, y_bot - 4 * G, True)
+    s += prop('ki_keywords', kw, 0, y_bot - 5 * G, True)
+    s += (f'\t\t(symbol "{name}_0_1"\n\t\t\t(rectangle (start {-half_w:.2f} {y_top:.2f}) (end {half_w:.2f} {y_bot:.2f})'
+          f' (stroke (width 0.254) (type default)) (fill (type background)))\n\t\t)\n')
+    s += f'\t\t(symbol "{name}_1_1"\n'
+    for i, p in enumerate(left):
+        if p:
+            s += pin(p[0], p[1], p[2], -half_w - G, y_top - (i + 1) * G, 0)
+    for i, p in enumerate(right):
+        if p:
+            s += pin(p[0], p[1], p[2], half_w + G, y_top - (i + 1) * G, 180)
+    seen = set()
+    for t, n, num, col in bottom:
+        s += pin(t, n, num, col * G, y_bot - G, 90, hide=(('b', col) in seen))
+        seen.add(('b', col))
+    for t, n, num, col in top:
+        s += pin(t, n, num, col * G, y_top + G, 270, hide=(('t', col) in seen))
+        seen.add(('t', col))
+    s += '\t\t)\n\t\t(embedded_fonts no)\n\t)\n'
+    return s
+
+
+B, I, O, P, PI, PO, OD, NC = ('bidirectional', 'input', 'output', 'passive', 'power_in',
+                              'power_out', 'open_collector', 'no_connect')
+
+# ---------------- ESP32-C5-WROOM-1U (32 pins) ----------------
+esp = symbol(
+    'ESP32-C5-WROOM-1U', 'U',
+    'obd-v2x:ESP32-C5-WROOM-1U',
+    'https://documentation.espressif.com/esp32-c5-wroom-1_wroom-1u_datasheet_en.pdf',
+    'ESP32-C5 module, dual-band Wi-Fi 6 / BLE 5 / 802.15.4, CAN FD, external antenna (U.FL)',
+    'ESP32 C5 WiFi 5GHz BLE module',
+    left=[(PI, '3V3', 2), (I, 'EN', 3), None,
+          (B, 'IO0/XTAL_32K_P', 6), (B, 'IO1/ADC1_CH0', 7), (B, 'IO2/MTMS', 4), (B, 'IO3/MTDI', 5),
+          (B, 'IO4/MTCK', 17), (B, 'IO5/MTDO', 16), (B, 'IO6', 8), (B, 'IO7', 9), (B, 'IO8', 10),
+          (B, 'IO9', 11), (B, 'IO10', 12), (B, 'IO15', 19)],
+    right=[(B, 'IO11/TXD0', 25), (B, 'IO12/RXD0', 24), (B, 'IO13/USB_D-', 13), (B, 'IO14/USB_D+', 14),
+           (B, 'IO23', 21), (B, 'IO24', 23), (B, 'IO25', 26), (B, 'IO26', 27), (B, 'IO27', 18),
+           (B, 'IO28', 15), None, (P, 'ANT', 31), (NC, 'NC', 20), (NC, 'NC', 22)],
+    bottom=[(PI, 'GND', n, 0) for n in (1, 28, 29, 30, 32)],
+    width=16 * G,
+)
+
+# ---------------- Quectel EG25-G (LGA-144, used pins) ----------------
+GND_PINS = [8, 9, 19, 22, 36, 46, 48, 50, 51, 52, 53, 54, 56, 72] + list(range(85, 113))
+eg25 = symbol(
+    'EG25-G', 'U',
+    'obd-v2x:Quectel_EG25-G',
+    'https://quectel.com/content/uploads/2024/04/Quectel_EG25-G_Hardware_Design_V1.5.pdf',
+    'Quectel EG25-G LTE Cat 4 module with GNSS, LGA-144 29x32 mm. Logic I/O 1.8 V. Unused/RESERVED pins not drawn.',
+    'LTE cellular modem GNSS Quectel',
+    left=[(PI, 'VBAT_BB', 59), (PI, 'VBAT_BB', 60), (PI, 'VBAT_RF', 57), (PI, 'VBAT_RF', 58),
+          (PO, 'VDD_EXT', 7), None,
+          (I, 'PWRKEY', 21), (I, 'RESET_N', 20), (OD, 'STATUS', 61), (O, 'NET_STATUS', 6), (O, 'NET_MODE', 5),
+          (I, 'W_DISABLE#', 4), (I, 'AP_READY', 2), (I, 'WAKEUP_IN', 1), (I, 'USB_BOOT', 115), None,
+          (I, 'USB_VBUS', 71), (B, 'USB_DP', 69), (B, 'USB_DM', 70), None,
+          (I, 'ADC0', 45), (I, 'ADC1', 44)],
+    right=[(I, 'RXD', 68), (O, 'TXD', 67), (I, 'RTS', 65), (O, 'CTS', 64), (I, 'DTR', 66), (O, 'RI', 62),
+           (O, 'DCD', 63), (I, 'DBG_RXD', 11), (O, 'DBG_TXD', 12), None,
+           (PO, 'USIM_VDD', 14), (B, 'USIM_DATA', 15), (O, 'USIM_CLK', 16), (O, 'USIM_RST', 17),
+           (I, 'USIM_PRESENCE', 13), (P, 'USIM_GND', 10), None,
+           (B, 'ANT_MAIN', 49), (I, 'ANT_DIV', 35), (I, 'ANT_GNSS', 47)],
+    bottom=[(PI, 'GND', n, 0) for n in GND_PINS],
+    width=18 * G,
+)
+
+# ---------------- OBD-II J1962 male plug ----------------
+obd = symbol(
+    'OBD2_J1962_Plug', 'J',
+    'obd-v2x:OBD2_J1962_Plug_PCB',
+    'https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II_diagnostic_connector',
+    'OBD-II (SAE J1962) 16-pin male plug, vehicle side pinout',
+    'OBD OBD2 J1962 diagnostic connector',
+    left=[(P, 'OEM1', 1), (P, 'J1850+', 2), (P, 'OEM3', 3), (P, 'CHASSIS_GND', 4), (P, 'SIGNAL_GND', 5),
+          (P, 'CAN_H', 6), (P, 'K_LINE', 7), (P, 'OEM8', 8)],
+    right=[(P, 'OEM9', 9), (P, 'J1850-', 10), (P, 'OEM11', 11), (P, 'OEM12', 12), (P, 'OEM13', 13),
+           (P, 'CAN_L', 14), (P, 'L_LINE', 15), (P, 'VBAT', 16)],
+    width=10 * G,
+)
+
+lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + ')\n')
+out = Path(__file__).with_name('obd-v2x.kicad_sym')
+out.write_text(lib, encoding='utf-8')
+print('wrote', out)

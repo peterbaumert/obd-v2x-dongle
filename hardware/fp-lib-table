@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "obd-v2x")(type "KiCad")(uri "${KIPRJMOD}/lib/obd-v2x.pretty")(options "")(descr "Project footprints"))
+)
