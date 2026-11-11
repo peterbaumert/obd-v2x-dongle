@@ -36,4 +36,8 @@
   It refuses to overwrite an existing board; `--force` regenerates and **loses all routing/manual moves**.
   From routing on, edit `obd-v2x-dongle.kicad_pcb` in KiCad; schematic changes via Tools > Update PCB from Schematic.
 - Check: `kicad-cli pcb drc --schematic-parity --refill-zones hardware/obd-v2x-dongle.kicad_pcb` (parity must be 0).
+- Routed with Freerouting (export DSN with In1 set to `(type power)` so it stays a solid plane, outer GND pours
+  removed from the export) plus `hardware/tools/maze.py` for single connections and GND stitching vias.
+  The buck switch node is locked 1 mm F.Cu tracks; keep other nets out of it.
+- Current state: DRC 0 errors, 0 unconnected, parity 0 (only cosmetic silk warnings).
 - RF net class width (0.35 mm) is a 50 ohm placeholder: confirm with PCBWay's stack-up before ordering.

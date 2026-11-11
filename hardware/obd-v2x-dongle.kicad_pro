@@ -143,10 +143,6 @@
         "pattern": "Net-(D202-K)"
       },
       {
-        "netclass": "Power",
-        "pattern": "VBUS_USB"
-      },
-      {
         "netclass": "RF",
         "pattern": "*LTE_ANT_*"
       },
