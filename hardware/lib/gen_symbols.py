@@ -122,6 +122,21 @@ obd = symbol(
 )
 
 
+# ---------------- MFF2 eSIM (ETSI TS 102 671, 6 x 5 mm QFN-8, 1.27 mm) ----------------
+# Pinout per vendor datasheets (Velocity IoT, Soracom, u-blox): 1 GND(C5), 2 VPP(C6), 3 I/O(C7), 4/5 NC,
+# 6 CLK(C3), 7 RST(C2), 8 VCC(C1); exposed pad not connected.
+esim = symbol(
+    'eSIM_MFF2', 'U',
+    'Package_SON:WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4mm',
+    'https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/4887/VIOT-1SIM-MFF2.pdf',
+    'Embedded SIM / eUICC chip, MFF2 package (6 x 5 mm QFN-8); exposed pad not connected',
+    'eSIM eUICC MFF2 SIM chip',
+    left=[(PI, 'VCC', 8), (I, 'RST', 7), (I, 'CLK', 6), (B, 'I/O', 3)],
+    right=[(PI, 'GND', 1), (NC, 'VPP', 2), (NC, 'NC', 4), (NC, 'NC', 5), (NC, 'EP', 9)],
+    width=10 * G,
+)
+
+
 # ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
 def rail_symbols(names):
     import sys
@@ -142,7 +157,7 @@ def rail_symbols(names):
 RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

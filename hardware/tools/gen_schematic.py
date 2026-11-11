@@ -54,6 +54,7 @@ SOURCING = {
     'Q401': ('MMBT3904', 'onsemi', 'C20526'),
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
+    'U403': ('IoT SIM Chip Industrial (MFF2 eUICC), consigned', '1NCE', ''),
     'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
@@ -649,8 +650,32 @@ def lte():
     decap(sh, 'C405', '100nF', C0603, g(104), g(10), 'LTE_1V8')
     decap(sh, 'C406', '100nF', C0603, g(109), g(10), '+3V3')
 
-    # SIM
-    sh.text('Nano-SIM', g(80), g(38), 1.27, True)
+    # eSIM (MFF2) on USIM1, default; the nano-SIM holder below shares the lines via DNP resistors
+    sh.text('SIM 1 = eSIM U403 (default): fit R411-R413.\nNano-SIM J401 instead: fit R405-R407, remove R411-R413 (never both).',
+            g(44), g(5.6), 1.27, True)
+    XE, YE = g(74), g(20)
+    E = sh.part('obd-v2x:eSIM_MFF2', 'U403', 'eSIM MFF2', 'Package_SON:WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4mm', XE, YE, 0)
+    E.fields = {'ref': (XE + g(1), E['8'][1] - g(2.5), 'left'), 'val': (XE + g(1), E['8'][1] - g(1.5), 'left')}
+    # series resistors on rows 3 grid apart; each wire drops in its own column to its pin row (no crossings)
+    for yr, xc, pin, src, rref in ((g(10), g(62), '7', 'LTE_USIM_RST', 'R413'), (g(13), g(60), '6', 'LTE_USIM_CLK', 'R412'),
+                                   (g(16), g(58), '3', 'LTE_USIM_DATA', 'R411')):
+        Re = rh(sh, 'Device:R', rref, '22R', R0402, g(52), yr)
+        sh.w(Re[2], (xc, yr), (xc, E[pin][1]), E[pin])
+        sh.w(Re[1], (g(51), yr))
+        sh.label(src, (g(51), yr), 'L')
+    xv, yv = g(66), g(7.5)
+    sh.w(E['8'], (xv, E['8'][1]), (xv, yv))
+    sh.label('SIM_VDD', (xv, yv), 'L')
+    Ce = rv(sh, 'Device:C', 'C415', '100nF', C0402, g(70), yv)
+    sh.w((xv, yv), Ce[1])
+    sh.gnd(Ce[2])
+    sh.w(E['1'], (E['1'][0] + g(2), E['1'][1]))
+    sh.gnd((E['1'][0] + g(2), E['1'][1]), rot=90)
+    for pin in ('2', '4', '5', '9'):
+        sh.nc(E, pin)
+
+    # SIM holder (alternative to the eSIM)
+    sh.text('Nano-SIM (alternative, R405-R407 DNP)', g(80), g(38), 1.27, True)
     XJ, YJ = g(104), g(44)
     S = sh.part('Connector:SIM_Card', 'J401', 'Nano-SIM', 'Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00', XJ, YJ, 0)
     S.fields = {'ref': (XJ - g(4), YJ - g(5), 'left'), 'val': (XJ - g(4), YJ + g(4), 'left')}
@@ -665,7 +690,7 @@ def lte():
                                     ('I/O', 'SIM_IO', 'R405', 'LTE_USIM_DATA', 0)):
         y = S[pin][1]
         yr = y + g(dy)
-        Rs = rh(sh, 'Device:R', rref, '22R', R0402, xR, yr)
+        Rs = rh(sh, 'Device:R', rref, '22R', R0402, xR, yr, dnp=True)
         sh.w(Rs[2], (xj - g(7), yr), (xj - g(7), y), S[pin])
         sh.label(net, (xj - g(6), y), 'R')
         sh.w(Rs[1], (xR - g(1), yr))
