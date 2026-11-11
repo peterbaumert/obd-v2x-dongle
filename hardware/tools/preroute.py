@@ -5,7 +5,7 @@ removes its own previous tracks/vias/zones on these nets first). Run before auto
 
 - LTE main / GNSS antenna chains: straight 0.35 mm F.Cu lines (50 ohm placeholder), GND vias at the
   shunt caps and U.FL shields, via fence on both sides.
-- Buck switch node (Net-(D103-K)): solid F.Cu copper area joining U102 SW, D103 cathode, L101.
+- Buck switch node (Net-(D103-K)): locked 1 mm F.Cu tracks U102 SW -> L101 and -> D103 cathode.
 """
 import os
 import subprocess
@@ -124,24 +124,22 @@ for t in list(board.GetTracks()):
 rf_chain('U401', '49', 'C411', 'R409', 'C412', 'J402', -1)
 rf_chain('U401', '47', 'C413', 'R410', 'C414', 'J403', +1)
 
-# buck switch node copper area
-z = pcbnew.ZONE(board)
-z.SetLayer(pcbnew.F_Cu)
-z.SetNet(nets['Net-(D103-K)'])
-z.SetZoneName('SW_NODE')
-z.SetAssignedPriority(10)
-z.SetLocalClearance(mm(0.3))
-z.SetMinThickness(mm(0.25))
-z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
-ol = z.Outline()
-ol.NewOutline()
-for x, y in ((28.3, 22.9), (31.5, 19.0), (34.4, 19.0), (34.4, 27.4), (36.0, 27.4), (36.0, 30.5),
-             (32.2, 30.5), (28.3, 24.3)):
-    ol.Append(mm(OX + x), mm(OY + y))
-board.Add(z)
+# buck switch node: locked 1 mm F.Cu tracks (a copper zone here was treated as a plane by the
+# autorouter, which ran other nets through it). Needs C105 / R104 moved out of the path (done on the board).
+sw = nets['Net-(D103-K)']
+for t in list(board.GetTracks()):
+    if t.GetNetname() == 'Net-(D103-K)' and not isinstance(t, pcbnew.PCB_VIA) and t.IsLocked():
+        board.Delete(t)
+J = (29.3, 23.6)
+for a, c in (((27.7, 23.595), J), (J, (32.5, 21.0)), ((32.5, 21.0), (32.975, 21.0)),   # U102 SW -> L101
+             (J, (31.4, 25.7)), ((31.4, 25.7), (33.0, 28.3))):                          # -> D103 cathode
+    t = pcbnew.PCB_TRACK(board)
+    t.SetStart(pt(*a)); t.SetEnd(pt(*c)); t.SetWidth(mm(1.0)); t.SetLayer(pcbnew.F_Cu); t.SetNet(sw)
+    t.SetLocked(True)
+    board.Add(t)
 
 board.Save(str(PCB))
 subprocess.run([str(CLI), 'pcb', 'drc', '--refill-zones', '--save-board',
                 '-o', os.path.join(os.environ.get('TEMP', '.'), 'obd-v2x-preroute.drc'), str(PCB)],
                check=False, capture_output=True)
-print('pre-routed RF chains + SW node;', len(added_gnd), 'GND vias')
+print('pre-routed RF chains + SW node tracks;', len(added_gnd), 'GND vias')
