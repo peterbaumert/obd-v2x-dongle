@@ -721,7 +721,7 @@ if __name__ == '__main__':
     only = sys.argv[1:] or ['power', 'vehicle', 'mcu', 'lte']
     import subprocess
     from schgen import HW
-    cli = Path.home() / 'AppData/Local/Programs/KiCad/10.0/bin/kicad-cli.exe'
+    from kicad_env import CLI as cli
     for name in only:
         sh = globals()[name]()
         for p in sh.parts:

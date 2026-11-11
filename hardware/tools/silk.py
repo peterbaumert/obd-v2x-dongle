@@ -1,20 +1,17 @@
 """Place reference designators on the silkscreen so they don't overlap pads, other silk or the edge.
 
-    "%LOCALAPPDATA%\\Programs\\KiCad\\10.0\\bin\\python.exe" hardware/tools/silk.py
+    <KiCad>/bin/python hardware/tools/silk.py      (KiCad's bundled Python provides pcbnew)
 
 For each footprint, tries positions above / below / left / right of its courtyard (left/right also
 rotated 90 deg). If none fits, the silkscreen reference is hidden (the F.Fab/B.Fab reference stays,
 so the assembly drawing still has it). Safe to re-run.
 """
-import os
-import subprocess
 from pathlib import Path
 
 import pcbnew
 
 HW = Path(__file__).resolve().parents[1]
 PCB = HW / 'obd-v2x-dongle.kicad_pcb'
-KICAD = Path(os.environ['LOCALAPPDATA']) / 'Programs/KiCad/10.0'
 CLR = pcbnew.FromMM(0.15)      # silk-to-pad / silk-to-silk clearance
 EDGE = pcbnew.FromMM(0.3)
 

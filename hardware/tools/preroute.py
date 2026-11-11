@@ -1,7 +1,7 @@
 """Hand-specified routing for the critical nets, applied to the existing board (idempotent:
 removes its own previous tracks/vias/zones on these nets first). Run before autorouting:
 
-    "%LOCALAPPDATA%\\Programs\\KiCad\\10.0\\bin\\python.exe" hardware/tools/preroute.py
+    <KiCad>/bin/python hardware/tools/preroute.py      (KiCad's bundled Python provides pcbnew)
 
 - LTE main / GNSS antenna chains: straight 0.35 mm F.Cu lines (50 ohm placeholder), GND vias at the
   shunt caps and U.FL shields, via fence on both sides.
@@ -9,13 +9,16 @@ removes its own previous tracks/vias/zones on these nets first). Run before auto
 """
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pcbnew
 
+sys.path.insert(0, str(Path(__file__).parent))
+from kicad_env import CLI  # noqa: E402
+
 HW = Path(__file__).resolve().parents[1]
 PCB = HW / 'obd-v2x-dongle.kicad_pcb'
-KICAD = Path(os.environ['LOCALAPPDATA']) / 'Programs/KiCad/10.0'
 OX, OY = 100.0, 50.0
 RF_W = 0.35
 VIA_D, VIA_DR = 0.6, 0.3
@@ -138,7 +141,7 @@ for x, y in ((28.3, 22.9), (31.5, 19.0), (34.4, 19.0), (34.4, 27.4), (36.0, 27.4
 board.Add(z)
 
 board.Save(str(PCB))
-subprocess.run([str(KICAD / 'bin/kicad-cli.exe'), 'pcb', 'drc', '--refill-zones', '--save-board',
+subprocess.run([str(CLI), 'pcb', 'drc', '--refill-zones', '--save-board',
                 '-o', os.path.join(os.environ.get('TEMP', '.'), 'obd-v2x-preroute.drc'), str(PCB)],
                check=False, capture_output=True)
 print('pre-routed RF chains + SW node;', len(added_gnd), 'GND vias')

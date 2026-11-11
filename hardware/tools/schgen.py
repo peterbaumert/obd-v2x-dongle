@@ -10,7 +10,7 @@ from sexp import Sym, dump, find, first, parse
 
 G = 2.54
 HW = Path(__file__).resolve().parents[1]
-KICAD_SYM = Path.home() / 'AppData/Local/Programs/KiCad/10.0/share/kicad/symbols'
+from kicad_env import SYMBOLS as KICAD_SYM
 PROJECT = 'obd-v2x-dongle'
 
 

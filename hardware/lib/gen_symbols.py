@@ -127,7 +127,8 @@ def rail_symbols(names):
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
     from sexp import parse, dump, find
-    stock = Path.home() / 'AppData/Local/Programs/KiCad/10.0/share/kicad/symbols/power.kicad_sym'
+    from kicad_env import SYMBOLS
+    stock = SYMBOLS / 'power.kicad_sym'
     tree = parse(stock.read_text(encoding='utf-8'))
     base = [s for s in find(tree, 'symbol') if s[1] == '+3V3'][0]
     src = dump(base, 1)

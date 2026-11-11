@@ -1,8 +1,8 @@
 """Bootstrap hardware/obd-v2x-dongle.kicad_pcb from the schematic: outline, stack-up, rules,
 footprints with nets, first-pass placement, GND planes.
 
-Run with KiCad's Python (needs pcbnew):
-    "%LOCALAPPDATA%\\Programs\\KiCad\\10.0\\bin\\python.exe" hardware/tools/gen_pcb.py [--force]
+Run with KiCad's bundled Python (it provides pcbnew):
+    <KiCad>/bin/python hardware/tools/gen_pcb.py [--force]
 
 The PCB is generated ONCE. After routing starts it is edited in KiCad (Tools > Update PCB from
 Schematic for netlist changes). --force overwrites the board, including any routing.
@@ -24,8 +24,7 @@ from sexp import parse, find  # noqa: E402
 HW = Path(__file__).resolve().parents[1]
 PCB = HW / 'obd-v2x-dongle.kicad_pcb'
 SCH = HW / 'obd-v2x-dongle.kicad_sch'
-KICAD = Path(os.environ['LOCALAPPDATA']) / 'Programs/KiCad/10.0'
-STOCK_FP = KICAD / 'share/kicad/footprints'
+from kicad_env import CLI, FOOTPRINTS as STOCK_FP  # noqa: E402
 
 OX, OY = 100.0, 50.0          # board origin on the page
 BOARD_W, BOARD_L = 52.0, 74.0
@@ -157,7 +156,7 @@ def pt(x, y):
 # ------------------------------------------------------------------ netlist
 def read_netlist():
     out = Path(os.environ.get('TEMP', '.')) / 'obd-v2x-gen_pcb.net'
-    subprocess.run([str(KICAD / 'bin/kicad-cli.exe'), 'sch', 'export', 'netlist', '--format', 'kicadsexpr',
+    subprocess.run([str(CLI), 'sch', 'export', 'netlist', '--format', 'kicadsexpr',
                     '-o', str(out), str(SCH)], check=True, capture_output=True)
     n = parse(out.read_text(encoding='utf-8'))
     comps = {}
@@ -393,7 +392,7 @@ def build():
         board.Add(z)
     board.Save(str(PCB))
     # fill zones with KiCad's own filler and save (pcbnew's in-process fill misses some clearances)
-    subprocess.run([str(KICAD / 'bin/kicad-cli.exe'), 'pcb', 'drc', '--refill-zones', '--save-board',
+    subprocess.run([str(CLI), 'pcb', 'drc', '--refill-zones', '--save-board',
                     '-o', os.path.join(os.environ.get('TEMP', '.'), 'obd-v2x-gen_pcb.drc'), str(PCB)],
                    check=False, capture_output=True)
     print(f'wrote {PCB} ({len(fps)} footprints, {len(netinfo)} nets)')

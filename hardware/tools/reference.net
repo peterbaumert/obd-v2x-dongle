@@ -2617,10 +2617,9 @@
 			(datasheet "https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II_diagnostic_connector")
 			(fields
 				(field
-					(name "MPN") "TBD (J1962 male, hand-fitted)")
+					(name "MPN") "CR-PG001 (OBD2 male 90deg PCB, hand-fitted)")
 				(field
-					(name "Manufacturer")
-				)
+					(name "Manufacturer") "Jiatel or equivalent")
 				(field
 					(name "LCSC")
 				)
@@ -2639,11 +2638,11 @@
 			)
 			(property
 				(name "MPN")
-				(value "TBD (J1962 male, hand-fitted)")
+				(value "CR-PG001 (OBD2 male 90deg PCB, hand-fitted)")
 			)
 			(property
 				(name "Manufacturer")
-				(value "")
+				(value "Jiatel or equivalent")
 			)
 			(property
 				(name "LCSC")
@@ -4036,16 +4035,16 @@
 		)
 		(comp
 			(ref "U301")
-			(value "ESP32-C5-WROOM-1U-N8R4")
+			(value "ESP32-C5-WROOM-1U-N16R8")
 			(footprint "obd-v2x:ESP32-C5-WROOM-1U")
 			(datasheet "https://documentation.espressif.com/esp32-c5-wroom-1_wroom-1u_datasheet_en.pdf")
 			(fields
 				(field
-					(name "MPN") "ESP32-C5-WROOM-1U-N8R4")
+					(name "MPN") "ESP32-C5-WROOM-1U-N16R8-V1.2")
 				(field
 					(name "Manufacturer") "Espressif")
 				(field
-					(name "LCSC") "C49308183")
+					(name "LCSC") "C54951857")
 				(field
 					(name "Footprint") "obd-v2x:ESP32-C5-WROOM-1U")
 				(field
@@ -4061,7 +4060,7 @@
 			)
 			(property
 				(name "MPN")
-				(value "ESP32-C5-WROOM-1U-N8R4")
+				(value "ESP32-C5-WROOM-1U-N16R8-V1.2")
 			)
 			(property
 				(name "Manufacturer")
@@ -4069,7 +4068,7 @@
 			)
 			(property
 				(name "LCSC")
-				(value "C49308183")
+				(value "C54951857")
 			)
 			(property
 				(name "Sheetname")
@@ -8532,7 +8531,7 @@
 				)
 				(pin
 					(num "19")
-					(name "IO15")
+					(name "NC/IO15")
 					(type "bidirectional")
 				)
 				(pin
@@ -8592,8 +8591,8 @@
 				)
 				(pin
 					(num "31")
-					(name "ANT")
-					(type "passive")
+					(name "ANT2")
+					(type "bidirectional")
 				)
 				(pin
 					(num "32")
@@ -8835,7 +8834,7 @@
 		(net
 			(code "2")
 			(name "/LTE + GNSS (EC200U)/LTE_ANT_GNSS")
-			(class "Default")
+			(class "RF")
 			(node
 				(ref "C413")
 				(pin "1")
@@ -8856,7 +8855,7 @@
 		(net
 			(code "3")
 			(name "/LTE + GNSS (EC200U)/LTE_ANT_MAIN")
-			(class "Default")
+			(class "RF")
 			(node
 				(ref "C411")
 				(pin "1")
@@ -10482,7 +10481,7 @@
 		(net
 			(code "51")
 			(name "Net-(D103-K)")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "C104")
 				(pin "2")
@@ -10510,7 +10509,7 @@
 		(net
 			(code "52")
 			(name "Net-(D202-K)")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "D202")
 				(pin "1")
@@ -10637,7 +10636,7 @@
 		(net
 			(code "58")
 			(name "Net-(J402-In)")
-			(class "Default")
+			(class "RF")
 			(node
 				(ref "C412")
 				(pin "1")
@@ -10658,7 +10657,7 @@
 		(net
 			(code "59")
 			(name "Net-(J403-In)")
-			(class "Default")
+			(class "RF")
 			(node
 				(ref "C414")
 				(pin "1")
@@ -10835,7 +10834,7 @@
 		(net
 			(code "68")
 			(name "OBD_VBAT")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "F101")
 				(pin "1")
@@ -10851,7 +10850,7 @@
 		(net
 			(code "69")
 			(name "VBAT_LTE")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "C401")
 				(pin "1")
@@ -10906,7 +10905,7 @@
 		(net
 			(code "70")
 			(name "VBUS_USB")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "D102")
 				(pin "2")
@@ -10947,7 +10946,7 @@
 		(net
 			(code "71")
 			(name "VIN_PROT")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "C102")
 				(pin "1")
@@ -11045,7 +11044,7 @@
 		(net
 			(code "73")
 			(name "VSYS_3V8")
-			(class "Default")
+			(class "Power")
 			(node
 				(ref "C107")
 				(pin "1")
@@ -11285,28 +11284,17 @@
 		)
 		(net
 			(code "90")
-			(name "unconnected-(U301-ANT-Pad31)")
+			(name "unconnected-(U301-ANT2-Pad31)")
 			(class "Default")
 			(node
 				(ref "U301")
 				(pin "31")
-				(pinfunction "ANT_31")
-				(pintype "passive+no_connect")
-			)
-		)
-		(net
-			(code "91")
-			(name "unconnected-(U301-IO15-Pad19)")
-			(class "Default")
-			(node
-				(ref "U301")
-				(pin "19")
-				(pinfunction "IO15_19")
+				(pinfunction "ANT2_31")
 				(pintype "bidirectional+no_connect")
 			)
 		)
 		(net
-			(code "92")
+			(code "91")
 			(name "unconnected-(U301-NC-Pad20)")
 			(class "Default")
 			(node
@@ -11317,7 +11305,7 @@
 			)
 		)
 		(net
-			(code "93")
+			(code "92")
 			(name "unconnected-(U301-NC-Pad22)")
 			(class "Default")
 			(node
@@ -11325,6 +11313,17 @@
 				(pin "22")
 				(pinfunction "NC_22")
 				(pintype "no_connect")
+			)
+		)
+		(net
+			(code "93")
+			(name "unconnected-(U301-NC{slash}IO15-Pad19)")
+			(class "Default")
+			(node
+				(ref "U301")
+				(pin "19")
+				(pinfunction "NC/IO15_19")
+				(pintype "bidirectional+no_connect")
 			)
 		)
 		(net
