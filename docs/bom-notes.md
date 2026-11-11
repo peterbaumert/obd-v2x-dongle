@@ -38,7 +38,14 @@ J401 GCT SIM8060-6-0-14-00 (2.2k) · J402–404 Hirose U.FL-R-SMT-1(10) (17k)
 ## Design notes
 
 - U102 compensation (R106/C105/C106) is a first pass — verify with TI WEBENCH.
-- C411–C416 antenna pi-match caps are DNP until the antennas are tuned.
+- C411–C414 antenna pi-match caps are DNP until the antennas are tuned (R409/R410 = 0 Ω).
 - U301: the 5.9 GHz antenna plugs into the module's own U.FL (ANT1, default). Pad 31 (ANT2) is disabled by
   default and left unconnected; pin 19 (IO15) is the PSRAM chip select on N16R8 and must stay unconnected.
 - U401 footprint follows Quectel's recommended land pattern; keep 3 mm clearance around the module.
+
+## Antennas (case design)
+- The board has no on-board antennas: ESP32-C5-WROOM-1U (5.9 GHz) uses the module's U.FL; LTE main (J402) and
+  GNSS (J403) are U.FL. No PCB keep-out needed; what matters is where the antennas sit in the case.
+- Mount the three antennas away from the PCB / ground planes (e.g. flex antennas on the inner case walls),
+  on different walls, a few cm apart (LTE TX can desensitise GNSS). Plastic case only.
+- Under the dash GNSS reception is poor: optional U.FL->SMA pigtail to an external GNSS antenna behind the windscreen.
