@@ -756,7 +756,7 @@ def battery():
     # ---------------- charger
     sh.text('Li-ion charger, fed from the car side (VIN_PROT)', g(5), g(8), 1.5, True)
     XC, YC = g(34), g(24)
-    U = sh.part('obd-v2x:BQ25171-Q1', 'U501', 'BQ25171-Q1', 'Package_SON:Texas_DRC0010J_ThermalVias', XC, YC, 0)
+    U = sh.part('obd-v2x:BQ25171-Q1', 'U501', 'BQ25171-Q1', 'Package_SON:Texas_DRC0010J', XC, YC, 0)
     U.fields = IC(XC, U['1'][1] - g(1), U['5'][1], left=XC + g(1), above=True)
     # input: VIN_PROT -> 33R -> (TVS, 1uF) -> IN ; enters from above so the left side stays free
     yi = U['1'][1] - g(5)
@@ -777,14 +777,14 @@ def battery():
     sh.gnd((U['3'][0] - g(1), U['3'][1]), rot=270)
     # programming resistors / NTC: lower pins land closest, so nothing crosses
     for xk, pin, ref, val, lib, fp in ((g(8), '4', 'RT501', '10k NTC', 'Device:Thermistor_NTC', R0603),
-                                       (g(13), '2', 'R502', '3.3k', 'Device:R', R0603),
+                                       (g(13), '2', 'R502', '4.3k', 'Device:R', R0603),
                                        (g(18), '9', 'R503', '24k 1%', 'Device:R', R0603),
                                        (g(23), '6', 'R504', '82k 1%', 'Device:R', R0603)):
         y = U[pin][1]
         sh.w(U[pin], (xk, y))
         r = rv(sh, lib, ref, val, fp, xk, y)
         sh.gnd(r[2])
-    sh.text('ISET 3.3k: 91 mA charge (kept low: linear from 14 V)\nVSET 24k: 4.10 V float   CHM_TMR 82k: Li-ion, 10 h timer\n'
+    sh.text('ISET 4.3k: 70 mA charge (kept low: linear from 14 V, ~0.6 W)\nVSET 24k: 4.10 V float   CHM_TMR 82k: Li-ion, 10 h timer\n'
             'TS: 10k NTC next to the cell -> charging only 0..45 C', g(5), g(48), 1.27)
     sh.nc(U, '7')
     sh.nc(U, '8')

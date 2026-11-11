@@ -46,8 +46,7 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 
 ## Open decisions
 
-1. **SIM access** – keep the hinged holder (open the case to change SIM, like many trackers), move to an
-   edge-mounted push-push nano-SIM holder with a case slot, or add a soldered MFF2 eSIM (no access needed).
-2. **Backup battery** (like Teltonika FMC003) – not in the design yet. Needed for "unplugged / power lost" alerts
-   and short GNSS/LTE operation without vehicle power.
+1. **SIM access** – decided: soldered MFF2 eSIM (U403) as default on SIM 1, nano-SIM holder kept as a resistor-
+   selectable alternative.
+2. **Backup battery** – decided: 1S Li-ion/LiPo with BQ25171-Q1 charger and TPS2121 power mux (sheet 6).
 3. **Mounting holes** – none; the case has to clamp the board (plug + edges).

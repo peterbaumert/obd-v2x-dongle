@@ -141,7 +141,7 @@ esim = symbol(
 # Pin numbers per TI SLUSDK0A Pin Functions; EP (11) = GND.
 bq = symbol(
     'BQ25171-Q1', 'U',
-    'Package_SON:Texas_DRC0010J_ThermalVias',
+    'Package_SON:Texas_DRC0010J',
     'https://www.ti.com/lit/ds/symlink/bq25171-q1.pdf',
     'Automotive 800 mA linear charger, 1-2 cell Li-ion/LiFePO4/NiMH, 40 V abs max input, NTC input',
     'battery charger Li-ion automotive linear',

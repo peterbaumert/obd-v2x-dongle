@@ -1107,7 +1107,7 @@
 					)
 				)
 			)
-			(property "Footprint" "Package_SON:Texas_DRC0010J_ThermalVias"
+			(property "Footprint" "Package_SON:Texas_DRC0010J"
 				(at 0 -15.24 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -2471,17 +2471,6 @@
 		)
 		(uuid "40d88903-cb23-57fd-9a17-6d7969d457b5")
 	)
-	(text "ISET 3.3k: 91 mA charge (kept low: linear from 14 V)\nVSET 24k: 4.10 V float   CHM_TMR 82k: Li-ion, 10 h timer\nTS: 10k NTC next to the cell -> charging only 0..45 C"
-		(exclude_from_sim no)
-		(at 12.7 121.92 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "6f7c7354-c26c-5238-96c7-d4fe1e728062")
-	)
 	(text "Li-ion charger, fed from the car side (VIN_PROT)"
 		(exclude_from_sim no)
 		(at 12.7 20.32 0)
@@ -2493,6 +2482,17 @@
 			(justify left)
 		)
 		(uuid "736a187b-0497-5437-b8bd-01d3a833f980")
+	)
+	(text "ISET 4.3k: 70 mA charge (kept low: linear from 14 V, ~0.6 W)\nVSET 24k: 4.10 V float   CHM_TMR 82k: Li-ion, 10 h timer\nTS: 10k NTC next to the cell -> charging only 0..45 C"
+		(exclude_from_sim no)
+		(at 12.7 121.92 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "a1f853ab-20fd-53e1-8839-7e78aa2835d9")
 	)
 	(text "1S Li-ion/LiPo cell, 250-400 mAh, with protection PCM"
 		(exclude_from_sim no)
@@ -5439,7 +5439,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "3.3k"
+		(property "Value" "4.3k"
 			(at 35.052 68.58 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5530,7 +5530,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SON:Texas_DRC0010J_ThermalVias"
+		(property "Footprint" "Package_SON:Texas_DRC0010J"
 			(at 86.36 60.96 0)
 			(hide yes)
 			(show_name no)

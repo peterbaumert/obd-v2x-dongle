@@ -70,9 +70,45 @@ def via(x, y, net='GND'):
     added_gnd.append((round(x, 3), round(y, 3)))
 
 
+PAD_BOXES = []
+for _fp in board.GetFootprints():
+    for _p in _fp.Pads():
+        _bb = _p.GetBoundingBox()
+        PAD_BOXES.append((pcbnew.ToMM(_bb.GetLeft()) - OX, pcbnew.ToMM(_bb.GetTop()) - OY,
+                          pcbnew.ToMM(_bb.GetRight()) - OX, pcbnew.ToMM(_bb.GetBottom()) - OY, _p.GetNetname()))
+
+
+TAKEN = []
+
+
+def free_spot(x, y, along_x_only):
+    """nearest position to (x, y) whose via (0.6 mm + 0.25 mm clearance) touches no pad of another net and no
+    other planned via; None if there is none within 3 mm (the via is then dropped)"""
+    r = VIA_D / 2 + 0.25
+
+    def ok(px, py):
+        if any((px - tx) ** 2 + (py - ty) ** 2 < (VIA_D + 0.3) ** 2 for tx, ty in TAKEN):
+            return False
+        for x0, y0, x1, y1, n in PAD_BOXES:
+            if n == 'GND' and x0 - 0.01 <= px <= x1 + 0.01 and y0 - 0.01 <= py <= y1 + 0.01:
+                return False            # not inside a GND pad either (solder wicking)
+            if n != 'GND' and x0 - r < px < x1 + r and y0 - r < py < y1 + r:
+                return False
+        return True
+    steps = [i * 0.25 for i in range(0, 13)]
+    cands = [(x + s * d, y) for s in steps for d in ((1, -1) if s else (1,))] if along_x_only else \
+            [(x + dx, y + dy) for s in steps for dx, dy in ((s, 0), (-s, 0), (0, s), (0, -s), (s, s), (-s, -s), (s, -s), (-s, s))]
+    for px, py in cands:
+        if ok(px, py):
+            TAKEN.append((px, py))
+            return (round(px, 3), round(py, 3))
+    return None
+
+
 # drop old GND vias at the exact positions we are about to add (re-run safety)
 def planned_vias():
     out = []
+    TAKEN.clear()
     for ch in (('U401', '49', 'C411', 'R409', 'C412', 'J402', -1), ('U401', '47', 'C413', 'R410', 'C414', 'J403', +1)):
         out += rf_chain(*ch, dry=True)
     return out
@@ -96,6 +132,15 @@ def rf_chain(u, pin, c1, r, c2, j, away, dry=False):
     for fx in (37.4, 41.7, 44.2):
         for side in (-1, 1):
             vias.append((fx, y + side * 1.05, None))
+    # through-vias also land on the bottom side: slide each one to the nearest spot clear of all pads
+    placed_v = []
+    for vx, vy, stub in vias:
+        spot = free_spot(vx, vy, stub is None)
+        if spot is None:
+            print(f'  dropped GND via near ({vx:.2f}, {vy:.2f}): no pad-free spot')
+            continue
+        placed_v.append(spot + (stub,))
+    vias = placed_v
     if dry:
         return [(round(v[0], 3), round(v[1], 3)) for v in vias]
     net_a = board.FindFootprintByReference(u).FindPadByNumber(pin).GetNetname()
@@ -110,6 +155,7 @@ def rf_chain(u, pin, c1, r, c2, j, away, dry=False):
 
 
 plan = set(planned_vias())
+TAKEN.clear()
 for t in list(board.GetTracks()):
     if isinstance(t, pcbnew.PCB_VIA) and t.GetNetname() == 'GND':
         q = t.GetPosition()

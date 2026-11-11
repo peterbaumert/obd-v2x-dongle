@@ -609,7 +609,7 @@
 	(symbol "BQ25171-Q1" (pin_names (offset 1.016)) (exclude_from_sim no) (in_bom yes) (on_board yes)
 		(property "Reference" "U" (at -15.24 12.70 0) (effects (font (size 1.27 1.27))))
 		(property "Value" "BQ25171-Q1" (at 5.08 12.70 0) (effects (font (size 1.27 1.27))))
-		(property "Footprint" "Package_SON:Texas_DRC0010J_ThermalVias" (at 0.00 -15.24 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Footprint" "Package_SON:Texas_DRC0010J" (at 0.00 -15.24 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/bq25171-q1.pdf" (at 0.00 -17.78 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Description" "Automotive 800 mA linear charger, 1-2 cell Li-ion/LiFePO4/NiMH, 40 V abs max input, NTC input" (at 0.00 -20.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "ki_keywords" "battery charger Li-ion automotive linear" (at 0.00 -22.86 0) (effects (font (size 1.27 1.27)) (hide yes)))

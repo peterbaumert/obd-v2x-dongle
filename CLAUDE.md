@@ -41,5 +41,9 @@
 - Routed with Freerouting (export DSN with In1 set to `(type power)` so it stays a solid plane, outer GND pours
   removed from the export) plus `hardware/tools/maze.py` for single connections and GND stitching vias.
   The buck switch node is locked 1 mm F.Cu tracks; keep other nets out of it.
-- Current state: DRC 0 errors, 0 unconnected, parity 0 (only cosmetic silk warnings).
+- Schematic changes reach the routed board via `hardware/tools/sync_pcb.py` (adds new parts, updates nets/fields,
+  rips copper of split nets and under new parts); then `route_unconnected.py` / Freerouting (lock pre-routes and
+  **save** the lock first, Freerouting leaves locked copper out of its result).
+- Current state: DRC 0 errors, parity 0; 3 signal connections (VCELL into U502, LTE_TXD_1V8, KL_TX) and one
+  bottom GND-pour island still to route by hand (KiCad interactive router).
 - RF net class width (0.35 mm) is a 50 ohm placeholder: confirm with PCBWay's stack-up before ordering.

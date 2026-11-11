@@ -153,6 +153,14 @@
       {
         "netclass": "RF",
         "pattern": "Net-(J403-In)"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "VBUCK_3V8"
+      },
+      {
+        "netclass": "Power",
+        "pattern": "VCELL"
       }
     ]
   },
