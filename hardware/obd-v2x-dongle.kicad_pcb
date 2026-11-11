@@ -13699,7 +13699,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "IoT SIM Chip Industrial (MFF2 eUICC), consigned"
+		(property "MPN" "MFF2 eSIM, optional (DNP)"
 			(at 0 0 90)
 			(layer "B.SilkS")
 			(hide yes)
@@ -13712,7 +13712,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Manufacturer" "1NCE"
+		(property "Manufacturer" ""
 			(at 0 0 90)
 			(layer "B.SilkS")
 			(hide yes)
@@ -13741,7 +13741,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/8a1ea897-759c-54cf-a956-afc0767397ac")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start 3.11 -2.61)
@@ -14686,7 +14686,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/1fc80177-71f4-5c45-b74a-7a8b36a98f82")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)
@@ -16145,7 +16145,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/9362f0ad-5fc8-5b49-90b4-9e73752f11a1")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)
@@ -16791,7 +16791,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/b93650c3-2606-52c0-8096-61a06161c0f2")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd dnp)
+		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)
@@ -16948,7 +16948,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/f68a1191-4705-5b35-8363-2079803b056e")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.107836 -0.36)
@@ -19322,7 +19322,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/1dce8d78-a70b-5f19-800f-ea12b9196e4f")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd)
+		(attr smd dnp)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)
@@ -24981,7 +24981,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/bdd802d0-c7f8-5ff3-ab1c-33ef5a193b6d")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd dnp)
+		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)
@@ -25138,7 +25138,7 @@
 		(path "/01715d65-cdba-4655-b5fc-0dddd6752831/778b7699-e641-5cc9-9d27-c8111ac26b32")
 		(sheetname "/LTE + GNSS (EC200U)/")
 		(sheetfile "lte.kicad_sch")
-		(attr smd dnp)
+		(attr smd)
 		(duplicate_pad_numbers_are_jumpers no)
 		(fp_line
 			(start -0.153641 -0.38)

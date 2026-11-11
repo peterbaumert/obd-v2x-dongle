@@ -4124,18 +4124,6 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Nano-SIM (alternative, R405-R407 DNP)"
-		(exclude_from_sim no)
-		(at 203.2 96.52 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "0cb69f93-dfa8-5805-a477-fa857a5d26af")
-	)
 	(text "PWRKEY / RESET_N open-collector drivers (MCU high = pull low)"
 		(exclude_from_sim no)
 		(at 10.16 20.32 0)
@@ -4160,7 +4148,19 @@
 		)
 		(uuid "3bb35330-2c27-58b6-ac8d-7f7495eb4522")
 	)
-	(text "SIM 1 = eSIM U403 (default): fit R411-R413.\nNano-SIM J401 instead: fit R405-R407, remove R411-R413 (never both)."
+	(text "Nano-SIM (default SIM)"
+		(exclude_from_sim no)
+		(at 203.2 96.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "78f95491-0f1b-5641-8e54-0ad804466024")
+	)
+	(text "SIM 1 = nano-SIM J401 (default): R405-R407 fitted.\nOptional soldered eSIM: fit U403, C415, R411-R413, remove R405-R407 (never both)."
 		(exclude_from_sim no)
 		(at 111.76 14.224 0)
 		(effects
@@ -4170,7 +4170,7 @@
 			)
 			(justify left)
 		)
-		(uuid "5a1103b2-fcc7-50fd-928d-ccc4a7d84127")
+		(uuid "a5223db9-ec26-5e77-a5c4-6aa264c502b9")
 	)
 	(text "VBAT_LTE bulk/decoupling (close to pins 57-60)"
 		(exclude_from_sim no)
@@ -6812,7 +6812,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "1dce8d78-a70b-5f19-800f-ea12b9196e4f")
 		(property "Reference" "R412"
 			(at 135.89 30.48 90)
@@ -6890,7 +6890,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "1fc80177-71f4-5c45-b74a-7a8b36a98f82")
 		(property "Reference" "R411"
 			(at 135.89 38.1 90)
@@ -9369,7 +9369,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "778b7699-e641-5cc9-9d27-c8111ac26b32")
 		(property "Reference" "R405"
 			(at 224.79 114.3 90)
@@ -9524,7 +9524,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "8a1ea897-759c-54cf-a956-afc0767397ac")
 		(property "Reference" "U403"
 			(at 190.5 36.83 0)
@@ -9580,7 +9580,7 @@
 				)
 			)
 		)
-		(property "MPN" "IoT SIM Chip Industrial (MFF2 eUICC), consigned"
+		(property "MPN" "MFF2 eSIM, optional (DNP)"
 			(at 187.96 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -9591,7 +9591,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "1NCE"
+		(property "Manufacturer" ""
 			(at 187.96 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -9734,7 +9734,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "9362f0ad-5fc8-5b49-90b4-9e73752f11a1")
 		(property "Reference" "R413"
 			(at 135.89 22.86 90)
@@ -10471,7 +10471,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "b93650c3-2606-52c0-8096-61a06161c0f2")
 		(property "Reference" "R407"
 			(at 224.79 99.06 90)
@@ -10705,7 +10705,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "bdd802d0-c7f8-5ff3-ab1c-33ef5a193b6d")
 		(property "Reference" "R406"
 			(at 224.79 106.68 90)
@@ -12565,7 +12565,7 @@
 		(in_bom yes)
 		(on_board yes)
 		(in_pos_files yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "f68a1191-4705-5b35-8363-2079803b056e")
 		(property "Reference" "C415"
 			(at 179.832 21.59 0)

@@ -46,7 +46,9 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 
 ## Open decisions
 
-1. **SIM access** – decided: soldered MFF2 eSIM (U403) as default on SIM 1, nano-SIM holder kept as a resistor-
-   selectable alternative.
+1. **SIM** – decided: the nano-SIM holder is SIM 1 (works with Telekom / Vodafone / congstar plug-in SIMs and with
+   removable eSIM cards). The soldered MFF2 eSIM footprint (U403) stays on the board, not fitted, for a possible
+   SGP.32 IoT eSIM later. Consumer eSIM profiles on a soldered chip would need an LPA in our firmware and the
+   EC200U's support for it is unclear.
 2. **Backup battery** – decided: 1S Li-ion/LiPo with BQ25171-Q1 charger and TPS2121 power mux (sheet 6).
 3. **Mounting holes** – none; the case has to clamp the board (plug + edges).

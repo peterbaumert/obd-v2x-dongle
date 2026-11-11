@@ -35,7 +35,7 @@ NEW_ANCHOR = {
     'R411': ('U403', '3'), 'R412': ('U403', '6'), 'R413': ('U403', '7'), 'C415': ('U403', '8'),
 }
 # nets whose existing copper must go (pad membership split; would short the new nets)
-RIP_NETS = {'VSYS_3V8'}
+RIP_NETS = set()   # e.g. {'VSYS_3V8'} when a net is split (was used for the backup-battery change)
 
 
 def main(dry):
