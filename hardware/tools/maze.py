@@ -137,7 +137,7 @@ class Grid:
                 c = (tomm(t.GetPosition().x), tomm(t.GetPosition().y))
                 self.mark_seg(vmask, c, c, VIA_D + 0.25)
         # board edge
-        edge = 0.3
+        edge = 0.4      # 0.3 mm rule + grid-rounding margin
         for m, r in [(m, r_tr - CLR + edge) for m in masks] + [(vmask, VIA_D / 2 + edge)]:
             k = int(math.ceil(r / RES))
             m[:k, :] = True; m[-k:, :] = True; m[:, :k] = True; m[:, -k:] = True
@@ -277,6 +277,15 @@ def route(board, net, a, La, c, Lc, width):
 
 
 def gndvias(board):
+    global CLR
+    saved, CLR = CLR, max(CLR, 0.25)     # stitching vias also sit next to 0.2 mm-clearance power nets
+    try:
+        _gndvias(board)
+    finally:
+        CLR = saved
+
+
+def _gndvias(board):
     grid = Grid(board)
     masks, vmask = grid.obstacles('GND', 0.15)
     gnd = board.FindNet('GND')

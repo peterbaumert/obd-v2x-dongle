@@ -44,6 +44,6 @@
 - Schematic changes reach the routed board via `hardware/tools/sync_pcb.py` (adds new parts, updates nets/fields,
   rips copper of split nets and under new parts); then `route_unconnected.py` / Freerouting (lock pre-routes and
   **save** the lock first, Freerouting leaves locked copper out of its result).
-- Current state: DRC 0 errors, parity 0; 3 signal connections (VCELL into U502, LTE_TXD_1V8, KL_TX) and one
-  bottom GND-pour island still to route by hand (KiCad interactive router).
+- Current state: fully routed. DRC 0 errors / 0 unconnected, parity 0, ERC 0/0 (only cosmetic silk warnings).
+  Only the pre-routes (RF lines + their GND vias, buck SW node) are locked.
 - RF net class width (0.35 mm) is a 50 ohm placeholder: confirm with PCBWay's stack-up before ordering.
