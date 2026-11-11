@@ -15,6 +15,8 @@
 - KiCad 10, project in `hardware/`. Scripts find KiCad via `hardware/tools/kicad_env.py` (`KICAD_DIR` env var,
   `kicad-cli` on PATH, or the default install locations). Never commit absolute local paths, usernames or
   machine names (generated files included); keep personal info out of the repo.
+- Git: commit as the repo's configured user (GitHub no-reply address). **No `Co-Authored-By` / "Generated with"
+  trailers or other AI attribution** in commit messages or PR descriptions.
 - Sheets power / vehicle / mcu / lte are **generated**: edit `hardware/tools/gen_schematic.py`, then
   `python hardware/tools/gen_schematic.py`. Don't hand-edit those `.kicad_sch` files (changes get overwritten).
   Layout rules: real wires inside a block, GND/rail power symbols, global labels only for cross-sheet nets.
