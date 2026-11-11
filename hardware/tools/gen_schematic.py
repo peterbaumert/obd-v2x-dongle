@@ -17,6 +17,7 @@ SHEETS = {
     'vehicle': 'fa1dd39e-b547-4d98-ad46-16b1323df42c',
     'mcu': '6ff62bc4-23e3-4296-bf60-cd67ba8c0f07',
     'lte': '01715d65-cdba-4655-b5fc-0dddd6752831',
+    'battery': 'c6ae1c68-acef-4152-829a-0cb506f6fd18',
 }
 
 R0402, R0603, R1206 = 'Resistor_SMD:R_0402_1005Metric', 'Resistor_SMD:R_0603_1608Metric', 'Resistor_SMD:R_1206_3216Metric'
@@ -55,6 +56,12 @@ SOURCING = {
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
     'U403': ('IoT SIM Chip Industrial (MFF2 eUICC), consigned', '1NCE', ''),
+    'U501': ('BQ25171QWDRCRQ1', 'Texas Instruments', 'C2861221'),
+    'U502': ('TPS2121RUXR', 'Texas Instruments', 'C485916'),
+    'J501': ('B2B-PH-SM4-TB(LF)(SN)', 'JST', 'C160352'),
+    'RT501': ('SDNT1608X103F3435FTF', 'Sunlord', 'C525660'),
+    'D501': ('SMF24A', 'Littelfuse', 'C315999'),
+    'C506': ('T495D227K006ATE100', 'KEMET', 'C2798131'),
     'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
@@ -227,7 +234,7 @@ def power():
     cap_to_gnd(sh, 'C107', '47uF 10V', C1210, xo1, yo, 2)
     cap_to_gnd(sh, 'C108', '47uF 10V', C1210, xo2, yo, 2)
     sh.w(L[2], (xf, yo), (xo1, yo), (xo2, yo), (xo2 + g(3), yo))
-    sh.rail('VSYS_3V8', (xo2 + g(3), yo))
+    sh.rail('VBUCK_3V8', (xo2 + g(3), yo))   # -> TPS2121 IN1 (battery sheet); loads are on VSYS_3V8
     # compensation (COMP -> R106 -> C105 -> GND, C106 || to GND), labelled
     sh.label('BUCK_COMP', B['COMP'], 'R', stub=1)
     yc = B['GND'][1] + g(5)
@@ -306,7 +313,7 @@ def power():
     # ---------------- power flags
     yf = g(72)
     sh.text('ERC power flags', g(5), yf - g(5), 1.27)
-    for i, net in enumerate(['VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'GND']):
+    for i, net in enumerate(['VBAT_F', 'VIN_PROT', 'VBUCK_3V8', 'VBAT_LTE', 'GND']):
         x = g(6 + 6 * i)
         flg = sh.part('power:PWR_FLAG', f'#FLG10{i + 1}', 'PWR_FLAG', '', x, yf, 0)
         if net == 'GND':
@@ -742,8 +749,118 @@ def lte():
     return sh
 
 
+# =====================================================================================
+def battery():
+    sh = Sheet('Backup battery', 'battery.kicad_sch', SHEETS['battery'], ROOT,
+               'Backup battery: 1S Li-ion charger (BQ25171-Q1) + priority power mux (TPS2121)')
+    # ---------------- charger
+    sh.text('Li-ion charger, fed from the car side (VIN_PROT)', g(5), g(8), 1.5, True)
+    XC, YC = g(34), g(24)
+    U = sh.part('obd-v2x:BQ25171-Q1', 'U501', 'BQ25171-Q1', 'Package_SON:Texas_DRC0010J_ThermalVias', XC, YC, 0)
+    U.fields = IC(XC, U['1'][1] - g(1), U['5'][1], left=XC + g(1), above=True)
+    # input: VIN_PROT -> 33R -> (TVS, 1uF) -> IN ; enters from above so the left side stays free
+    yi = U['1'][1] - g(5)
+    xn = U['1'][0] - g(2)
+    sh.w(U['1'], (xn, U['1'][1]), (xn, yi))
+    Ri = rh(sh, 'Device:R', 'R501', '33R 0.5W', R1206, g(9), yi)
+    sh.w((g(9), yi), (g(7), yi))
+    sh.rail('VIN_PROT', (g(7), yi))
+    sh.w(Ri[2], (g(24), yi), (xn, yi))
+    flg = sh.part('power:PWR_FLAG', '#FLG501', 'PWR_FLAG', '', g(24), yi - g(2), 0)   # fed via R501
+    sh.w(flg[1], (g(24), yi))
+    Dt = dv(sh, 'Device:D_Zener', 'D501', 'SMF24A', 'Diode_SMD:D_SOD-123F', g(17), yi + g(1), 'K')
+    sh.w((g(17), yi), Dt['K'])
+    sh.gnd(Dt['A'])
+    cap_to_gnd(sh, 'C501', '1uF 50V', C0805, g(21), yi, 1)
+    # /CE low = charge enabled
+    sh.w(U['3'], (U['3'][0] - g(1), U['3'][1]))
+    sh.gnd((U['3'][0] - g(1), U['3'][1]), rot=270)
+    # programming resistors / NTC: lower pins land closest, so nothing crosses
+    for xk, pin, ref, val, lib, fp in ((g(8), '4', 'RT501', '10k NTC', 'Device:Thermistor_NTC', R0603),
+                                       (g(13), '2', 'R502', '3.3k', 'Device:R', R0603),
+                                       (g(18), '9', 'R503', '24k 1%', 'Device:R', R0603),
+                                       (g(23), '6', 'R504', '82k 1%', 'Device:R', R0603)):
+        y = U[pin][1]
+        sh.w(U[pin], (xk, y))
+        r = rv(sh, lib, ref, val, fp, xk, y)
+        sh.gnd(r[2])
+    sh.text('ISET 3.3k: 91 mA charge (kept low: linear from 14 V)\nVSET 24k: 4.10 V float   CHM_TMR 82k: Li-ion, 10 h timer\n'
+            'TS: 10k NTC next to the cell -> charging only 0..45 C', g(5), g(48), 1.27)
+    sh.nc(U, '7')
+    sh.nc(U, '8')
+    sh.gnd(U['5'])
+    # output = cell
+    yo = U['10'][1]
+    xo = U['10'][0]
+    sh.w(U['10'], (xo + g(6), yo))
+    sh.rail('VCELL', (xo + g(6), yo))
+    cap_to_gnd(sh, 'C502', '1uF', C0603, xo + g(3), yo, 1)
+    # cell connector
+    sh.text('1S Li-ion/LiPo cell, 250-400 mAh, with protection PCM', g(46), g(40), 1.27, True)
+    XJ, YJ = g(62), g(45)
+    J = sh.part('Connector_Generic:Conn_01x02', 'J501', 'Battery 1S',
+                'Connector_JST:JST_PH_B2B-PH-SM4-TB_1x02-1MP_P2.00mm_Vertical',
+                XJ, YJ, 0, fields={'ref': (XJ + g(1), YJ - g(1), 'left'), 'val': (XJ + g(1), YJ + g(2), 'left')})
+    sh.w(J['1'], (J['1'][0] - g(7), J['1'][1]))
+    sh.rail('VCELL', (J['1'][0] - g(7), J['1'][1]))
+    cap_to_gnd(sh, 'C505', '1uF', C0603, J['1'][0] - g(4), J['1'][1], 2)
+    sh.w(J['2'], (J['2'][0] - g(1), J['2'][1]))
+    sh.gnd((J['2'][0] - g(1), J['2'][1]), rot=270)
+
+    # ---------------- power mux
+    sh.text('Priority power mux: buck (IN1) while VIN_PROT > ~9.7 V, else cell (IN2)', g(62), g(8), 1.5, True)
+    XM, YM = g(86), g(24)
+    M = sh.part('obd-v2x:TPS2121', 'U502', 'TPS2121', 'Package_DFN_QFN:Texas_VQFN-HR-12_2x2.5mm_P0.5mm', XM, YM, 0)
+    M.fields = IC(XM, M['7'][1] - g(1), M['12'][1], left=XM + g(1), above=True)
+    sh.w(M['7'], (M['7'][0] - g(6), M['7'][1]))
+    sh.rail('VBUCK_3V8', (M['7'][0] - g(6), M['7'][1]))
+    sh.w(M['2'], (M['2'][0] - g(10), M['2'][1]))
+    sh.rail('VCELL', (M['2'][0] - g(10), M['2'][1]))
+    # PR1 = VIN_PROT / 9.2 (trips at ~9.7 V; 53 V surge -> 5.8 V < 6 V abs max)
+    y3 = M['6'][1]
+    xd = M['6'][0] - g(4)
+    sh.w(M['6'], (xd, y3))
+    Rb = rv(sh, 'Device:R', 'R506', '10k 1%', R0603, xd, y3)
+    Rb.fields = VL(Rb.x, Rb.y)
+    sh.gnd(Rb[2])
+    Rt = rh(sh, 'Device:R', 'R505', '82k 1%', R0603, xd - g(7), y3)
+    sh.w(Rt[2], (xd, y3))
+    sh.w(Rt[1], (Rt[1][0] - g(2), y3))
+    sh.rail('VIN_PROT', (Rt[1][0] - g(2), y3))
+    # CP2 / OV1 / OV2 unused -> GND
+    xb = M['3'][0] - g(1)
+    sh.w(M['3'], (xb, M['3'][1]))
+    sh.w(M['5'], (xb, M['5'][1]))
+    sh.w(M['4'], (xb, M['4'][1]), (xb, M['4'][1] + g(1)))
+    sh.w((xb, M['3'][1]), (xb, M['4'][1]))
+    sh.gnd((xb, M['4'][1] + g(1)))
+    # outputs -> VSYS_3V8 with hold-up for modem bursts on battery
+    xr = M['1'][0] + g(2)
+    sh.w(M['1'], (xr, M['1'][1]))
+    sh.w(M['8'], (xr, M['8'][1]), (xr, M['1'][1]))
+    yv = M['1'][1]
+    sh.w((xr, yv), (g(110), yv))
+    sh.rail('VSYS_3V8', (g(110), yv))
+    cap_to_gnd(sh, 'C506', '220uF', 'Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D', g(103), yv, 1,
+               lib='Device:C_Polarized')
+    cap_to_gnd(sh, 'C507', '10uF', C0805, g(107), yv, 1)
+    # ST unused -> GND ; ILIM 30.1k ~ 3.5 A ; SS 10 nF
+    sh.w(M['9'], (M['9'][0] + g(1), M['9'][1]))
+    sh.gnd((M['9'][0] + g(1), M['9'][1]), rot=90)
+    for xk, pin, ref, val, lib, fp in ((M['10'][0] + g(6), '10', 'R507', '30.1k 1%', 'Device:R', R0603),
+                                       (M['11'][0] + g(3), '11', 'C504', '10nF', 'Device:C', C0603)):
+        y = M[pin][1]
+        sh.w(M[pin], (xk, y))
+        r = rv(sh, lib, ref, val, fp, xk, y)
+        sh.gnd(r[2])
+    sh.gnd(M['12'])
+    sh.text('ILIM 30.1k: ~3.5 A   SS 10 nF\nFirmware on battery: LTE only (lower burst current),\n'
+            'shut the modem down below ~3.6 V cell', g(80), g(40), 1.27)
+    return sh
+
+
 if __name__ == '__main__':
-    only = sys.argv[1:] or ['power', 'vehicle', 'mcu', 'lte']
+    only = sys.argv[1:] or ['power', 'vehicle', 'mcu', 'lte', 'battery']
     import subprocess
     from schgen import HW
     from kicad_env import CLI as cli

@@ -606,6 +606,126 @@
 		)
 		(embedded_fonts no)
 	)
+	(symbol "BQ25171-Q1" (pin_names (offset 1.016)) (exclude_from_sim no) (in_bom yes) (on_board yes)
+		(property "Reference" "U" (at -15.24 12.70 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "BQ25171-Q1" (at 5.08 12.70 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "Package_SON:Texas_DRC0010J_ThermalVias" (at 0.00 -15.24 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/bq25171-q1.pdf" (at 0.00 -17.78 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Automotive 800 mA linear charger, 1-2 cell Li-ion/LiFePO4/NiMH, 40 V abs max input, NTC input" (at 0.00 -20.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "ki_keywords" "battery charger Li-ion automotive linear" (at 0.00 -22.86 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(symbol "BQ25171-Q1_0_1"
+			(rectangle (start -15.24 10.16) (end 15.24 -10.16) (stroke (width 0.254) (type default)) (fill (type background)))
+		)
+		(symbol "BQ25171-Q1_1_1"
+			(pin power_in line (at -17.78 7.62 0) (length 2.54)
+				(name "IN" (effects (font (size 1.27 1.27))))
+				(number "1" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 2.54 0) (length 2.54)
+				(name "~{CE}" (effects (font (size 1.27 1.27))))
+				(number "3" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 0.00 0) (length 2.54)
+				(name "TS" (effects (font (size 1.27 1.27))))
+				(number "4" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at -17.78 -2.54 0) (length 2.54)
+				(name "ISET" (effects (font (size 1.27 1.27))))
+				(number "2" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at -17.78 -5.08 0) (length 2.54)
+				(name "VSET" (effects (font (size 1.27 1.27))))
+				(number "9" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at -17.78 -7.62 0) (length 2.54)
+				(name "CHM_TMR" (effects (font (size 1.27 1.27))))
+				(number "6" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_out line (at 17.78 7.62 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.27 1.27))))
+				(number "10" (effects (font (size 1.27 1.27))))
+			)
+			(pin open_collector line (at 17.78 2.54 180) (length 2.54)
+				(name "STAT1" (effects (font (size 1.27 1.27))))
+				(number "7" (effects (font (size 1.27 1.27))))
+			)
+			(pin open_collector line (at 17.78 0.00 180) (length 2.54)
+				(name "STAT2" (effects (font (size 1.27 1.27))))
+				(number "8" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_in line (at 0.00 -12.70 90) (length 2.54)
+				(name "GND" (effects (font (size 1.27 1.27))))
+				(number "5" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_in line (at 0.00 -12.70 90) (length 2.54) (hide yes)
+				(name "GND" (effects (font (size 1.27 1.27))))
+				(number "11" (effects (font (size 1.27 1.27))))
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "TPS2121" (pin_names (offset 1.016)) (exclude_from_sim no) (in_bom yes) (on_board yes)
+		(property "Reference" "U" (at -15.24 12.70 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "TPS2121" (at 5.08 12.70 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "Package_DFN_QFN:Texas_VQFN-HR-12_2x2.5mm_P0.5mm" (at 0.00 -15.24 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps2121.pdf" (at 0.00 -17.78 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "2.8-22 V priority power mux, 56 mOhm, 4.5 A, seamless switchover" (at 0.00 -20.32 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "ki_keywords" "power mux ORing priority switchover" (at 0.00 -22.86 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(symbol "TPS2121_0_1"
+			(rectangle (start -15.24 10.16) (end 15.24 -10.16) (stroke (width 0.254) (type default)) (fill (type background)))
+		)
+		(symbol "TPS2121_1_1"
+			(pin power_in line (at -17.78 7.62 0) (length 2.54)
+				(name "IN1" (effects (font (size 1.27 1.27))))
+				(number "7" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_in line (at -17.78 5.08 0) (length 2.54)
+				(name "IN2" (effects (font (size 1.27 1.27))))
+				(number "2" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 0.00 0) (length 2.54)
+				(name "PR1" (effects (font (size 1.27 1.27))))
+				(number "6" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 -2.54 0) (length 2.54)
+				(name "CP2" (effects (font (size 1.27 1.27))))
+				(number "3" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 -5.08 0) (length 2.54)
+				(name "OV1" (effects (font (size 1.27 1.27))))
+				(number "5" (effects (font (size 1.27 1.27))))
+			)
+			(pin input line (at -17.78 -7.62 0) (length 2.54)
+				(name "OV2" (effects (font (size 1.27 1.27))))
+				(number "4" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_out line (at 17.78 7.62 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.27 1.27))))
+				(number "1" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at 17.78 5.08 180) (length 2.54)
+				(name "OUT" (effects (font (size 1.27 1.27))))
+				(number "8" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at 17.78 0.00 180) (length 2.54)
+				(name "ST" (effects (font (size 1.27 1.27))))
+				(number "9" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at 17.78 -2.54 180) (length 2.54)
+				(name "ILIM" (effects (font (size 1.27 1.27))))
+				(number "10" (effects (font (size 1.27 1.27))))
+			)
+			(pin passive line (at 17.78 -5.08 180) (length 2.54)
+				(name "SS" (effects (font (size 1.27 1.27))))
+				(number "11" (effects (font (size 1.27 1.27))))
+			)
+			(pin power_in line (at 0.00 -12.70 90) (length 2.54)
+				(name "GND" (effects (font (size 1.27 1.27))))
+				(number "12" (effects (font (size 1.27 1.27))))
+			)
+		)
+		(embedded_fonts no)
+	)
 	(symbol "VIN_PROT"
 		(power global)
 		(pin_numbers
@@ -1153,6 +1273,290 @@
 			)
 		)
 		(symbol "LTE_1V8_1_1"
+			(pin power_in line
+				(at 0 0 90)
+				(length 0)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "VBUCK_3V8"
+		(power global)
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 0)
+			(hide yes)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "#PWR"
+			(at 0 -3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VBUCK_3V8"
+			(at 0 3.556 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VBUCK_3V8\""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "global power"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "VBUCK_3V8_0_1"
+			(polyline
+				(pts
+					(xy -0.762 1.27)
+					(xy 0 2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 2.54)
+					(xy 0.762 1.27)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 0)
+					(xy 0 2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "VBUCK_3V8_1_1"
+			(pin power_in line
+				(at 0 0 90)
+				(length 0)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "VCELL"
+		(power global)
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 0)
+			(hide yes)
+		)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "#PWR"
+			(at 0 -3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VCELL"
+			(at 0 3.556 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCELL\""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "global power"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "VCELL_0_1"
+			(polyline
+				(pts
+					(xy -0.762 1.27)
+					(xy 0 2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 2.54)
+					(xy 0.762 1.27)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+			(polyline
+				(pts
+					(xy 0 0)
+					(xy 0 2.54)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(symbol "VCELL_1_1"
 			(pin power_in line
 				(at 0 0 90)
 				(length 0)

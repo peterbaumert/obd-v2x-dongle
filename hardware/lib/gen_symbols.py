@@ -137,6 +137,35 @@ esim = symbol(
 )
 
 
+# ---------------- TI BQ25171-Q1 linear Li-ion charger (VSON-10 3x3, DRC) ----------------
+# Pin numbers per TI SLUSDK0A Pin Functions; EP (11) = GND.
+bq = symbol(
+    'BQ25171-Q1', 'U',
+    'Package_SON:Texas_DRC0010J_ThermalVias',
+    'https://www.ti.com/lit/ds/symlink/bq25171-q1.pdf',
+    'Automotive 800 mA linear charger, 1-2 cell Li-ion/LiFePO4/NiMH, 40 V abs max input, NTC input',
+    'battery charger Li-ion automotive linear',
+    left=[(PI, 'IN', 1), None, (I, '~{CE}', 3), (I, 'TS', 4), (P, 'ISET', 2), (P, 'VSET', 9), (P, 'CHM_TMR', 6)],
+    right=[(PO, 'OUT', 10), None, (OD, 'STAT1', 7), (OD, 'STAT2', 8)],
+    bottom=[(PI, 'GND', 5, 0), (PI, 'GND', 11, 0)],
+    width=12 * G,
+)
+
+# ---------------- TI TPS2121 priority power mux (VQFN-HR-12 2x2.5, RUX) ----------------
+# Pin numbers per TI SLVSEA3F Pin Functions (TPS2121 VQFN-HR column).
+mux = symbol(
+    'TPS2121', 'U',
+    'Package_DFN_QFN:Texas_VQFN-HR-12_2x2.5mm_P0.5mm',
+    'https://www.ti.com/lit/ds/symlink/tps2121.pdf',
+    '2.8-22 V priority power mux, 56 mOhm, 4.5 A, seamless switchover',
+    'power mux ORing priority switchover',
+    left=[(PI, 'IN1', 7), (PI, 'IN2', 2), None, (I, 'PR1', 6), (I, 'CP2', 3), (I, 'OV1', 5), (I, 'OV2', 4)],
+    right=[(PO, 'OUT', 1), (P, 'OUT', 8), None, (P, 'ST', 9), (P, 'ILIM', 10), (P, 'SS', 11)],
+    bottom=[(PI, 'GND', 12, 0)],
+    width=12 * G,
+)
+
+
 # ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
 def rail_symbols(names):
     import sys
@@ -154,10 +183,10 @@ def rail_symbols(names):
     return out
 
 
-RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8']
+RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8', 'VBUCK_3V8', 'VCELL']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)
