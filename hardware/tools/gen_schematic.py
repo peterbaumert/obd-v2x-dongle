@@ -57,7 +57,7 @@ SOURCING = {
     'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
-    'J201': ('TBD (J1962 male, hand-fitted)', '', ''),
+    'J201': ('CR-PG001 (OBD2 male 90deg PCB, hand-fitted)', 'Jiatel or equivalent', ''),
 }
 
 

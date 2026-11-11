@@ -13,7 +13,7 @@ PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so
 |---|---|---|---|
 | U301 | ESP32-C5-WROOM-1U-N16R8-V1.2 (C54951857) | LCSC **21 pcs**, ~$5.84 | Low stock: order soon. Fallbacks: ESP32-C5-WROOM-1-N16R8-V1.2 (PCB antenna, 323 pcs, but no U.FL, so not for the 5.9 GHz external antenna) or consign. All other C5 module variants were 0 on 2026-11-11 |
 | U401 | Quectel EC200UEUAA-N05-SGNSA (C2942341) | LCSC 65 pcs, ~$13 @1 | Replaced EG25-G (~$66 LCSC / $126 Digi-Key). "SGNS" = GNSS variant per Quectel ordering code: confirm GNSS on order. |
-| J201 | OBD-II J1962 male plug | **Not available** at LCSC/Digi-Key as a PCB part | Hand-fitted: buy a PCB-pin J1962 male plug separately; footprint once the part is chosen |
+| J201 | OBD-II J1962 male plug, 90° THT (Jiatel CR-PG001 or same-mould equivalent, "OBD2 Stecker 16 Pin 90 Grad Platine") | Not stocked by LCSC/Digi-Key; ~€1–3 from AliExpress/eBay | **Hand-solder** after assembly. Before ordering boards: check the hole pattern (2×8, P4.00, rows 3.00, Ø1.35 pins) and **pinout with a multimeter** on a real plug: footprint assumes the row nearer the housing = pins 1–8, pin 1 and 9 at the same end (pin 16 = +12 V). Drawing: [Jiatel](https://www.jiatelcn.com/wp-content/uploads/2025/05/OBDII-Male-90-RA-Model.pdf). PCBWay-assemblable alternative: Antenk OBD-FMB-16-SN-B-E-R-V2 (C46459580), contacts only, case must form the D-shroud |
 
 ## Changed for availability
 

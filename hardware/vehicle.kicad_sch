@@ -4576,7 +4576,7 @@
 				)
 			)
 		)
-		(property "MPN" "TBD (J1962 male, hand-fitted)"
+		(property "MPN" "CR-PG001 (OBD2 male 90deg PCB, hand-fitted)"
 			(at 40.64 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -4587,7 +4587,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Jiatel or equivalent"
 			(at 40.64 76.2 0)
 			(hide yes)
 			(show_name no)

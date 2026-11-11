@@ -7,6 +7,8 @@ Quectel_EC200U: from Quectel EC200U Series QuecOpen Hardware Design V1.0,
   Module 31.0 x 28.0 mm, footprint extent 34.3 x 31.3 mm, 80 LCC + 64 LGA pads.
   Origin = module centre, x right, y down (top view).
 
+OBD2_J1962_Plug_PCB: Jiatel CR-PG001 90 deg plug drawing (see obd_plug()).
+
 ESP32-C5-WROOM-1U.kicad_mod is vendored from espressif/kicad-libraries (CC-BY-SA 4.0 with
 the KiCad design exception), not generated here.
 """
@@ -133,7 +135,49 @@ def ec200u():
                      'Quectel EC200U LTE LCC LGA', cy + 1.2, body)
 
 
+# ------------------------------------------------------------------ OBD-II 90 deg PCB plug
+def tht(num, x, y, drill, dia, shape='circle'):
+    return (f'\t(pad "{num}" thru_hole {shape} (at {f(x)} {f(y)}) (size {f(dia)} {f(dia)}) (drill {f(drill)}) '
+            f'(layers "*.Cu" "*.Mask") (uuid "{uid(f"obd{num}")}"))\n')
+
+
+def obd_plug():
+    """J1962 male plug, 90 deg THT (Jiatel CR-PG001 rev C drawing, same mould sold widely as
+    'OBD2 16 pin male 90 degree PCB'). Hole pattern: 2 x 8, pitch 4.00, rows 3.00 apart, hole 1.35 +0.1.
+
+    Origin = pin 1. Mating face points to -y (towards the board edge / car socket).
+    Row y=0 (nearer the housing) = pins 1..8, row y=+3 = pins 9..16, pin n and n+8 aligned.
+    Pin 1 at x=0, pin 8 at x=-28 (top view).
+    !! Row/end assignment inferred from the drawing: verify with a multimeter on a real plug before
+       ordering boards (pin 16 = +12 V).
+    """
+    P, ROW, DRILL, DIA = 4.0, 3.0, 1.45, 2.3
+    body = ''
+    for k in range(8):
+        x = -P * k
+        body += tht(k + 1, x, 0, DRILL, DIA, 'rect' if k == 0 else 'circle')
+        body += tht(k + 9, x, ROW, DRILL, DIA)
+    cx = -P * 3.5                                   # centre between pin 1 and pin 8
+    hw = 37.6 / 2                                   # housing width
+    rear = -(6.5 - ROW)                             # housing rear face, 6.5 from the outer leg row
+    front = rear - 20.0                             # housing / shroud front (20.0 deep)
+    body += rect(cx - hw, front, cx + hw, rear, 'F.Fab', 0.1)
+    body += rect(cx - hw - 0.5, front - 0.5, cx + hw + 0.5, ROW + DIA / 2 + 0.5, 'F.CrtYd', 0.05)
+    # silk: housing rear edge + sides down to the courtyard, pin-1 marker
+    body += line(cx - hw - 0.15, rear, cx + hw + 0.15, rear, 'F.SilkS', 0.15)
+    body += line(cx - hw - 0.15, rear, cx - hw - 0.15, rear - 3, 'F.SilkS', 0.15)
+    body += line(cx + hw + 0.15, rear, cx + hw + 0.15, rear - 3, 'F.SilkS', 0.15)
+    body += line(1.8, -1.8, 1.8, 1.8, 'F.SilkS', 0.15)
+    body += line(cx - hw, front + 2, cx + hw, front + 2, 'F.Fab', 0.1)
+    assert body.count('(pad ') == 16
+    return footprint('OBD2_J1962_Plug_PCB',
+                     'OBD-II SAE J1962 male plug, 16 pin, 90 deg THT, 2x8 P4.00 rows 3.00. '
+                     'Jiatel CR-PG001 rev C drawing. Mating face towards -y. Verify pinout on a sample',
+                     'OBD OBD2 J1962 plug connector', 26, body)
+
+
 if __name__ == '__main__':
-    p = OUT / 'Quectel_EC200U.kicad_mod'
-    p.write_text(ec200u(), encoding='utf-8')
-    print('wrote', p)
+    for name, fn in (('Quectel_EC200U', ec200u), ('OBD2_J1962_Plug_PCB', obd_plug)):
+        p = OUT / f'{name}.kicad_mod'
+        p.write_text(fn(), encoding='utf-8')
+        print('wrote', p)

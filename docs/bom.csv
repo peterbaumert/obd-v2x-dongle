@@ -21,7 +21,7 @@
 "D203","PESD1LIN","Diode_SMD:D_SOD-323","PESD1LIN,115","Nexperia","C58901","1",""
 "D301","SK6812MINI","LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm","SK6812MINI-E","OPSCO","C5149201","1",""
 "F101","2A slow","Fuse:Fuse_1206_3216Metric","0466002.NRHF","Littelfuse","C3105","1",""
-"J201","OBD2_J1962_Plug","obd-v2x:OBD2_J1962_Plug_PCB","TBD (J1962 male, hand-fitted)","","","1",""
+"J201","OBD2_J1962_Plug","obd-v2x:OBD2_J1962_Plug_PCB","CR-PG001 (OBD2 male 90deg PCB, hand-fitted)","Jiatel or equivalent","","1",""
 "J301","USB-C","Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12","TYPE-C-31-M-12","HRO","C165948","1",""
 "J401","Nano-SIM","Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00","SIM8060-6-0-14-00-A","GCT","C6296715","1",""
 "J402","U.FL LTE main","Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical","U.FL-R-SMT-1(10)","Hirose","C88373","1",""
