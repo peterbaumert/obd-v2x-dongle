@@ -43,7 +43,7 @@ SOURCING = {
     'U202': ('TJA1021T/20/CM,118', 'NXP', 'C128810'),
     'D202': ('B0540WS-7', 'Diodes Inc', 'C52754523'),
     'D203': ('PESD1LIN,115', 'Nexperia', 'C58901'),
-    'U301': ('ESP32-C5-WROOM-1U-N8R4', 'Espressif', 'C49308183'),
+    'U301': ('ESP32-C5-WROOM-1U-N16R8-V1.2', 'Espressif', 'C54951857'),
     'D301': ('SK6812MINI-E', 'OPSCO', 'C5149201'),
     'U302': ('USBLC6-2SC6', 'ST', 'C2827654'),
     'J301': ('TYPE-C-31-M-12', 'HRO', 'C165948'),
@@ -466,7 +466,7 @@ MCU_GLOBAL = {'KL_RX', 'VSENSE', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'CAN_TX', 'C
 def mcu():
     sh = Sheet('MCU', 'mcu.kicad_sch', SHEETS['mcu'], ROOT, 'MCU: ESP32-C5 (ITS-G5 RX, CAN FD, BLE), USB-C')
     X, Y = g(66), g(34)
-    U = sh.part('obd-v2x:ESP32-C5-WROOM-1U', 'U301', 'ESP32-C5-WROOM-1U-N8R4', 'obd-v2x:ESP32-C5-WROOM-1U', X, Y, 0)
+    U = sh.part('obd-v2x:ESP32-C5-WROOM-1U', 'U301', 'ESP32-C5-WROOM-1U-N16R8', 'obd-v2x:ESP32-C5-WROOM-1U', X, Y, 0)
     U.fields = {'ref': (X - g(8), U['2'][1] - g(2.5), 'left'), 'val': (X - g(8), U['2'][1] - g(1.5), 'left')}
     sh.text('ESP32-C5: 5.9 GHz ITS-G5 receive via U.FL on the module', g(40), g(8), 1.5, True)
     left = [('6', 'KL_RX'), ('7', 'VSENSE'), ('4', 'LTE_PWRKEY_CTL'), ('5', 'LTE_RESET_CTL'), ('17', 'CAN_TX'),
