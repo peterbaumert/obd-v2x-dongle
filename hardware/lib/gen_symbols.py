@@ -112,15 +112,34 @@ obd = symbol(
     'https://en.wikipedia.org/wiki/On-board_diagnostics#OBD-II_diagnostic_connector',
     'OBD-II (SAE J1962) 16-pin male plug, vehicle side pinout',
     'OBD OBD2 J1962 diagnostic connector',
-    left=[(P, 'OEM1', 1), (P, 'J1850+', 2), (P, 'OEM3', 3), (P, 'CHASSIS_GND', 4), (P, 'SIGNAL_GND', 5),
-          (P, 'CAN_H', 6), (P, 'K_LINE', 7), (P, 'OEM8', 8)],
-    right=[(P, 'OEM9', 9), (P, 'J1850-', 10), (P, 'OEM11', 11), (P, 'OEM12', 12), (P, 'OEM13', 13),
-           (P, 'CAN_L', 14), (P, 'L_LINE', 15), (P, 'VBAT', 16)],
+    left=[(P, 'OEM1', 1), (P, 'OEM3', 3), (P, 'OEM8', 8), (P, 'OEM9', 9), (P, 'OEM11', 11),
+          (P, 'OEM12', 12), (P, 'OEM13', 13), (P, 'J1850+', 2), (P, 'J1850-', 10), (P, 'L_LINE', 15)],
+    right=[(P, 'VBAT', 16), None, (P, 'CAN_H', 6), (P, 'CAN_L', 14), None, (P, 'K_LINE', 7), None,
+           (P, 'SIGNAL_GND', 5), (P, 'CHASSIS_GND', 4)],
     width=10 * G,
 )
 
+
+# ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
+def rail_symbols(names):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+    from sexp import parse, dump, find
+    stock = Path.home() / 'AppData/Local/Programs/KiCad/10.0/share/kicad/symbols/power.kicad_sym'
+    tree = parse(stock.read_text(encoding='utf-8'))
+    base = [s for s in find(tree, 'symbol') if s[1] == '+3V3'][0]
+    src = dump(base, 1)
+    out = ''
+    for n in names:
+        out += '\t' + src.replace('"+3V3', '"' + n).replace('Power symbol creates a global label with name \\"' + n + '\\"',
+                                                           'Power symbol creates a global label with name \\"' + n + '\\"') + '\n'
+    return out
+
+
+RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8']
+
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

@@ -12,6 +12,13 @@
 - ESP32-C5 strapping: GPIO28 = BOOT (low = download), GPIO27 must be high at boot (LED data line is fine), GPIO26/25/7 floating OK.
 
 ## KiCad
-- KiCad 10, project in `hardware/`. Sheets: power, vehicle, mcu, lte. Cross-sheet nets use global labels.
-- Project symbols are generated: edit `hardware/lib/gen_symbols.py`, then run `python hardware/lib/gen_symbols.py`. Don't hand-edit `obd-v2x.kicad_sym`.
-- Check with `kicad-cli sch erc hardware/obd-v2x-dongle.kicad_sch` (expect 0 errors).
+- KiCad 10 (per-user install in `%LOCALAPPDATA%\Programs\KiCad\10.0`), project in `hardware/`.
+- Sheets power / vehicle / mcu / lte are **generated**: edit `hardware/tools/gen_schematic.py`, then
+  `python hardware/tools/gen_schematic.py`. Don't hand-edit those `.kicad_sch` files (changes get overwritten).
+  Layout rules: real wires inside a block, GND/rail power symbols, global labels only for cross-sheet nets.
+- After any change run `python hardware/tools/check_netlist.py` — connectivity must match
+  `hardware/tools/reference.net`. When a connectivity change is intended, review it and then refresh
+  `reference.net` (`kicad-cli sch export netlist --format kicadsexpr`).
+- Project symbols (incl. rail power symbols) are generated: edit `hardware/lib/gen_symbols.py`, run it.
+- ERC: `kicad-cli sch erc hardware/obd-v2x-dongle.kicad_sch` (expect 0 errors; footprint warnings until the
+  custom footprints exist). PDF: `kicad-cli sch export pdf -o docs/schematic.pdf hardware/obd-v2x-dongle.kicad_sch`.

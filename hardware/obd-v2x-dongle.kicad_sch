@@ -1,77 +1,197 @@
-(kicad_sch (version 20260101) (generator "eeschema") (generator_version "10.0")
-
-  (uuid 85633eb7-cf01-4fcf-93cc-694bd24a43ba)
-
-  (paper "A4")
-
-  (lib_symbols
-  )
-
-  (sheet (at 30.0 40.0) (size 40.0 25.0) (fields_autoplaced yes)
-    (stroke (width 0.0006) (type default))
-    (fill (color 0 0 0 0.0000))
-    (uuid "c67045ad-ad78-40ef-adb2-4c081ee4501d")
-    (property "Sheetname" "Power" (at 32.54 38.73 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "power.kicad_sch" (at 32.54 66.27 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "obd-v2x-dongle"
-        (path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba" (page "2"))
-      )
-    )
-  )
-  (sheet (at 90.0 40.0) (size 40.0 25.0) (fields_autoplaced yes)
-    (stroke (width 0.0006) (type default))
-    (fill (color 0 0 0 0.0000))
-    (uuid "fa1dd39e-b547-4d98-ad46-16b1323df42c")
-    (property "Sheetname" "Vehicle (OBD, CAN, K-Line)" (at 92.54 38.73 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "vehicle.kicad_sch" (at 92.54 66.27 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "obd-v2x-dongle"
-        (path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba" (page "3"))
-      )
-    )
-  )
-  (sheet (at 30.0 90.0) (size 40.0 25.0) (fields_autoplaced yes)
-    (stroke (width 0.0006) (type default))
-    (fill (color 0 0 0 0.0000))
-    (uuid "6ff62bc4-23e3-4296-bf60-cd67ba8c0f07")
-    (property "Sheetname" "MCU (ESP32-C5, USB)" (at 32.54 88.73 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "mcu.kicad_sch" (at 32.54 116.27 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "obd-v2x-dongle"
-        (path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba" (page "4"))
-      )
-    )
-  )
-  (sheet (at 90.0 90.0) (size 40.0 25.0) (fields_autoplaced yes)
-    (stroke (width 0.0006) (type default))
-    (fill (color 0 0 0 0.0000))
-    (uuid "01715d65-cdba-4655-b5fc-0dddd6752831")
-    (property "Sheetname" "LTE + GNSS (EG25-G)" (at 92.54 88.73 0)
-      (effects (font (size 1.27 1.27)) (justify left bottom))
-    )
-    (property "Sheetfile" "lte.kicad_sch" (at 92.54 116.27 0)
-      (effects (font (size 1.27 1.27)) (justify left top))
-    )
-    (instances
-      (project "obd-v2x-dongle"
-        (path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba" (page "5"))
-      )
-    )
-  )
-  (sheet_instances
-    (path "/" (page "1"))
-  )
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "85633eb7-cf01-4fcf-93cc-694bd24a43ba")
+	(paper "A4")
+	(lib_symbols)
+	(sheet
+		(at 90 90)
+		(size 40 25)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.0006)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "01715d65-cdba-4655-b5fc-0dddd6752831")
+		(property "Sheetname" "LTE + GNSS (EG25-G)"
+			(at 92.54 88.73 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "lte.kicad_sch"
+			(at 92.54 116.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "obd-v2x-dongle"
+				(path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30 90)
+		(size 40 25)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.0006)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "6ff62bc4-23e3-4296-bf60-cd67ba8c0f07")
+		(property "Sheetname" "MCU (ESP32-C5, USB)"
+			(at 32.54 88.73 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "mcu.kicad_sch"
+			(at 32.54 116.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "obd-v2x-dongle"
+				(path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 30 40)
+		(size 40 25)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.0006)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "c67045ad-ad78-40ef-adb2-4c081ee4501d")
+		(property "Sheetname" "Power"
+			(at 32.54 38.73 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 32.54 66.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "obd-v2x-dongle"
+				(path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 90 40)
+		(size 40 25)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.0006)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "fa1dd39e-b547-4d98-ad46-16b1323df42c")
+		(property "Sheetname" "Vehicle (OBD, CAN, K-Line)"
+			(at 92.54 38.73 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "vehicle.kicad_sch"
+			(at 92.54 66.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "obd-v2x-dongle"
+				(path "/85633eb7-cf01-4fcf-93cc-694bd24a43ba"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
 )
