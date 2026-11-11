@@ -25,3 +25,11 @@
 - ERC: `kicad-cli sch erc hardware/obd-v2x-dongle.kicad_sch` (expect 0 errors, 0 warnings).
   PDF: `kicad-cli sch export pdf -o docs/schematic.pdf hardware/obd-v2x-dongle.kicad_sch`.
 - EC200U: PWRKEY must be held low >= 2 s to power on; pin 35 is a BT/Wi-Fi-scan antenna (unused), there is no LTE diversity antenna.
+
+## PCB
+- 52 x 74 mm, 4 layers (In1/In2 GND planes), parts on both sides; OBD plug at the front edge, housing overhangs 12 mm.
+- The board was bootstrapped by `hardware/tools/gen_pcb.py` (KiCad's Python: `%LOCALAPPDATA%\Programs\KiCad.0in\python.exe`).
+  It refuses to overwrite an existing board; `--force` regenerates and **loses all routing/manual moves**.
+  From routing on, edit `obd-v2x-dongle.kicad_pcb` in KiCad; schematic changes via Tools > Update PCB from Schematic.
+- Check: `kicad-cli pcb drc --schematic-parity --refill-zones hardware/obd-v2x-dongle.kicad_pcb` (parity must be 0).
+- RF net class width (0.35 mm) is a 50 ohm placeholder: confirm with PCBWay's stack-up before ordering.

@@ -23,6 +23,12 @@ Quectel EC200U-EU (LTE Cat 1 + GNSS) ── LTE main + GNSS antennas (U.FL), nan
 - Low-battery cutoff (~11.8 V) to avoid draining the car battery
 - Cranking ride-through down to ~6 V
 
+## PCB (first-pass placement, not routed)
+
+![PCB](docs/img/pcb-iso.png)
+
+52 x 74 mm, 4 layers, parts on both sides. Top: power, LTE modem, U.FL antennas. Bottom: CAN/K-Line, ESP32-C5, SIM, USB-C.
+
 ## Repo layout
 
 | Path | Contents |
