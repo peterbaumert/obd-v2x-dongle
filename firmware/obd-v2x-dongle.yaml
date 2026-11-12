@@ -13,10 +13,6 @@
 substitutions:
   name: obd-v2x-dongle
   friendly_name: OBD V2X Dongle
-  engine_on_voltage: "13.2"      # V: above = alternator charging = engine running
-  low_battery_voltage: "11.8"    # V: warning threshold while the engine is off
-  traccar_interval_moving: "10"  # s between Traccar positions while the engine runs
-  traccar_interval_parked: "300" # s between Traccar positions while parked
   traccar_url: !secret traccar_url              # e.g. http://traccar.example.org:5055 (OsmAnd port)
   traccar_device_id: !secret traccar_device_id  # device identifier configured in Traccar
 
@@ -26,14 +22,12 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.2.0"
+    version: "0.3.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
         - output.turn_off: kline_slp_n     # K-line transceiver asleep (not used yet)
-    - priority: -100   # after all components: power the modem up
-      then:
-        - script.execute: lte_power_on
+  # The modem is powered by power_manager (on_network) only when a wake needs the network
 
 esp32:
   variant: esp32c5
@@ -51,7 +45,7 @@ external_components:
   - source:
       type: local
       path: components
-    components: [otm_uplink, obd2, ec200u_gnss]
+    components: [otm_uplink, obd2, ec200u_gnss, power_manager]
 
 # ---------------------------------------------------------------- board control
 output:
@@ -83,7 +77,7 @@ binary_sensor:
     device_class: running
     lambda: |-
       float v = id(car_battery).state;
-      return !std::isnan(v) && v > ${engine_on_voltage};
+      return !std::isnan(v) && v > id(set_engine_on_voltage).state;
     filters:
       - delayed_on: 5s
       - delayed_off: 30s
@@ -96,7 +90,14 @@ binary_sensor:
     device_class: battery
     lambda: |-
       float v = id(car_battery).state;
-      return !std::isnan(v) && !id(engine_running).state && v < ${low_battery_voltage};
+      return !std::isnan(v) && !id(engine_running).state && v < id(set_low_battery_voltage).state
+             && v >= id(set_unplugged_voltage).state;
+  - platform: template
+    name: "Unplugged"
+    icon: mdi:power-plug-off
+    lambda: |-
+      float v = id(car_battery).state;
+      return !std::isnan(v) && v < id(set_unplugged_voltage).state;
 
 # ---------------------------------------------------------------- LTE modem (EC200U-EU)
 script:
@@ -125,6 +126,20 @@ script:
             - logger.log:
                 level: ERROR
                 format: "EC200U did not report STATUS high after PWRKEY"
+  - id: lte_power_off
+    mode: single
+    then:
+      - if:
+          condition:
+            modem.connected: lte
+          then:
+            - modem.send_at: "AT+QPOWD=1"     # orderly shutdown (detaches from the network)
+            - wait_until:
+                condition:
+                  binary_sensor.is_off: lte_status
+                timeout: 10s
+      - modem.disable:
+      - output.turn_off: lte_power_en         # cut the modem supply (Q102)
 
 modem:
   id: lte
@@ -138,6 +153,14 @@ modem:
   enable_on_boot: false       # lte_power_on enables it once the modem is up
 
 switch:
+  - platform: template
+    id: stay_awake
+    name: "Stay awake"
+    icon: mdi:sleep-off
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    command_retain: true
   - platform: template
     name: "Use eSIM"
     icon: mdi:sim
@@ -166,6 +189,11 @@ mqtt:
   password: !secret mqtt_password
   discovery: true
   topic_prefix: ${name}
+  # The dongle sleeps most of the time when parked: no birth/will/shutdown messages, so Home Assistant keeps
+  # showing the last (retained) values instead of "unavailable"
+  birth_message:
+  will_message:
+  shutdown_message:
   on_connect:
     # Home Assistant device tracker (map) for the GPS position, attached to this device
     - mqtt.publish:
@@ -206,8 +234,8 @@ interval:
           condition:
             lambda: |-
               if (!id(gnss).has_fix() || !id(lte).is_connected()) return false;
-              const uint32_t every = (id(engine_running).state ? ${traccar_interval_moving}
-                                                               : ${traccar_interval_parked}) * 1000UL;
+              const uint32_t every = id(engine_running).state ? id(set_traccar_interval_driving).state * 1000UL
+                                                              : id(set_report_interval).state * 60000UL;
               if (id(traccar_last_ms) != 0 && millis() - id(traccar_last_ms) < every) return false;
               id(traccar_last_ms) = millis();
               return true;
@@ -225,6 +253,175 @@ interval:
                            f.satellites, id(engine_running).state ? "true" : "false",
                            std::isnan(id(car_battery).state) ? 0.0f : id(car_battery).state);
                   return std::string(buf);
+                on_response:
+                  then:
+                    - if:
+                        condition:
+                          lambda: return response->status_code == 200;
+                        then:
+                          - power_manager.report_done: pm
+
+# ---------------------------------------------------------------- parking mode / deep sleep
+# Settings are Home Assistant entities (Configuration). command_retain: the broker keeps a changed value until
+# the dongle's next wake picks it up.
+deep_sleep:
+  id: deep_sleep_1
+
+power_manager:
+  id: pm
+  deep_sleep_id: deep_sleep_1
+  battery_adc: car_battery
+  voltage_multiplier: 11.0
+  modem_status: lte_status
+  stay_awake: stay_awake
+  engine_on_voltage: set_engine_on_voltage
+  unplugged_voltage: set_unplugged_voltage
+  low_battery_voltage: set_low_battery_voltage
+  parking_delay: set_parking_delay
+  check_interval: set_check_interval
+  report_interval: set_report_interval
+  low_battery_report_interval: set_low_battery_report_interval
+  report_timeout: set_report_timeout
+  on_network:
+    - script.execute: lte_power_on
+  on_shutdown:
+    - script.execute: lte_power_off
+
+number:
+  - platform: template
+    id: set_engine_on_voltage
+    name: "Engine running above"
+    entity_category: config
+    unit_of_measurement: V
+    icon: mdi:car-battery
+    min_value: 12.6
+    max_value: 14.5
+    step: 0.1
+    initial_value: 13.2
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_low_battery_voltage
+    name: "Car battery low below"
+    entity_category: config
+    unit_of_measurement: V
+    icon: mdi:battery-alert
+    min_value: 10.5
+    max_value: 12.6
+    step: 0.1
+    initial_value: 12.0
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_unplugged_voltage
+    name: "Unplugged below"
+    entity_category: config
+    unit_of_measurement: V
+    icon: mdi:power-plug-off
+    min_value: 3
+    max_value: 9
+    step: 0.5
+    initial_value: 6
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_parking_delay
+    name: "Sleep after engine off"
+    entity_category: config
+    unit_of_measurement: min
+    icon: mdi:timer-sand
+    min_value: 1
+    max_value: 120
+    step: 1
+    initial_value: 5
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_check_interval
+    name: "Parked battery check every"
+    entity_category: config
+    unit_of_measurement: s
+    icon: mdi:timer-outline
+    min_value: 30
+    max_value: 3600
+    step: 10
+    initial_value: 60
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_report_interval
+    name: "Parked position report every"
+    entity_category: config
+    unit_of_measurement: min
+    icon: mdi:map-marker-radius
+    min_value: 5
+    max_value: 1440
+    step: 5
+    initial_value: 30
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_low_battery_report_interval
+    name: "Report every (battery low)"
+    entity_category: config
+    unit_of_measurement: min
+    icon: mdi:map-marker-radius-outline
+    min_value: 15
+    max_value: 1440
+    step: 15
+    initial_value: 120
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_report_timeout
+    name: "Report timeout"
+    entity_category: config
+    unit_of_measurement: min
+    icon: mdi:timer-alert-outline
+    min_value: 1
+    max_value: 15
+    step: 1
+    initial_value: 3
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+  - platform: template
+    id: set_traccar_interval_driving
+    name: "Traccar interval driving"
+    entity_category: config
+    unit_of_measurement: s
+    icon: mdi:map-clock
+    min_value: 5
+    max_value: 300
+    step: 5
+    initial_value: 10
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
+
+text_sensor:
+  - platform: template
+    name: "Power mode"
+    icon: mdi:power-sleep
+    entity_category: diagnostic
+    update_interval: 5s
+    lambda: return std::string(id(pm).get_mode_str());
 
 # ---------------------------------------------------------------- V2X: ITS-G5 receive -> OpenTrafficMap
 otm_uplink:

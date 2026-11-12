@@ -1,7 +1,7 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.2, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
+**Status: v0.3, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
 
 | File | Purpose |
 |---|---|
@@ -9,6 +9,7 @@ ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Que
 | `components/otm_uplink/` | second MQTT connection to the OpenTrafficMap C-ITS server |
 | `components/obd2/` | OBD-II over CAN on ESP-IDF's TWAI node driver |
 | `components/ec200u_gnss/` | GPS position from the EC200U's GNSS receiver (`AT+QGPSLOC`) |
+| `components/power_manager/` | parking mode / deep sleep (modes, wake timing in RTC memory) |
 | `secrets.example.yaml` | keys the configuration needs (copy to `secrets.yaml`, which git ignores) |
 
 Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in that release
@@ -37,9 +38,26 @@ Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in
   With the engine off the CAN transceiver stays in standby and nothing is sent: on cars like the
   Mercedes W205 the gateway sleeps with the ignition off and requests would wake the bus.
 
+## Parking mode / deep sleep (`power_manager`)
+
+| Mode | When | What happens |
+|---|---|---|
+| driving | car battery above "Engine running above" (alternator charging) | everything on, OBD-II polling, Traccar every "Traccar interval driving" |
+| parked | engine stopped, or after power-on | stays awake for "Sleep after engine off", then shuts the modem down (`AT+QPOWD`, supply off) and sleeps |
+| check | timer wake from deep sleep | one ADC reading of the car battery, back to sleep at once unless the engine runs, the car was unplugged or a report is due (~1 s awake) |
+| report | report due ("Parked position report every", or "Report every (battery low)" below "Car battery low below"), or just unplugged | modem + GPS on until Traccar accepted a position, or "Report timeout" |
+
+All values are Home Assistant entities under *Configuration* (stored on the dongle). They are published with
+`command_retain`, so the broker keeps a change until the sleeping dongle wakes and picks it up. "Stay awake"
+keeps it awake (diagnostics, updates). The MQTT birth/will messages are off: while it sleeps Home Assistant keeps
+the last values instead of showing the entities as unavailable. "Power mode" shows the current mode.
+
+Defaults: engine running above 13.2 V, battery low below 12.0 V, unplugged below 6 V, sleep 5 min after engine off,
+battery check every 60 s, position every 30 min parked / 120 min with a low battery, report timeout 3 min.
+
 ## Entities (Home Assistant)
 
-Car battery, car battery low, engine running · speed, engine RPM, coolant / intake / ambient temperature,
+Car battery, car battery low, unplugged, engine running, power mode · speed, engine RPM, coolant / intake / ambient temperature,
 engine load, fuel level, ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/s) · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
 V2X packets received / dropped · status LED, "Use eSIM" switch · uptime.
@@ -61,7 +79,7 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
 | Feature | State / plan |
 |---|---|
 | GPS position, Traccar | done (untested on hardware); possible upstream improvement: a `send_at` reply callback in ESPHome's modem component instead of the logger listener |
-| Parking / deep sleep | modem off (`AT+QPOWD`, LTE_PWR_EN), ESP32 deep sleep, wake on timer / battery voltage; backup-cell mode when VSENSE drops (unplugged) |
+| Backup cell voltage | read the modem supply (`AT+CBC`) while unplugged, stop reporting when the cell gets low |
 | OTA over LTE | `ota: platform: http_request` pulling a firmware URL, triggered via MQTT |
 | More OBD | multi-frame ISO-TP (VIN, fault codes), 29-bit / 250 kbit/s auto-detect, K-line (older cars), OEM PIDs (e.g. Mercedes odometer / fuel level) |
 | Trip logic | trip start/stop from engine running + speed, distance, idling time (like a Teltonika FMC003) |
