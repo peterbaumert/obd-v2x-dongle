@@ -4,6 +4,7 @@
 # The ESP32-C5's Wi-Fi radio is the ITS-G5 / 802.11p receiver, so there is no Wi-Fi.
 #   - Owner's MQTT broker (Home Assistant MQTT discovery): car battery, OBD-II live data, LTE, V2X counters
 #   - OpenTrafficMap MQTT server: received ITS-G5 frames (components/otm_uplink)
+#   - Traccar server: GPS position (OsmAnd protocol over HTTP)
 # OBD-II requests are only sent while the engine runs (charging voltage): on cars like the Mercedes W205
 # the gateway sleeps with the ignition off, and requests would wake the bus and drain the battery.
 #
@@ -14,6 +15,10 @@ substitutions:
   friendly_name: OBD V2X Dongle
   engine_on_voltage: "13.2"      # V: above = alternator charging = engine running
   low_battery_voltage: "11.8"    # V: warning threshold while the engine is off
+  traccar_interval_moving: "10"  # s between Traccar positions while the engine runs
+  traccar_interval_parked: "300" # s between Traccar positions while parked
+  traccar_url: !secret traccar_url              # e.g. http://traccar.example.org:5055 (OsmAnd port)
+  traccar_device_id: !secret traccar_device_id  # device identifier configured in Traccar
 
 esphome:
   name: ${name}
@@ -21,7 +26,7 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.1.0"
+    version: "0.2.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
@@ -46,7 +51,7 @@ external_components:
   - source:
       type: local
       path: components
-    components: [otm_uplink, obd2]
+    components: [otm_uplink, obd2, ec200u_gnss]
 
 # ---------------------------------------------------------------- board control
 output:
@@ -161,6 +166,65 @@ mqtt:
   password: !secret mqtt_password
   discovery: true
   topic_prefix: ${name}
+  on_connect:
+    # Home Assistant device tracker (map) for the GPS position, attached to this device
+    - mqtt.publish:
+        topic: homeassistant/device_tracker/${name}/config
+        retain: true
+        payload: !lambda |-
+          return std::string("{\"name\":\"Position\",\"unique_id\":\"${name}_position\",") +
+                 "\"json_attributes_topic\":\"${name}/position\",\"source_type\":\"gps\"," +
+                 "\"device\":{\"ids\":\"" + get_mac_address() + "\"}}";
+
+# ---------------------------------------------------------------- GPS (EC200U GNSS) -> Home Assistant + Traccar
+ec200u_gnss:
+  id: gnss
+  update_interval: 5s
+
+http_request:
+  timeout: 10s
+  verify_ssl: true
+
+interval:
+  - interval: 5s
+    then:
+      - if:
+          condition:
+            lambda: return id(gnss).has_fix() && id(mqtt_client).is_connected();
+          then:
+            - mqtt.publish:
+                topic: ${name}/position
+                payload: !lambda |-
+                  const auto &f = id(gnss).get_fix();
+                  char buf[160];
+                  snprintf(buf, sizeof(buf),
+                           "{\"latitude\":%.6f,\"longitude\":%.6f,\"gps_accuracy\":%.0f,\"altitude\":%.0f,"
+                           "\"speed\":%.1f,\"course\":%.0f}",
+                           f.latitude, f.longitude, f.hdop * 5.0f, f.altitude, f.speed, f.course);
+                  return std::string(buf);
+      - if:
+          condition:
+            lambda: |-
+              if (!id(gnss).has_fix() || !id(lte).is_connected()) return false;
+              const uint32_t every = (id(engine_running).state ? ${traccar_interval_moving}
+                                                               : ${traccar_interval_parked}) * 1000UL;
+              if (id(traccar_last_ms) != 0 && millis() - id(traccar_last_ms) < every) return false;
+              id(traccar_last_ms) = millis();
+              return true;
+          then:
+            # OsmAnd protocol: speed in knots; extra parameters become Traccar attributes
+            - http_request.get:
+                url: !lambda |-
+                  const auto &f = id(gnss).get_fix();
+                  char buf[320];
+                  snprintf(buf, sizeof(buf),
+                           "%s/?id=%s&lat=%.6f&lon=%.6f&timestamp=%u&speed=%.1f&bearing=%.0f&altitude=%.0f"
+                           "&hdop=%.1f&sat=%d&ignition=%s&power=%.2f",
+                           "${traccar_url}", "${traccar_device_id}", f.latitude, f.longitude,
+                           (unsigned) id(gnss).get_fix_epoch(), f.speed / 1.852f, f.course, f.altitude, f.hdop,
+                           f.satellites, id(engine_running).state ? "true" : "false",
+                           std::isnan(id(car_battery).state) ? 0.0f : id(car_battery).state);
+                  return std::string(buf);
 
 # ---------------------------------------------------------------- V2X: ITS-G5 receive -> OpenTrafficMap
 otm_uplink:
@@ -169,6 +233,9 @@ otm_uplink:
 
 globals:
   - id: last_packet_ms
+    type: uint32_t
+    initial_value: "0"
+  - id: traccar_last_ms
     type: uint32_t
     initial_value: "0"
 
@@ -228,6 +295,23 @@ sensor:
   - platform: modem
     rssi:
       name: "LTE signal"
+  - platform: ec200u_gnss
+    latitude:
+      name: "Latitude"
+    longitude:
+      name: "Longitude"
+    altitude:
+      name: "Altitude"
+    speed:
+      name: "GPS speed"
+    course:
+      name: "Course"
+    hdop:
+      name: "GPS HDOP"
+      entity_category: diagnostic
+    satellites:
+      name: "GPS satellites"
+      entity_category: diagnostic
   - platform: its_g5_receiver
     its_g5_receiver_id: g5
     packets_received:
