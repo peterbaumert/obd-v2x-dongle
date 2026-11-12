@@ -3,7 +3,7 @@
 Writes hardware/fab/ (git-ignored):
   obd-v2x-dongle-gerber.zip   Gerber X2 (4 copper, mask, paste, silk, edge) + Excellon PTH/NPTH drill + drill map
   obd-v2x-dongle-cpl.csv      pick & place, both sides, mm, origin = board bottom-left (drill/place origin), DNP left out
-  obd-v2x-dongle-bom.csv      assembly BOM: fitted parts only, MPN / manufacturer / LCSC, SMD/THT, side, notes
+  obd-v2x-dongle-bom.csv      assembly BOM: parts PCBWay places (no DNP, no J201, no test pads), MPN / LCSC, SMD/THT, side
 Also refreshes docs/bom.csv (full BOM incl. DNP).
 
 Order notes (also in docs/design-review.md): 4 layers, 1.6 mm, 1 oz outer / 1 oz inner, PCBWay standard stack-up
@@ -73,9 +73,11 @@ def main():
     board = pcbnew.LoadBoard(str(PCB))
     fps = {fp.GetReference(): fp for fp in board.GetFootprints()}
 
-    def kind(ref):
-        fp = fps[ref]
-        return 'THT' if any(p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH for p in fp.Pads()) else 'SMD'
+    def kind(ref):          # footprint type, not pads: thermal vias in an SMD footprint are PTH pads
+        return 'THT' if fps[ref].GetAttributes() & pcbnew.FP_THROUGH_HOLE else 'SMD'
+
+    def placed(ref):        # nothing to place: test pads etc. are excluded from the position files
+        return ref not in NOT_ASSEMBLED and not fps[ref].GetAttributes() & pcbnew.FP_EXCLUDE_FROM_POS_FILES
 
     with full.open(newline='') as f, (OUT / f'{NAME}-bom.csv').open('w', newline='') as g:
         w = csv.writer(g)
@@ -85,11 +87,11 @@ def main():
         for r in csv.DictReader(f):
             if r['DNP']:
                 continue
-            refs = r['Reference'].split(',')
+            refs = [x for x in r['Reference'].split(',') if placed(x)]
+            if not refs:
+                continue
             side = sorted({'Bottom' if fps[x].IsFlipped() else 'Top' for x in refs})
-            note = '; '.join(sorted({NOT_ASSEMBLED[x] for x in refs if x in NOT_ASSEMBLED}))
-            if not r['MPN']:
-                note = (note + '; ' if note else '') + 'generic: any in-stock part with this value and package'
+            note = 'generic: any in-stock part with this value and package' if not r['MPN'] else ''
             n += 1
             w.writerow([n, ' '.join(refs), len(refs), r['Value'], r['Manufacturer'], r['MPN'], r['LCSC'],
                         r['Footprint'].split(':')[-1], ' / '.join(sorted({kind(x) for x in refs})), ' / '.join(side), note])
