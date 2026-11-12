@@ -242,8 +242,8 @@ def power():
     xcmp = XB - g(2)
     sh.label('BUCK_COMP', (xcmp, yc), 'L')
     sh.w((xcmp, yc), (xcmp + g(6), yc))
-    Rc = rv(sh, 'Device:R', 'R106', '7.5k', R0603, xcmp + g(2), yc)
-    Cc = rv(sh, 'Device:C', 'C105', '6.8nF', C0603, xcmp + g(2), Rc[2][1] + g(1))
+    Rc = rv(sh, 'Device:R', 'R106', '12k', R0603, xcmp + g(2), yc)
+    Cc = rv(sh, 'Device:C', 'C105', '5.6nF', C0603, xcmp + g(2), Rc[2][1] + g(1))
     sh.w(Rc[2], Cc[1])
     sh.gnd(Cc[2])
     Cp = rv(sh, 'Device:C', 'C106', '47pF', C0603, xcmp + g(6), yc)
@@ -534,10 +534,10 @@ def mcu():
     sh.w((xb, yn), (xb - g(3), yn))
     sh.label('ESP_BOOT', (xb - g(3), yn), 'L')
     # LED
-    Dl = sh.part('LED:SK6812MINI', 'D301', 'SK6812MINI', 'LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm', g(98), g(36), 0)
+    Dl = sh.part('obd-v2x:SK6812MINI-HS', 'D301', 'SK6812MINI-HS', 'obd-v2x:LED_SK6812MINI-HS_3.7x3.5mm', g(98), g(36), 0)
     Dl.fields = {'ref': (g(98) + g(4), g(35), 'left'), 'val': (g(98) + g(4), g(37), 'left')}
     sh.rail('VSYS_3V8', Dl['VDD'])
-    sh.gnd(Dl['VSS'])
+    sh.gnd(Dl['GND'])
     sh.w(Dl['DIN'], Dl.out('DIN', 2))
     sh.label('LED_DIN', Dl.out('DIN', 2), 'L')
     sh.nc(Dl, 'DOUT')

@@ -23,7 +23,7 @@
         "min_hole_clearance": 0.25,
         "min_silk_clearance": 0.0,
         "min_text_height": 0.8,
-        "min_text_thickness": 0.12
+        "min_text_thickness": 0.15
       }
     }
   },
@@ -101,7 +101,7 @@
         "pcb_color": "rgba(0, 0, 0, 0.000)",
         "priority": 2,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
-        "track_width": 0.35,
+        "track_width": 0.32,
         "tuning_profile": "",
         "via_diameter": 0.6,
         "via_drill": 0.3,

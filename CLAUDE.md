@@ -46,4 +46,7 @@
   **save** the lock first, Freerouting leaves locked copper out of its result).
 - Current state: fully routed. DRC 0 errors / 0 unconnected, parity 0, ERC 0/0 (only cosmetic silk warnings).
   Only the pre-routes (RF lines + their GND vias, buck SW node) are locked.
-- RF net class width (0.35 mm) is a 50 ohm placeholder: confirm with PCBWay's stack-up before ordering.
+- RF net class: 0.32 mm GCPW, 0.25 mm gap = ~50 ohm on PCBWay's standard 1.6 mm 4-layer stack-up (order with 50 ohm
+  impedance control on L1). No vias in SMD pads (maze.py enforces it; only the ESP32 EPAD thermal vias).
+- Fab outputs: `<KiCad>/bin/python hardware/tools/fab.py` -> `hardware/fab/` (Gerber zip, BOM, CPL; git-ignored), also
+  refreshes `docs/bom.csv`. Order settings in `docs/design-review.md`.

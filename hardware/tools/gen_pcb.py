@@ -116,8 +116,9 @@ NETCLASSES = [
     # name, track, clearance, via_d, via_drill, net-name patterns
     ('Power', 0.6, 0.2, 0.8, 0.4, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
                                   'Net-(D202-K)', 'VBUCK_3V8', 'VCELL']),   # USB VBUS (<0.5 A) stays default class
-    # 50 ohm placeholder: confirm width/gap with PCBWay's impedance calculator for the ordered stack-up
-    ('RF', 0.35, 0.25, 0.6, 0.3, ['*LTE_ANT_*', 'Net-(J402-In)', 'Net-(J403-In)']),
+    # 50 ohm grounded coplanar (0.32 mm, 0.25 mm gap) over In1 on PCBWay's standard 1.6 mm 4-layer stack-up
+    # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): see docs/design-review.md. Order with 50 ohm impedance control.
+    ('RF', 0.32, 0.25, 0.6, 0.3, ['*LTE_ANT_*', 'Net-(J402-In)', 'Net-(J403-In)']),
 ]
 
 
@@ -130,7 +131,7 @@ def write_project_rules():
         'min_via_diameter': RULES['via_d'], 'min_through_hole_diameter': RULES['min_drill'],
         'min_via_annular_width': RULES['annular'], 'min_hole_to_hole': RULES['hole_to_hole'],
         'min_copper_edge_clearance': RULES['edge'], 'min_hole_clearance': 0.25,
-        'min_silk_clearance': 0.0, 'min_text_height': 0.8, 'min_text_thickness': 0.12,
+        'min_silk_clearance': 0.0, 'min_text_height': 0.8, 'min_text_thickness': 0.15,
     })
     ns = d.setdefault('net_settings', {})
     default = next(c for c in ns['classes'] if c['name'] == 'Default')
@@ -307,7 +308,7 @@ def build():
         big = ref in ('U401', 'U301', 'J201', 'J401')
         sz = mm(1.0 if big else 0.8)
         fp.Reference().SetTextSize(pcbnew.VECTOR2I(sz, sz))
-        fp.Reference().SetTextThickness(mm(0.15 if big else 0.12))
+        fp.Reference().SetTextThickness(mm(0.15))   # PCBWay: silk character stroke >= 0.15 mm
         board.Add(fp)
         fps[ref] = fp
 

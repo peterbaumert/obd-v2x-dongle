@@ -9,6 +9,8 @@ Quectel_EC200U: from Quectel EC200U Series QuecOpen Hardware Design V1.0,
 
 OBD2_J1962_Plug_PCB: Jiatel CR-PG001 90 deg plug drawing (see obd_plug()).
 
+LED_SK6812MINI-HS_3.7x3.5mm: OPSCO SK6812MINI-HS datasheet Rev. B/0, section 6 (recommended pads, top view).
+
 ESP32-C5-WROOM-1U.kicad_mod is vendored from espressif/kicad-libraries (CC-BY-SA 4.0 with
 the KiCad design exception), not generated here.
 """
@@ -176,8 +178,31 @@ def obd_plug():
                      'OBD OBD2 J1962 plug connector', 26, body)
 
 
+def sk6812mini_hs():
+    """OPSCO SK6812MINI-HS, body 3.7 x 3.5 mm. Recommended land (datasheet section 6, top view):
+    pads 1.5 x 1.0, 1.8 apart in x, 0.8 apart in y. Pin 1 (GND) = chamfered corner, bottom right:
+    3 VDD top left, 2 DIN top right, 1 GND bottom right, 4 DOUT bottom left."""
+    X, Y, W, H = 1.65, 0.9, 1.5, 1.0
+    body = (pad(3, 'rect', -X, -Y, W, H) + pad(2, 'rect', X, -Y, W, H) +
+            pad(1, 'rect', X, Y, W, H) + pad(4, 'rect', -X, Y, W, H))
+    bx, by, ch = 1.85, 1.75, 0.6
+    body += (line(-bx, -by, bx, -by, 'F.Fab', 0.1) + line(bx, -by, bx, by - ch, 'F.Fab', 0.1) +
+             line(bx, by - ch, bx - ch, by, 'F.Fab', 0.1) + line(bx - ch, by, -bx, by, 'F.Fab', 0.1) +
+             line(-bx, by, -bx, -by, 'F.Fab', 0.1))
+    sy = by + 0.15                                   # silk outside the body, clear of the pads
+    body += (line(-bx, -sy, bx, -sy, 'F.SilkS', 0.15) + line(-bx, sy, 2.2, sy, 'F.SilkS', 0.15) +
+             line(2.2, sy, 2.6, sy - 0.4, 'F.SilkS', 0.15))   # corner tick = pin 1 (chamfered corner), clear of pad 1
+    body += rect(-2.75, -2.1, 2.75, 2.1, 'F.CrtYd', 0.05)
+    assert body.count('(pad ') == 4
+    return footprint('LED_SK6812MINI-HS_3.7x3.5mm',
+                     'OPSCO SK6812MINI-HS RGB LED 3.7 x 3.5 mm, top-emitting; pins 1 GND, 2 DIN, 3 VDD, 4 DOUT '
+                     '(datasheet Rev. B/0 recommended land)',
+                     'LED RGB SK6812 SK6812MINI-HS', 3.0, body)
+
+
 if __name__ == '__main__':
-    for name, fn in (('Quectel_EC200U', ec200u), ('OBD2_J1962_Plug_PCB', obd_plug)):
+    for name, fn in (('Quectel_EC200U', ec200u), ('OBD2_J1962_Plug_PCB', obd_plug),
+                     ('LED_SK6812MINI-HS_3.7x3.5mm', sk6812mini_hs)):
         p = OUT / f'{name}.kicad_mod'
         p.write_text(fn(), encoding='utf-8')
         print('wrote', p)

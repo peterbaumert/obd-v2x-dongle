@@ -1,0 +1,26 @@
+** Drc report for obd-v2x-dongle.kicad_pcb **
+** Created on 2026-11-12T09:05:29 **
+** Report includes: Errors, Warnings **
+
+** Found 2 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(150.0000 mm, 124.0000 mm): Segment on Edge.Cuts
+    @(140.3000 mm, 122.6500 mm): Segment of J301 on B.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; warning
+    @(150.0000 mm, 124.0000 mm): Segment on Edge.Cuts
+    @(149.7000 mm, 122.6500 mm): Segment of J301 on B.Silkscreen
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

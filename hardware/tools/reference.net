@@ -512,7 +512,7 @@
 		)
 		(comp
 			(ref "C105")
-			(value "6.8nF")
+			(value "5.6nF")
 			(footprint "Capacitor_SMD:C_0603_1608Metric")
 			(fields
 				(field
@@ -1751,7 +1751,7 @@
 		)
 		(comp
 			(ref "R106")
-			(value "7.5k")
+			(value "12k")
 			(footprint "Resistor_SMD:R_0603_1608Metric")
 			(fields
 				(field
@@ -3383,9 +3383,9 @@
 		)
 		(comp
 			(ref "D301")
-			(value "SK6812MINI")
-			(footprint "LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm")
-			(datasheet "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
+			(value "SK6812MINI-HS")
+			(footprint "obd-v2x:LED_SK6812MINI-HS_3.7x3.5mm")
+			(datasheet "https://www.lcsc.com/datasheet/C2922787.pdf")
 			(fields
 				(field
 					(name "MPN") "SK6812MINI-HS")
@@ -3394,17 +3394,17 @@
 				(field
 					(name "LCSC") "C2922787")
 				(field
-					(name "Footprint") "LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm")
+					(name "Footprint") "obd-v2x:LED_SK6812MINI-HS_3.7x3.5mm")
 				(field
-					(name "Datasheet") "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
+					(name "Datasheet") "https://www.lcsc.com/datasheet/C2922787.pdf")
 				(field
 					(name "Description")
 				)
 			)
 			(libsource
-				(lib "LED")
-				(part "SK6812MINI")
-				(description "RGB LED with integrated controller")
+				(lib "obd-v2x")
+				(part "SK6812MINI-HS")
+				(description "RGB LED with integrated controller (WS2812-compatible), 3.7 x 3.5 mm top-emitting, VDD 3.7-5.5 V")
 			)
 			(property
 				(name "MPN")
@@ -3428,11 +3428,7 @@
 			)
 			(property
 				(name "ki_keywords")
-				(value "RGB LED NeoPixel Mini addressable")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "LED*SK6812MINI*PLCC*3.5x3.5mm*P1.75mm*")
+				(value "RGB LED addressable SK6812 NeoPixel")
 			)
 			(sheetpath
 				(names "/MCU (ESP32-C5, USB)/")
@@ -3444,16 +3440,16 @@
 					(name "A")
 					(pins
 						(pin
-							(num "3")
-						)
-						(pin
-							(num "4")
-						)
-						(pin
 							(num "2")
 						)
 						(pin
+							(num "3")
+						)
+						(pin
 							(num "1")
+						)
+						(pin
+							(num "4")
 						)
 					)
 				)
@@ -9190,49 +9186,6 @@
 			)
 		)
 		(libpart
-			(lib "LED")
-			(part "SK6812MINI")
-			(description "RGB LED with integrated controller")
-			(docs "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
-			(footprints
-				(fp "LED*SK6812MINI*PLCC*3.5x3.5mm*P1.75mm*")
-			)
-			(fields
-				(field
-					(name "Reference") "D")
-				(field
-					(name "Value") "SK6812MINI")
-				(field
-					(name "Footprint") "LED_SMD:LED_SK6812MINI_PLCC4_3.5x3.5mm_P1.75mm")
-				(field
-					(name "Datasheet") "https://cdn-shop.adafruit.com/product-files/2686/SK6812MINI_REV.01-1-2.pdf")
-				(field
-					(name "Description") "RGB LED with integrated controller")
-			)
-			(pins
-				(pin
-					(num "1")
-					(name "DOUT")
-					(type "output")
-				)
-				(pin
-					(num "2")
-					(name "VSS")
-					(type "power_in")
-				)
-				(pin
-					(num "3")
-					(name "DIN")
-					(type "input")
-				)
-				(pin
-					(num "4")
-					(name "VDD")
-					(type "power_in")
-				)
-			)
-		)
-		(libpart
 			(lib "Logic_LevelTranslator")
 			(part "TXS0108EPW")
 			(description "Bidirectional  level-shifting voltage translator, TSSOP-20")
@@ -10689,6 +10642,46 @@
 		)
 		(libpart
 			(lib "obd-v2x")
+			(part "SK6812MINI-HS")
+			(description "RGB LED with integrated controller (WS2812-compatible), 3.7 x 3.5 mm top-emitting, VDD 3.7-5.5 V")
+			(docs "https://www.lcsc.com/datasheet/C2922787.pdf")
+			(fields
+				(field
+					(name "Reference") "D")
+				(field
+					(name "Value") "SK6812MINI-HS")
+				(field
+					(name "Footprint") "obd-v2x:LED_SK6812MINI-HS_3.7x3.5mm")
+				(field
+					(name "Datasheet") "https://www.lcsc.com/datasheet/C2922787.pdf")
+				(field
+					(name "Description") "RGB LED with integrated controller (WS2812-compatible), 3.7 x 3.5 mm top-emitting, VDD 3.7-5.5 V")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "2")
+					(name "DIN")
+					(type "input")
+				)
+				(pin
+					(num "3")
+					(name "VDD")
+					(type "power_in")
+				)
+				(pin
+					(num "4")
+					(name "DOUT")
+					(type "output")
+				)
+			)
+		)
+		(libpart
+			(lib "obd-v2x")
 			(part "TPS2121")
 			(description "2.8-22 V priority power mux, 56 mOhm, 4.5 A, seamless switchover")
 			(docs "https://www.ti.com/lit/ds/symlink/tps2121.pdf")
@@ -10849,10 +10842,6 @@
 		(library
 			(logical "Interface_CAN_LIN")
 			(uri "${KICAD10_SYMBOL_DIR}/Interface_CAN_LIN.kicad_sym")
-		)
-		(library
-			(logical "LED")
-			(uri "${KICAD10_SYMBOL_DIR}/LED.kicad_sym")
 		)
 		(library
 			(logical "Logic_LevelTranslator")
@@ -11549,8 +11538,8 @@
 			(class "Default")
 			(node
 				(ref "D301")
-				(pin "3")
-				(pinfunction "DIN_3")
+				(pin "2")
+				(pinfunction "DIN_2")
 				(pintype "input")
 			)
 			(node
@@ -12037,8 +12026,8 @@
 			)
 			(node
 				(ref "D301")
-				(pin "2")
-				(pinfunction "VSS_2")
+				(pin "1")
+				(pinfunction "GND_1")
 				(pintype "power_in")
 			)
 			(node
@@ -13776,8 +13765,8 @@
 			)
 			(node
 				(ref "D301")
-				(pin "4")
-				(pinfunction "VDD_4")
+				(pin "3")
+				(pinfunction "VDD_3")
 				(pintype "power_in")
 			)
 			(node
@@ -13818,12 +13807,12 @@
 		)
 		(net
 			(code "95")
-			(name "unconnected-(D301-DOUT-Pad1)")
+			(name "unconnected-(D301-DOUT-Pad4)")
 			(class "Default")
 			(node
 				(ref "D301")
-				(pin "1")
-				(pinfunction "DOUT_1")
+				(pin "4")
+				(pinfunction "DOUT_4")
 				(pintype "output+no_connect")
 			)
 		)

@@ -6,6 +6,7 @@
 Coordinates are board-relative mm (board origin at page 100, 50), layers F/In2/B.
 `route` adds tracks/vias for one connection, avoiding all other-net copper with clearance.
 `gndvias` gives every outer-layer GND SMD pad without a nearby GND via/hole its own via.
+Vias never land in SMD pads (no via-in-pad: the board is ordered without via filling).
 In1 is the GND plane and never gets tracks. Always run DRC afterwards.
 """
 import heapq
@@ -81,13 +82,19 @@ class Grid:
         r_tr = hw + CLR
         r_via = VIA_D / 2 + CLR
         for fp in b.GetFootprints():
+            fid = fp.GetReference().startswith('FID')   # fiducials keep a 1 mm copper-free ring
             for p in fp.Pads():
                 if p.GetNetname() == netname and netname:
+                    # no via-in-pad: an open via in an SMD pad wicks solder away (the board has no via filling)
+                    if p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD:
+                        bb = p.GetBoundingBox()
+                        self.mark_rect(vmask, tomm(bb.GetLeft()), tomm(bb.GetTop()), tomm(bb.GetRight()),
+                                       tomm(bb.GetBottom()), VIA_DR / 2 + 0.1)
                     continue
                 bb = p.GetBoundingBox()
                 x0, y0, x1, y1 = tomm(bb.GetLeft()), tomm(bb.GetTop()), tomm(bb.GetRight()), tomm(bb.GetBottom())
                 hole = p.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH)
-                extra = 0.15 if hole else 0.0          # hole-to-copper / hole-to-hole margin
+                extra = 0.15 if hole else 1.0 if fid else 0.0   # hole-to-copper / hole-to-hole margin
                 for i, L in enumerate(LAYERS):
                     if hole or p.IsOnLayer(L):
                         self.mark_rect(masks[i], x0, y0, x1, y1, r_tr + extra)

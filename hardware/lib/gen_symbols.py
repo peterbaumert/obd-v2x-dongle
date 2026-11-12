@@ -180,6 +180,20 @@ simsw = symbol(
     width=12 * G,
 )
 
+# ---------------- OPSCO SK6812MINI-HS RGB LED (3.7 x 3.5 mm, top-emitting) ----------------
+# Pin numbers per OPSCO SK6812MINI-HS datasheet Rev. B/0, section 5 (1 GND, 2 DIN, 3 VDD, 4 DOUT).
+# Not the same numbering as KiCad's LED:SK6812MINI (1 DOUT, 2 VSS, 3 DIN, 4 VDD).
+led = symbol(
+    'SK6812MINI-HS', 'D',
+    'obd-v2x:LED_SK6812MINI-HS_3.7x3.5mm',
+    'https://www.lcsc.com/datasheet/C2922787.pdf',
+    'RGB LED with integrated controller (WS2812-compatible), 3.7 x 3.5 mm top-emitting, VDD 3.7-5.5 V',
+    'RGB LED addressable SK6812 NeoPixel',
+    left=[(I, 'DIN', 2)], right=[(O, 'DOUT', 4)],
+    top=[(PI, 'VDD', 3, 0)], bottom=[(PI, 'GND', 1, 0)],
+    width=6 * G,
+)
+
 
 # ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
 def rail_symbols(names):
@@ -201,7 +215,7 @@ def rail_symbols(names):
 RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8', 'VBUCK_3V8', 'VCELL']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + led + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

@@ -3,6 +3,8 @@
     <KiCad>/bin/python hardware/tools/sync_pcb.py [--dry-run]
 
 - adds footprints that are new in the schematic (positions from NEW_PLACE, else packed next to an anchor pad)
+- swaps footprints whose library footprint changed (same place and side, turned to keep each net's pads near
+  their old spots); their tracks then end at the old pad positions and need reconnecting
 - updates value, fields, DNP / BOM flags and pad nets of existing footprints
 - deletes tracks/vias of nets whose pad membership changed in a way that could short (listed nets are re-routed later)
 - reports footprints that are on the board but no longer in the schematic (not deleted automatically)
@@ -18,19 +20,13 @@ import gen_pcb as G  # noqa: E402  (netlist reader, footprint loader, placement 
 
 T, B = G.T, G.B
 # new parts: ref: (x, y, rot, side)  -- board-relative mm, top view
-NEW_PLACE = {
-    # SIM switch, bottom side between the ESP and the modem (open area: room to fan out the 0.4 mm pads)
-    'U404': (16.0, 33.0, 0, B),   # open on all layers (outside the modem's top-side pads): vias anywhere
-}
+NEW_PLACE = {}
 # small parts: ref: (anchor ref, anchor pad)
-NEW_ANCHOR = {
-    'C416': ('U404', '14'), 'R414': ('U404', '2'),
-}
+NEW_ANCHOR = {}
 # nets whose existing copper must go (pad membership split; would short the new nets)
-LTE = '/LTE + GNSS (EC200U)/'
-RIP_NETS = {LTE + 'LTE_USIM_DATA', LTE + 'LTE_USIM_CLK', LTE + 'LTE_USIM_RST', LTE + 'SIM_VDD'}
+RIP_NETS = set()
 # nets renamed in the schematic: existing copper is moved to the new name
-RENAME_NETS = {'/MCU (ESP32-C5, USB)/UART0_RX': 'SIM_SEL'}
+RENAME_NETS = {}
 
 
 def main(dry):
@@ -50,6 +46,52 @@ def main(dry):
     gone = [r for r in fps if r not in comps and not r.startswith(('FID', 'REF', '#'))]
     if gone:
         print('on board but not in schematic (left alone):', ' '.join(gone))
+
+    # footprints changed in the schematic: swap in place (same position and side), turned so that each
+    # net's pads land as close as possible to where that net's pads were; the copper is left as it is
+    for ref, c in comps.items():
+        old = fps.get(ref)
+        if old is None:
+            continue
+        cur = old.GetFPID()
+        if f'{cur.GetLibNickname()}:{cur.GetLibItemName()}' == c['fp']:
+            continue
+        was = {}
+        for p in old.Pads():
+            if p.GetNetname() and not p.GetNetname().startswith('unconnected-'):
+                was.setdefault(p.GetNetname(), []).append(p.GetPosition())
+        new = G.load_fp(c['fp'])
+        board.Add(new)
+        for k, v in c['fields'].items():
+            if k not in ('Footprint', 'Datasheet', 'Description'):
+                new.SetField(k, v)
+                new.GetField(k).SetVisible(False)
+        new.SetReference(ref)
+        new.SetValue(c['value'])
+        new.SetPath(old.GetPath())
+        new.SetSheetname(old.GetSheetname())
+        new.SetSheetfile(old.GetSheetfile())
+        new.Reference().SetTextSize(old.Reference().GetTextSize())
+        new.Reference().SetTextThickness(old.Reference().GetTextThickness())
+        new.Value().SetVisible(False)
+        if old.IsFlipped():
+            new.Flip(new.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
+        new.SetPosition(old.GetPosition())
+        best = None
+        for rot in (0, 90, 180, 270):
+            new.SetOrientationDegrees(rot)
+            cost = 0
+            for p in new.Pads():
+                want = nets.get((ref, p.GetNumber()))
+                if want in was:
+                    cost += min((p.GetPosition() - q).EuclideanNorm() for q in was[want])
+            if best is None or cost < best[0]:
+                best = (cost, rot)
+        new.SetOrientationDegrees(best[1])
+        new.Reference().SetPosition(old.Reference().GetPosition())
+        board.Remove(old)
+        fps[ref] = new
+        print(f'  {ref}: footprint {cur.GetLibItemName()} -> {c["fp"]} (rot {best[1]}); reconnect its tracks')
 
     # existing footprints: fields, DNP, pad nets
     changed_pads = 0
@@ -131,7 +173,7 @@ def main(dry):
         fp.Value().SetVisible(False)
         sz = pcbnew.FromMM(0.8)
         fp.Reference().SetTextSize(pcbnew.VECTOR2I(sz, sz))
-        fp.Reference().SetTextThickness(pcbnew.FromMM(0.12))
+        fp.Reference().SetTextThickness(pcbnew.FromMM(0.15))
         fps[ref] = fp
         return fp
 

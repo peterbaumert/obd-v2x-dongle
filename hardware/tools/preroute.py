@@ -3,7 +3,7 @@ removes its own previous tracks/vias/zones on these nets first). Run before auto
 
     <KiCad>/bin/python hardware/tools/preroute.py      (KiCad's bundled Python provides pcbnew)
 
-- LTE main / GNSS antenna chains: straight 0.35 mm F.Cu lines (50 ohm placeholder), GND vias at the
+- LTE main / GNSS antenna chains: straight 0.32 mm F.Cu lines (50 ohm GCPW, see gen_pcb.py), GND vias at the
   shunt caps and U.FL shields, via fence on both sides.
 - Buck switch node (Net-(D103-K)): locked 1 mm F.Cu tracks U102 SW -> L101 and -> D103 cathode.
 """
@@ -20,7 +20,7 @@ from kicad_env import CLI  # noqa: E402
 HW = Path(__file__).resolve().parents[1]
 PCB = HW / 'obd-v2x-dongle.kicad_pcb'
 OX, OY = 100.0, 50.0
-RF_W = 0.35
+RF_W = 0.32
 VIA_D, VIA_DR = 0.6, 0.3
 
 
