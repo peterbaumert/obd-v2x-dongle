@@ -1,0 +1,277 @@
+# OBD-II / V2X dongle firmware (ESPHome, ESP32-C5-WROOM-1U-N16R8 on the obd-v2x-dongle board).
+#
+# Uplink: LTE (Quectel EC200U-EU) via ESPHome's modem component (PPP + CMUX, ESPHome >= 2026.11).
+# The ESP32-C5's Wi-Fi radio is the ITS-G5 / 802.11p receiver, so there is no Wi-Fi.
+#   - Owner's MQTT broker (Home Assistant MQTT discovery): car battery, OBD-II live data, LTE, V2X counters
+#   - OpenTrafficMap MQTT server: received ITS-G5 frames (components/otm_uplink)
+# OBD-II requests are only sent while the engine runs (charging voltage): on cars like the Mercedes W205
+# the gateway sleeps with the ignition off, and requests would wake the bus and drain the battery.
+#
+# Pin map: hardware/tools/gen_schematic.py, sheet "MCU" (module pin -> GPIO in the comments).
+
+substitutions:
+  name: obd-v2x-dongle
+  friendly_name: OBD V2X Dongle
+  engine_on_voltage: "13.2"      # V: above = alternator charging = engine running
+  low_battery_voltage: "11.8"    # V: warning threshold while the engine is off
+
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+  min_version: 2026.11.0
+  project:
+    name: obd-v2x-dongle.firmware
+    version: "0.1.0"
+  on_boot:
+    - priority: 800    # safe state before anything else runs
+      then:
+        - output.turn_off: kline_slp_n     # K-line transceiver asleep (not used yet)
+    - priority: -100   # after all components: power the modem up
+      then:
+        - script.execute: lte_power_on
+
+esp32:
+  variant: esp32c5
+  board: esp32-c5-devkitc-1
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+external_components:
+  - source: github://hn/esphome-its-g5
+    components: [its_g5_receiver]
+  - source:
+      type: local
+      path: components
+    components: [otm_uplink, obd2]
+
+# ---------------------------------------------------------------- board control
+output:
+  - platform: gpio            # IO8 (pin 10): Q103 -> Q102 modem supply switch, high = modem powered
+    id: lte_power_en
+    pin: GPIO8
+  - platform: gpio            # IO2 (pin 4): Q401 open collector, high = modem PWRKEY pulled low
+    id: lte_pwrkey
+    pin: GPIO2
+  - platform: gpio            # IO3 (pin 5): Q402 open collector, high = modem RESET_N pulled low
+    id: lte_reset
+    pin: GPIO3
+  - platform: gpio            # IO12 (pin 24): U404 FSA2567, low = nano-SIM J401, high = eSIM U403
+    id: sim_sel
+    pin: GPIO12
+  - platform: gpio            # IO7 (pin 9): TJA1021 SLP_N, low = sleep
+    id: kline_slp_n
+    pin: GPIO7
+
+binary_sensor:
+  - platform: gpio            # IO9 (pin 11): modem STATUS via TXS0108E, high = modem running
+    id: lte_status
+    name: "LTE modem running"
+    entity_category: diagnostic
+    pin: GPIO9
+  - platform: template
+    id: engine_running
+    name: "Engine running"
+    device_class: running
+    lambda: |-
+      float v = id(car_battery).state;
+      return !std::isnan(v) && v > ${engine_on_voltage};
+    filters:
+      - delayed_on: 5s
+      - delayed_off: 30s
+    on_press:
+      - lambda: id(obd).set_active(true);
+    on_release:
+      - lambda: id(obd).set_active(false);
+  - platform: template
+    name: "Car battery low"
+    device_class: battery
+    lambda: |-
+      float v = id(car_battery).state;
+      return !std::isnan(v) && !id(engine_running).state && v < ${low_battery_voltage};
+
+# ---------------------------------------------------------------- LTE modem (EC200U-EU)
+script:
+  - id: lte_power_on
+    mode: single
+    then:
+      - output.turn_on: lte_power_en
+      - delay: 500ms
+      - if:
+          condition:
+            binary_sensor.is_off: lte_status
+          then:
+            - output.turn_on: lte_pwrkey     # EC200U: PWRKEY low >= 2 s to power on
+            - delay: 2500ms
+            - output.turn_off: lte_pwrkey
+      - wait_until:
+          condition:
+            binary_sensor.is_on: lte_status
+          timeout: 20s
+      - if:
+          condition:
+            binary_sensor.is_on: lte_status
+          then:
+            - modem.enable:
+          else:
+            - logger.log:
+                level: ERROR
+                format: "EC200U did not report STATUS high after PWRKEY"
+
+modem:
+  id: lte
+  model: GENERIC
+  tx_pin: GPIO23              # IO23 (pin 21) MCU_TX_LTE -> modem RXD
+  rx_pin: GPIO24              # IO24 (pin 23) MCU_RX_LTE <- modem TXD
+  rts_pin: GPIO26             # IO26 (pin 27) MCU_RTS_LTE -> modem RTS
+  cts_pin: GPIO25             # IO25 (pin 26) MCU_CTS_LTE <- modem CTS
+  baud_rate: 115200
+  apn: !secret lte_apn
+  enable_on_boot: false       # lte_power_on enables it once the modem is up
+
+switch:
+  - platform: template
+    name: "Use eSIM"
+    icon: mdi:sim
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    # Only switch SIMs while the modem's SIM interface is idle: drop the connection first
+    turn_on_action:
+      - modem.disable:
+      - delay: 2s
+      - output.turn_on: sim_sel
+      - delay: 1s
+      - modem.enable:
+    turn_off_action:
+      - modem.disable:
+      - delay: 2s
+      - output.turn_off: sim_sel
+      - delay: 1s
+      - modem.enable:
+
+mqtt:
+  id: mqtt_client
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  discovery: true
+  topic_prefix: ${name}
+
+# ---------------------------------------------------------------- V2X: ITS-G5 receive -> OpenTrafficMap
+otm_uplink:
+  id: otm
+  node_id: !secret otm_node_id
+
+globals:
+  - id: last_packet_ms
+    type: uint32_t
+    initial_value: "0"
+
+its_g5_receiver:
+  id: g5
+  channel: 5900               # G5CC
+  broadcast_only: true
+  on_packet:
+    - lambda: |-
+        id(last_packet_ms) = millis();
+        id(otm).publish_packet(x);
+
+# ---------------------------------------------------------------- OBD-II over CAN (ISO 15765-4, 11 bit, 500 kbit/s)
+# components/obd2 (ESPHome's esp32_can does not link on the ESP32-C5). Only active while the engine runs.
+obd2:
+  id: obd
+  tx_pin: GPIO4               # IO4 (pin 17) CAN_TX -> TCAN334
+  rx_pin: GPIO5               # IO5 (pin 16) CAN_RX <- TCAN334
+  standby_pin: GPIO10         # IO10 (pin 12) TCAN334 STB, high = standby
+  bit_rate: 500000
+  poll_interval: 250ms        # one request per 250 ms, round robin (speed/RPM twice per round)
+
+# ---------------------------------------------------------------- sensors
+sensor:
+  - platform: adc             # IO1 (pin 7) VSENSE = VIN_PROT / 11 (R109 100k / R110 10k)
+    id: car_battery
+    name: "Car battery"
+    pin: GPIO1
+    attenuation: 12db
+    update_interval: 2s
+    device_class: voltage
+    unit_of_measurement: V
+    accuracy_decimals: 2
+    filters:
+      - multiply: 11.0
+      - sliding_window_moving_average:
+          window_size: 5
+          send_every: 5
+  - platform: obd2
+    obd2_id: obd
+    speed:
+      name: "Speed"
+    rpm:
+      name: "Engine RPM"
+    coolant_temperature:
+      name: "Coolant temperature"
+    engine_load:
+      name: "Engine load"
+    fuel_level:
+      name: "Fuel level"
+    intake_temperature:
+      name: "Intake air temperature"
+    ambient_temperature:
+      name: "Ambient temperature"
+    ecu_voltage:
+      name: "ECU voltage"
+  - platform: modem
+    rssi:
+      name: "LTE signal"
+  - platform: its_g5_receiver
+    its_g5_receiver_id: g5
+    packets_received:
+      name: "V2X packets received"
+      icon: mdi:car-connected
+      filters:
+        - throttle: 60s
+    packets_dropped:
+      name: "V2X packets dropped"
+      entity_category: diagnostic
+      filters:
+        - throttle: 60s
+  - platform: uptime
+    name: "Uptime"
+
+# ---------------------------------------------------------------- status LED (D301 SK6812MINI-HS, IO27 / pin 18)
+#   red = no LTE, yellow = LTE up but MQTT not connected, green = connected, blue flash = V2X frame received
+light:
+  - platform: esp32_rmt_led_strip
+    id: status_led
+    name: "Status LED"
+    entity_category: config
+    pin: GPIO27
+    num_leds: 1
+    chipset: SK6812
+    rgb_order: GRB
+    default_transition_length: 0s
+    restore_mode: RESTORE_DEFAULT_ON
+    on_turn_on:
+      - light.turn_on:
+          id: status_led
+          effect: "Status"
+          brightness: 30%
+    effects:
+      - addressable_lambda:
+          name: "Status"
+          update_interval: 50ms
+          lambda: |-
+            if (millis() - id(last_packet_ms) < 60) {
+              it[0] = Color(0, 0, 255);
+            } else if (!id(lte).is_connected()) {
+              it[0] = Color(255, 0, 0);
+            } else if (!id(mqtt_client).is_connected()) {
+              it[0] = Color(255, 160, 0);
+            } else {
+              it[0] = Color(0, 255, 0);
+            }

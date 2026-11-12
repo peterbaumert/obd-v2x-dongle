@@ -24,3 +24,7 @@ Thumbs.db
 __pycache__/
 *.pyc
 hardware/tools/stock.json
+
+# ESPHome firmware: local secrets and build output
+firmware/secrets.yaml
+firmware/.esphome/
