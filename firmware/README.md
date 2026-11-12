@@ -49,7 +49,8 @@ Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in
 
 All values are Home Assistant entities under *Configuration* (stored on the dongle). They are published with
 `command_retain`, so the broker keeps a change until the sleeping dongle wakes and picks it up. "Stay awake"
-keeps it awake (diagnostics, updates). The MQTT birth/will messages are off: while it sleeps Home Assistant keeps
+keeps it awake (diagnostics, updates), and so does a **computer on USB-C** (detected by its USB frames; a charger
+or power bank does not count). The MQTT birth/will messages are off: while it sleeps Home Assistant keeps
 the last values instead of showing the entities as unavailable. "Power mode" shows the current mode.
 
 Defaults: engine running above 13.2 V, battery low below 12.0 V, unplugged below 6 V, sleep 5 min after engine off,
@@ -71,7 +72,11 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
    `/config/esphome/`, then *Install → Plug into this computer* with the dongle on USB-C (ESP32 USB-Serial-JTAG).
    Or locally: `esphome run obd-v2x-dongle.yaml`. On Windows run ESPHome from PowerShell/cmd, not Git Bash
    (ESP-IDF's installer refuses MSYS).
-3. First flash over USB. There is no Wi-Fi and the car is not reachable from outside, so ESPHome's normal OTA
+3. **Emergency access is always USB-C**: flash and logs over the ESP32's USB-Serial-JTAG. If the firmware is
+   broken, hold BOOT and press RESET (pinholes in the case bottom) to start the ESP32's ROM bootloader. A sleeping
+   dongle: press RESET (it then stays awake for "Sleep after engine off"), or just plug in a computer.
+   There is no Wi-Fi fallback: the radio is the V2X receiver.
+4. First flash over USB. There is no Wi-Fi and the car is not reachable from outside, so ESPHome's normal OTA
    does not apply (see roadmap).
 
 ## Roadmap

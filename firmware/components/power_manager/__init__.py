@@ -14,6 +14,7 @@ at runtime. Timing between wakes is kept in RTC memory (survives deep sleep, not
 from esphome import automation
 import esphome.codegen as cg
 from esphome.components import binary_sensor, deep_sleep, number, switch
+from esphome.components.esp32 import include_builtin_idf_component
 from esphome.components.adc.sensor import ADCSensor
 import esphome.config_validation as cv
 from esphome.const import CONF_ID, CONF_TRIGGER_ID
@@ -64,6 +65,7 @@ CONFIG_SCHEMA = cv.Schema(
 
 
 async def to_code(config):
+    include_builtin_idf_component("esp_driver_usb_serial_jtag")
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
     cg.add(var.set_deep_sleep(await cg.get_variable(config[CONF_DEEP_SLEEP_ID])))

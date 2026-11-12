@@ -1,5 +1,6 @@
 #include "power_manager.h"
 
+#include <driver/usb_serial_jtag.h>
 #include <esp_attr.h>
 #include <esp_sleep.h>
 
@@ -11,6 +12,7 @@ static const char *const TAG = "power_manager";
 static const uint32_t RTC_MAGIC = 0x0B2D2026;
 static const uint32_t SHUTDOWN_TIMEOUT_MS = 15000;  // modem: AT+QPOWD then STATUS low
 static const uint32_t SAMPLE_INTERVAL_MS = 2000;
+static const uint32_t USB_DETECT_MS = 500;  // time after boot to see the host's USB frames before sleeping
 
 // Survive deep sleep (not a power loss): time since the last position report and the unplugged state
 RTC_NOINIT_ATTR static uint32_t rtc_magic;
@@ -71,6 +73,19 @@ float PowerManager::sample_voltage_() {
     }
   }
   return n == 0 ? NAN : sum / n * this->multiplier_;
+}
+
+bool PowerManager::usb_host_() {
+  // True only with a computer on USB-C (USB frames), not with a charger or power bank
+  const bool usb = usb_serial_jtag_is_connected();
+  if (usb && !this->usb_seen_)
+    ESP_LOGI(TAG, "USB host connected: staying awake");
+  this->usb_seen_ = usb;
+  return usb;
+}
+
+bool PowerManager::stay_awake_on_() {
+  return (this->stay_awake_ != nullptr && this->stay_awake_->state) || this->usb_host_();
 }
 
 float PowerManager::setting_(number::Number *n, float fallback) const {
@@ -152,6 +167,12 @@ void PowerManager::loop() {
       break;
     }
     case Mode::SLEEPING: {
+      if (now < USB_DETECT_MS)
+        break;  // give a connected computer a moment to show up
+      if (this->stay_awake_on_()) {
+        this->enter_(Mode::PARKED);
+        break;
+      }
       const uint32_t sleep_s = static_cast<uint32_t>(this->setting_(this->check_interval_, 60.0f));
       // Awake time counts towards the next report as well
       rtc_secs_since_report += now / 1000;

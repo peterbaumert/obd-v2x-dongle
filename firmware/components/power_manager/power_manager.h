@@ -49,7 +49,9 @@ class PowerManager : public Component {
   float setting_(number::Number *n, float fallback) const;
   void enter_(Mode mode);
   void start_network_();
-  bool stay_awake_on_() const { return this->stay_awake_ != nullptr && this->stay_awake_->state; }
+  /// "Stay awake" switch on, or a computer connected to USB-C
+  bool stay_awake_on_();
+  bool usb_host_();
 
   deep_sleep::DeepSleepComponent *deep_sleep_{nullptr};
   adc::ADCSensor *adc_{nullptr};
@@ -70,6 +72,7 @@ class PowerManager : public Component {
 
   Mode mode_{Mode::CHECK};
   bool network_started_{false};
+  bool usb_seen_{false};
   bool reported_{false};
   float voltage_{NAN};
   uint32_t mode_since_{0};
