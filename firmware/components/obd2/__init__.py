@@ -6,7 +6,9 @@ the ESP32-C5, so this component talks to the new driver (esp_twai_onchip) direct
 The node only runs while `set_active(true)` (e.g. engine running): otherwise the CAN controller is disabled
 and the transceiver held in standby, so a parked car's bus is never woken. While active it sends one
 mode 01 request every `poll_interval` (round robin over the configured sensors) to the functional address
-0x7DF and decodes single-frame responses from 0x7E8..0x7EF.
+0x7DF and decodes the responses from 0x7E8..0x7EF. Multi-frame responses (ISO-TP: VIN, long fault code lists)
+are reassembled per ECU (flow control to 0x7E0..0x7E7). It also reads the VIN once, the stored fault codes
+(mode 03) on activation and every `dtc_interval`, and clears them (mode 04) from a button.
 """
 from esphome import pins
 import esphome.codegen as cg
@@ -15,10 +17,12 @@ import esphome.config_validation as cv
 from esphome.const import CONF_ID, CONF_RX_PIN, CONF_TX_PIN
 
 DEPENDENCIES = ["esp32"]
+AUTO_LOAD = ["sensor", "text_sensor", "button"]
 
 CONF_BIT_RATE = "bit_rate"
 CONF_STANDBY_PIN = "standby_pin"
 CONF_POLL_INTERVAL = "poll_interval"
+CONF_DTC_INTERVAL = "dtc_interval"
 CONF_OBD2_ID = "obd2_id"
 
 obd2_ns = cg.esphome_ns.namespace("obd2")
@@ -35,6 +39,7 @@ CONFIG_SCHEMA = cv.Schema(
             cv.positive_time_period_milliseconds,
             cv.Range(min=cv.TimePeriod(milliseconds=50)),
         ),
+        cv.Optional(CONF_DTC_INTERVAL, default="5min"): cv.positive_time_period_milliseconds,
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -46,6 +51,7 @@ async def to_code(config):
     cg.add(var.set_pins(config[CONF_TX_PIN], config[CONF_RX_PIN]))
     cg.add(var.set_bit_rate(config[CONF_BIT_RATE]))
     cg.add(var.set_poll_interval(config[CONF_POLL_INTERVAL]))
+    cg.add(var.set_dtc_interval(config[CONF_DTC_INTERVAL]))
     if CONF_STANDBY_PIN in config:
         pin = await cg.gpio_pin_expression(config[CONF_STANDBY_PIN])
         cg.add(var.set_standby_pin(pin))

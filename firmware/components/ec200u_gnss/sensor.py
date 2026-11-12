@@ -10,15 +10,18 @@ from esphome.const import (
     CONF_SPEED,
     DEVICE_CLASS_DISTANCE,
     DEVICE_CLASS_SPEED,
+    DEVICE_CLASS_VOLTAGE,
     STATE_CLASS_MEASUREMENT,
     UNIT_DEGREES,
     UNIT_KILOMETER_PER_HOUR,
     UNIT_METER,
+    UNIT_VOLT,
 )
 
 from . import CONF_EC200U_GNSS_ID, Ec200uGnss
 
 CONF_HDOP = "hdop"
+CONF_SUPPLY_VOLTAGE = "supply_voltage"
 
 CONFIG_SCHEMA = cv.Schema(
     {
@@ -44,13 +47,19 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_SATELLITES): sensor.sensor_schema(
             accuracy_decimals=0, icon="mdi:satellite-variant", state_class=STATE_CLASS_MEASUREMENT
         ),
+        # Modem supply voltage (AT+CBC): ~3.8 V on car power, the backup cell's voltage when unplugged
+        cv.Optional(CONF_SUPPLY_VOLTAGE): sensor.sensor_schema(
+            unit_of_measurement=UNIT_VOLT, accuracy_decimals=2, device_class=DEVICE_CLASS_VOLTAGE,
+            state_class=STATE_CLASS_MEASUREMENT,
+        ),
     }
 )
 
 
 async def to_code(config):
     hub = await cg.get_variable(config[CONF_EC200U_GNSS_ID])
-    for key in (CONF_LATITUDE, CONF_LONGITUDE, CONF_ALTITUDE, CONF_SPEED, CONF_COURSE, CONF_HDOP, CONF_SATELLITES):
+    for key in (CONF_LATITUDE, CONF_LONGITUDE, CONF_ALTITUDE, CONF_SPEED, CONF_COURSE, CONF_HDOP, CONF_SATELLITES,
+                CONF_SUPPLY_VOLTAGE):
         if key in config:
             sens = await sensor.new_sensor(config[key])
             cg.add(getattr(hub, f"set_{key}_sensor")(sens))

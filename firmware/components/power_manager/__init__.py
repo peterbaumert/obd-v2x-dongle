@@ -8,12 +8,15 @@ Modes (decided at every boot / wake and while awake):
   REPORT    report due (`report_interval`, or `low_battery_report_interval` below `low_battery_voltage`,
             or just unplugged): network on until `report_done()` is called or `report_timeout` passes
 
+Unplugged, the board runs from its backup cell. `cell_voltage` (the modem's AT+CBC reading) below
+`cell_cutoff_voltage` shuts everything down; until car power returns it only wakes to check for that.
+
 All thresholds and intervals are Home Assistant number entities (passed in by id), so they can be changed
 at runtime. Timing between wakes is kept in RTC memory (survives deep sleep, not power loss).
 """
 from esphome import automation
 import esphome.codegen as cg
-from esphome.components import binary_sensor, deep_sleep, number, switch
+from esphome.components import binary_sensor, deep_sleep, number, sensor, switch
 from esphome.components.esp32 import include_builtin_idf_component
 from esphome.components.adc.sensor import ADCSensor
 import esphome.config_validation as cv
@@ -26,6 +29,8 @@ CONF_BATTERY_ADC = "battery_adc"
 CONF_VOLTAGE_MULTIPLIER = "voltage_multiplier"
 CONF_MODEM_STATUS = "modem_status"
 CONF_STAY_AWAKE = "stay_awake"
+CONF_CELL_VOLTAGE = "cell_voltage"
+CONF_CELL_CUTOFF_VOLTAGE = "cell_cutoff_voltage"
 CONF_ON_NETWORK = "on_network"
 CONF_ON_SHUTDOWN = "on_shutdown"
 SETTINGS = (
@@ -53,6 +58,8 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_VOLTAGE_MULTIPLIER, default=1.0): cv.positive_float,
         cv.Optional(CONF_MODEM_STATUS): cv.use_id(binary_sensor.BinarySensor),
         cv.Optional(CONF_STAY_AWAKE): cv.use_id(switch.Switch),
+        cv.Optional(CONF_CELL_VOLTAGE): cv.use_id(sensor.Sensor),
+        cv.Optional(CONF_CELL_CUTOFF_VOLTAGE): cv.use_id(number.Number),
         **{cv.Required(k): cv.use_id(number.Number) for k in SETTINGS},
         cv.Optional(CONF_ON_NETWORK): automation.validate_automation(
             {cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(NetworkTrigger)}
@@ -75,6 +82,10 @@ async def to_code(config):
         cg.add(var.set_modem_status(await cg.get_variable(config[CONF_MODEM_STATUS])))
     if CONF_STAY_AWAKE in config:
         cg.add(var.set_stay_awake(await cg.get_variable(config[CONF_STAY_AWAKE])))
+    if CONF_CELL_VOLTAGE in config:
+        cg.add(var.set_cell_voltage(await cg.get_variable(config[CONF_CELL_VOLTAGE])))
+    if CONF_CELL_CUTOFF_VOLTAGE in config:
+        cg.add(var.set_cell_cutoff_voltage(await cg.get_variable(config[CONF_CELL_CUTOFF_VOLTAGE])))
     for k in SETTINGS:
         cg.add(getattr(var, f"set_{k}")(await cg.get_variable(config[k])))
     for conf in config.get(CONF_ON_NETWORK, []):

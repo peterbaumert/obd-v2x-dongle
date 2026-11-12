@@ -19,6 +19,7 @@ RTC_NOINIT_ATTR static uint32_t rtc_magic;
 RTC_NOINIT_ATTR static uint32_t rtc_secs_since_report;
 RTC_NOINIT_ATTR static uint32_t rtc_last_sleep_s;
 RTC_NOINIT_ATTR static uint8_t rtc_unplugged;
+RTC_NOINIT_ATTR static uint8_t rtc_cell_low;
 
 void PowerManager::setup() {
   const bool from_sleep = esp_sleep_get_wakeup_cause() == ESP_SLEEP_WAKEUP_TIMER && rtc_magic == RTC_MAGIC;
@@ -27,6 +28,7 @@ void PowerManager::setup() {
     rtc_secs_since_report = 0;
     rtc_last_sleep_s = 0;
     rtc_unplugged = 0;
+    rtc_cell_low = 0;
   } else {
     rtc_secs_since_report += rtc_last_sleep_s;
   }
@@ -39,14 +41,18 @@ void PowerManager::setup() {
   const float interval_min =
       low ? this->setting_(this->low_batt_interval_, 120.0f) : this->setting_(this->report_interval_, 30.0f);
 
-  ESP_LOGI(TAG, "%s: car battery %.2f V, %u s since last report", from_sleep ? "Wake" : "Boot", v,
-           static_cast<unsigned>(rtc_secs_since_report));
+  if (!unplugged)
+    rtc_cell_low = 0;  // car power is back: the cell charges again
+  ESP_LOGI(TAG, "%s: car battery %.2f V, %u s since last report%s", from_sleep ? "Wake" : "Boot", v,
+           static_cast<unsigned>(rtc_secs_since_report), rtc_cell_low ? ", backup cell low" : "");
 
   if (!from_sleep) {
     // Power-on (plugged in, flashed, reset): stay awake like after parking so it can be reached
     this->enter_(engine ? Mode::DRIVING : Mode::PARKED);
   } else if (engine) {
     this->enter_(Mode::DRIVING);
+  } else if (rtc_cell_low) {
+    this->enter_(this->usb_host_() ? Mode::PARKED : Mode::SLEEPING);  // no reports until plugged in again
   } else if (unplugged && !rtc_unplugged) {
     ESP_LOGI(TAG, "Unplugged since last wake: reporting");
     this->enter_(Mode::REPORT);
@@ -85,8 +91,15 @@ bool PowerManager::usb_host_() {
 }
 
 bool PowerManager::stay_awake_on_() {
-  return (this->stay_awake_ != nullptr && this->stay_awake_->state) || this->usb_host_();
+  // A low backup cell overrides the "Stay awake" switch (only a computer on USB-C keeps it awake then)
+  return (this->stay_awake_ != nullptr && this->stay_awake_->state && !rtc_cell_low) || this->usb_host_();
 }
+
+bool PowerManager::unplugged_() const {
+  return !std::isnan(this->voltage_) && this->voltage_ < this->setting_(this->unplugged_v_, 6.0f);
+}
+
+bool PowerManager::is_cell_low() const { return rtc_cell_low != 0; }
 
 float PowerManager::setting_(number::Number *n, float fallback) const {
   return (n == nullptr || std::isnan(n->state)) ? fallback : n->state;
@@ -134,6 +147,18 @@ void PowerManager::loop() {
       this->voltage_ = std::isnan(this->voltage_) ? v : this->voltage_ * 0.7f + v * 0.3f;  // light smoothing
   }
   const bool engine = this->voltage_ > this->setting_(this->engine_on_v_, 13.2f);
+
+  // Unplugged: the dongle runs from the backup cell. Stop before the cell's protection cuts it off.
+  if (!this->unplugged_()) {
+    rtc_cell_low = 0;
+  } else if (!rtc_cell_low && this->cell_voltage_ != nullptr && this->cell_voltage_->has_state() &&
+             this->cell_voltage_->state < this->setting_(this->cell_cutoff_v_, 3.6f) &&
+             (this->mode_ == Mode::DRIVING || this->mode_ == Mode::PARKED || this->mode_ == Mode::REPORT)) {
+    ESP_LOGW(TAG, "Backup cell %.2f V: shutting down until car power returns", this->cell_voltage_->state);
+    rtc_cell_low = 1;
+    this->enter_(Mode::SHUTDOWN);
+    return;
+  }
 
   switch (this->mode_) {
     case Mode::DRIVING:
@@ -206,7 +231,8 @@ const char *PowerManager::get_mode_str() const {
 }
 
 void PowerManager::dump_config() {
-  ESP_LOGCONFIG(TAG, "Power manager: mode %s, voltage multiplier %.2f", this->get_mode_str(), this->multiplier_);
+  ESP_LOGCONFIG(TAG, "Power manager: mode %s, voltage multiplier %.2f, backup cell low: %s", this->get_mode_str(),
+                this->multiplier_, YESNO(rtc_cell_low));
 }
 
 }  // namespace esphome::power_manager

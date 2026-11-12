@@ -32,6 +32,7 @@ class Ec200uGnss : public PollingComponent {
   void set_course_sensor(sensor::Sensor *s) { this->course_sensor_ = s; }
   void set_hdop_sensor(sensor::Sensor *s) { this->hdop_sensor_ = s; }
   void set_satellites_sensor(sensor::Sensor *s) { this->satellites_sensor_ = s; }
+  void set_supply_voltage_sensor(sensor::Sensor *s) { this->supply_voltage_sensor_ = s; }
 
   void setup() override;
   void update() override;
@@ -47,11 +48,13 @@ class Ec200uGnss : public PollingComponent {
  protected:
   void on_log_(const char *message, size_t len);
   bool parse_qgpsloc_(const char *p);
+  void parse_cbc_(const char *p);
 
   modem::ModemComponent *modem_;
   bool started_{false};
   bool start_pending_{false};
   bool fix_valid_{false};
+  uint8_t cbc_countdown_{0};
   uint32_t fix_ms_{0};
   Fix fix_{};
   CallbackManager<void(const Fix &)> on_fix_;
@@ -63,6 +66,8 @@ class Ec200uGnss : public PollingComponent {
   sensor::Sensor *course_sensor_{nullptr};
   sensor::Sensor *hdop_sensor_{nullptr};
   sensor::Sensor *satellites_sensor_{nullptr};
+  /// Modem supply (AT+CBC): the buck (~3.8 V) on car power, the backup cell when unplugged
+  sensor::Sensor *supply_voltage_sensor_{nullptr};
 };
 
 }  // namespace esphome::ec200u_gnss

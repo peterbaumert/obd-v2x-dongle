@@ -22,7 +22,7 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.3.0"
+    version: "0.4.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
@@ -162,6 +162,14 @@ switch:
     restore_mode: RESTORE_DEFAULT_OFF
     command_retain: true
   - platform: template
+    id: auto_update
+    name: "Install updates automatically"
+    icon: mdi:update
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    command_retain: true
+  - platform: template
     name: "Use eSIM"
     icon: mdi:sim
     entity_category: config
@@ -203,6 +211,36 @@ mqtt:
           return std::string("{\"name\":\"Position\",\"unique_id\":\"${name}_position\",") +
                  "\"json_attributes_topic\":\"${name}/position\",\"source_type\":\"gps\"," +
                  "\"device\":{\"ids\":\"" + get_mac_address() + "\"}}";
+    - update.check: fw_update   # look for new firmware whenever the network comes up
+
+# ---------------------------------------------------------------- firmware updates over LTE
+# The dongle is behind the mobile network's NAT, so nothing can connect to it: it fetches new firmware itself.
+# Release: compile, then `python firmware/tools/make_release.py <name>.ota.bin <dir>` and put the two files on a
+# web server the dongle can reach (e.g. Home Assistant's config/www/<random name>/ -> https://<ha>/local/<random name>/).
+# The binary contains the secrets (MQTT password, ...): use a hard-to-guess directory name, never a public place.
+# Home Assistant shows a "Firmware" update entity; Install only reaches the dongle while it is awake (driving,
+# "Stay awake"), so for a parked car turn on "Install updates automatically" and it installs at the next wake.
+# safe_mode + OTA rollback: firmware that crashes within 2 min after an update is rolled back by the bootloader.
+safe_mode:
+  boot_is_good_after: 2min
+
+ota:
+  - platform: http_request
+    id: ota_lte
+
+update:
+  - platform: http_request
+    id: fw_update
+    name: "Firmware"
+    source: !secret ota_manifest_url
+    update_interval: 6h
+    on_update_available:
+      - if:
+          condition:
+            switch.is_on: auto_update
+          then:
+            - logger.log: "New firmware, installing"
+            - update.perform: fw_update
 
 # ---------------------------------------------------------------- GPS (EC200U GNSS) -> Home Assistant + Traccar
 ec200u_gnss:
@@ -282,6 +320,8 @@ power_manager:
   report_interval: set_report_interval
   low_battery_report_interval: set_low_battery_report_interval
   report_timeout: set_report_timeout
+  cell_voltage: modem_supply        # backup cell voltage while unplugged (modem AT+CBC)
+  cell_cutoff_voltage: set_cell_cutoff_voltage
   on_network:
     - script.execute: lte_power_on
   on_shutdown:
@@ -414,6 +454,20 @@ number:
     restore_value: true
     mode: box
     command_retain: true
+  - platform: template
+    id: set_cell_cutoff_voltage
+    name: "Backup cell cut-off"
+    entity_category: config
+    unit_of_measurement: V
+    icon: mdi:battery-alert-variant-outline
+    min_value: 3.3
+    max_value: 3.9
+    step: 0.05
+    initial_value: 3.6
+    optimistic: true
+    restore_value: true
+    mode: box
+    command_retain: true
 
 text_sensor:
   - platform: template
@@ -421,7 +475,23 @@ text_sensor:
     icon: mdi:power-sleep
     entity_category: diagnostic
     update_interval: 5s
-    lambda: return std::string(id(pm).get_mode_str());
+    lambda: |-
+      if (id(pm).is_cell_low())
+        return std::string(id(pm).get_mode_str()) + " (backup cell low)";
+      return std::string(id(pm).get_mode_str());
+  - platform: obd2
+    obd2_id: obd
+    vin:
+      name: "VIN"
+      entity_category: diagnostic
+    fault_codes:
+      name: "Fault codes"
+
+button:
+  - platform: obd2
+    obd2_id: obd
+    clear_fault_codes:
+      name: "Clear fault codes"
 
 # ---------------------------------------------------------------- V2X: ITS-G5 receive -> OpenTrafficMap
 otm_uplink:
@@ -454,6 +524,7 @@ obd2:
   standby_pin: GPIO10         # IO10 (pin 12) TCAN334 STB, high = standby
   bit_rate: 500000
   poll_interval: 250ms        # one request per 250 ms, round robin (speed/RPM twice per round)
+  dtc_interval: 5min          # stored fault codes (mode 03): on engine start and every 5 min
 
 # ---------------------------------------------------------------- sensors
 sensor:
@@ -489,6 +560,8 @@ sensor:
       name: "Ambient temperature"
     ecu_voltage:
       name: "ECU voltage"
+    dtc_count:
+      name: "Fault code count"
   - platform: modem
     rssi:
       name: "LTE signal"
@@ -508,6 +581,10 @@ sensor:
       entity_category: diagnostic
     satellites:
       name: "GPS satellites"
+      entity_category: diagnostic
+    supply_voltage:
+      id: modem_supply
+      name: "Supply voltage"
       entity_category: diagnostic
   - platform: its_g5_receiver
     its_g5_receiver_id: g5
@@ -534,7 +611,7 @@ light:
     pin: GPIO27
     num_leds: 1
     chipset: SK6812
-    rgb_order: GRB
+    channel_colors: GRB
     default_transition_length: 0s
     restore_mode: RESTORE_DEFAULT_ON
     on_turn_on:

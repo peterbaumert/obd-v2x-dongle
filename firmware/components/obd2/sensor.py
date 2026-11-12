@@ -25,6 +25,7 @@ PIDS = {
     "ambient_temperature": (0x46, UNIT_CELSIUS, DEVICE_CLASS_TEMPERATURE, None, 0),
 }
 FAST = {"speed", "rpm"}   # polled twice as often
+CONF_DTC_COUNT = "dtc_count"
 
 
 def _schema(unit, device_class, icon, decimals):
@@ -39,6 +40,7 @@ def _schema(unit, device_class, icon, decimals):
 CONFIG_SCHEMA = cv.Schema(
     {cv.GenerateID(CONF_OBD2_ID): cv.use_id(Obd2Component)}
     | {cv.Optional(k): _schema(*v[1:]) for k, v in PIDS.items()}
+    | {cv.Optional(CONF_DTC_COUNT): sensor.sensor_schema(icon="mdi:engine-off", accuracy_decimals=0)}
 )
 
 
@@ -48,3 +50,5 @@ async def to_code(config):
         if key in config:
             sens = await sensor.new_sensor(config[key])
             cg.add(hub.add_pid(pid, sens, key in FAST))
+    if CONF_DTC_COUNT in config:
+        cg.add(hub.set_dtc_count_sensor(await sensor.new_sensor(config[CONF_DTC_COUNT])))

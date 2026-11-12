@@ -10,6 +10,7 @@
 namespace esphome::ec200u_gnss {
 
 static const char *const TAG = "ec200u_gnss";
+static const uint8_t CBC_EVERY = 6;  // supply voltage every 6th update (30 s at 5 s)
 
 void Ec200uGnss::setup() {
   if (logger::global_logger == nullptr) {
@@ -40,11 +41,21 @@ void Ec200uGnss::update() {
     }
     return;
   }
+  if (this->supply_voltage_sensor_ != nullptr && this->cbc_countdown_-- == 0) {
+    this->cbc_countdown_ = CBC_EVERY - 1;
+    this->modem_->send_at("AT+CBC");
+    return;
+  }
   this->modem_->send_at("AT+QGPSLOC=2", 2000);
 }
 
 void Ec200uGnss::on_log_(const char *message, size_t len) {
   const std::string line(message, len);
+  const size_t cbc = line.find("+CBC:");
+  if (cbc != std::string::npos) {
+    this->parse_cbc_(line.c_str() + cbc + 5);
+    return;
+  }
   const size_t at = line.find("+QGPSLOC:");
   if (at != std::string::npos) {
     if (this->parse_qgpsloc_(line.c_str() + at + 9)) {
@@ -109,6 +120,16 @@ bool Ec200uGnss::parse_qgpsloc_(const char *p) {
     return false;
   this->fix_ = f;
   return true;
+}
+
+// +CBC: <bcs>,<bcl>,<voltage mV>
+void Ec200uGnss::parse_cbc_(const char *p) {
+  const char *c = strrchr(p, ',');
+  if (c == nullptr)
+    return;
+  const long mv = strtol(c + 1, nullptr, 10);
+  if (mv > 2000 && mv < 5000)
+    this->supply_voltage_sensor_->publish_state(mv / 1000.0f);
 }
 
 uint32_t Ec200uGnss::get_fix_epoch() const {
