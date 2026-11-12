@@ -2,10 +2,12 @@
 
     <KiCad>/bin/python hardware/tools/maze.py route NET X1 Y1 LAYER1 X2 Y2 LAYER2 [WIDTH]
     <KiCad>/bin/python hardware/tools/maze.py gndvias
+    <KiCad>/bin/python hardware/tools/maze.py smooth
 
 Coordinates are board-relative mm (board origin at page 100, 50), layers F/In2/B.
 `route` adds tracks/vias for one connection, avoiding all other-net copper with clearance.
 `gndvias` gives every outer-layer GND SMD pad without a nearby GND via/hole its own via.
+`smooth` straightens the grid router's staircases (0/45/90 deg pieces, clearance-checked); run it after routing.
 Vias never land in SMD pads (no via-in-pad: the board is ordered without via filling).
 In1 is the GND plane and never gets tracks. Always run DRC afterwards.
 """
@@ -349,6 +351,194 @@ def _gndvias(board):
     print('GND vias added', added)
 
 
+def _netclass_clearance():
+    """net name -> clearance (mm) from the project's net classes and patterns"""
+    import fnmatch
+    import json
+    pro = json.loads(PCB.with_suffix('.kicad_pro').read_text(encoding='utf-8'))['net_settings']
+    cls = {c['name']: c['clearance'] for c in pro['classes']}
+    pats = [(p['pattern'], cls[p['netclass']]) for p in pro.get('netclass_patterns', [])]
+
+    def clr(net):
+        for pat, c in pats:
+            if fnmatch.fnmatchcase(net, pat) or fnmatch.fnmatchcase(net.split('/')[-1], pat):
+                return c
+        return cls['Default']
+    return clr
+
+
+def smooth(board, margin=0.02):
+    """Straighten the grid router's staircases: every chain of unlocked track segments (same net, layer and
+    width, no via/pad/branch at the inner points) is rebuilt greedily from the longest possible pieces that are
+    a straight 0/45/90 deg segment or a 45 deg + straight dogleg, each kept only if it clears all other-net
+    copper, holes, keep-outs and the board edge."""
+    clr_of = _netclass_clearance()
+    bb = board.GetBoardEdgesBoundingBox()
+    edge = board.GetDesignSettings().m_CopperEdgeClearance
+    ex0, ey0, ex1, ey1 = bb.GetLeft(), bb.GetTop(), bb.GetRight(), bb.GetBottom()
+    tracks = [t for t in board.GetTracks()]
+    vias = [t for t in tracks if isinstance(t, pcbnew.PCB_VIA)]
+    pads = [p for fp in board.GetFootprints() for p in fp.Pads()]
+    keepouts = [z for fp in board.GetFootprints() for z in fp.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
+    keepouts += [z for z in board.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
+
+    def obstacles(layer):
+        out = []
+        for t in tracks:
+            if isinstance(t, pcbnew.PCB_VIA) or t.GetLayer() == layer:
+                out.append(t)
+        for p in pads:
+            if p.IsOnLayer(layer) or p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
+                out.append(p)
+        return out
+
+    def key(p):
+        return (p.x, p.y)
+
+    changed = removed = added = 0
+    for layer in LAYERS:
+        tracks = [t for t in board.GetTracks()]
+        vias = [t for t in tracks if isinstance(t, pcbnew.PCB_VIA)]
+        obs = obstacles(layer)
+        obs_bb = [(o, o.GetBoundingBox()) for o in obs]
+        segs = [t for t in tracks if not isinstance(t, pcbnew.PCB_VIA) and t.GetLayer() == layer]
+        by_net = {}
+        for t in segs:
+            by_net.setdefault(t.GetNetname(), []).append(t)
+        for net, ts in by_net.items():
+            if net == 'GND' or not net:
+                continue
+            nclr = clr_of(net)
+            deg = {}
+            for t in ts:
+                for p in (t.GetStart(), t.GetEnd()):
+                    deg[key(p)] = deg.get(key(p), 0) + 1
+            anchors = set()
+            for v in vias:
+                if v.GetNetname() == net:
+                    anchors.add(key(v.GetPosition()))
+            for p in pads:
+                if p.GetNetname() == net and p.IsOnLayer(layer):
+                    for t in ts:
+                        for q in (t.GetStart(), t.GetEnd()):
+                            if p.GetEffectiveShape(layer).Collide(q, 0):
+                                anchors.add(key(q))
+            seen = set()
+            for t0 in ts:
+                if id(t0) in seen or t0.IsLocked():
+                    continue
+                # grow a chain through degree-2, non-anchor points with matching width
+                w = t0.GetWidth()
+                chain = [t0]
+                seen.add(id(t0))
+                pts = [t0.GetStart(), t0.GetEnd()]
+                for end in (1, 0):
+                    while True:
+                        p = pts[-1] if end else pts[0]
+                        if deg.get(key(p)) != 2 or key(p) in anchors:
+                            break
+                        nxt = [t for t in ts if id(t) not in seen and not t.IsLocked() and t.GetWidth() == w
+                               and (key(t.GetStart()) == key(p) or key(t.GetEnd()) == key(p))]
+                        if not nxt:
+                            break
+                        t = nxt[0]
+                        seen.add(id(t))
+                        chain.append(t)
+                        q = t.GetEnd() if key(t.GetStart()) == key(p) else t.GetStart()
+                        if end:
+                            pts.append(q)
+                        else:
+                            pts.insert(0, q)
+                if len(chain) < 3:
+                    continue
+                own = {id(c) for c in chain}
+                # other same-net copper touching the chain (T-junctions, pads, vias): a touch at a chain vertex
+                # pins that vertex (the pieces on either side are straightened separately); a touch somewhere
+                # else on a segment depends on this exact geometry, so such chains stay as they are
+                pinned, touch = set(), False
+                foreign = [t for t in tracks if t.GetNetname() == net and id(t) not in own] +                     [p for p in pads if p.GetNetname() == net and p.IsOnLayer(layer)]
+                for o in foreign:
+                    if isinstance(o, pcbnew.PCB_TRACK) and not isinstance(o, pcbnew.PCB_VIA) and o.GetLayer() != layer:
+                        continue
+                    sh = o.GetEffectiveShape(layer)
+                    hit = [k for k, q in enumerate(pts) if sh.Collide(q, w // 2 + 1)]
+                    if hit:
+                        pinned.update(hit)
+                    elif any(sh.Collide(pcbnew.SHAPE_SEGMENT(c.GetStart(), c.GetEnd(), c.GetWidth()), 0) for c in chain):
+                        touch = True
+                        break
+                if touch:
+                    continue
+                clear = mm(nclr + margin)
+
+                def free(a, b):
+                    if a == b:
+                        return True
+                    hw = w // 2
+                    lo_x, hi_x = min(a.x, b.x) - hw, max(a.x, b.x) + hw
+                    lo_y, hi_y = min(a.y, b.y) - hw, max(a.y, b.y) + hw
+                    if lo_x < ex0 + edge or hi_x > ex1 - edge or lo_y < ey0 + edge or hi_y > ey1 - edge:
+                        return False
+                    seg = pcbnew.SHAPE_SEGMENT(a, b, w)
+                    box = pcbnew.BOX2I(pcbnew.VECTOR2I(lo_x, lo_y), pcbnew.VECTOR2I(hi_x - lo_x, hi_y - lo_y))
+                    box.Inflate(mm(1.0))
+                    for o, obb in obs_bb:
+                        if id(o) in own or not box.Intersects(obb):
+                            continue
+                        same = o.GetNetname() == net and o.GetNetname() != ''
+                        if same and not (isinstance(o, pcbnew.PAD) and o.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH):
+                            continue
+                        c = max(clear, mm(clr_of(o.GetNetname()) + margin)) if o.GetNetname() else clear
+                        if isinstance(o, pcbnew.PAD) and o.GetAttribute() in (pcbnew.PAD_ATTRIB_PTH, pcbnew.PAD_ATTRIB_NPTH):
+                            c = max(c, mm(0.25 + margin))        # hole clearance
+                        if o.GetEffectiveShape(layer).Collide(seg, c):
+                            return False
+                    for z in keepouts:
+                        if z.IsOnLayer(layer) and z.Outline().Collide(seg, 0):
+                            return False
+                    return True
+
+                def options(a, b):
+                    dx, dy = b.x - a.x, b.y - a.y
+                    if dx == 0 or dy == 0 or abs(dx) == abs(dy):
+                        return [[a, b]]
+                    s = min(abs(dx), abs(dy))
+                    d1 = pcbnew.VECTOR2I(a.x + (s if dx > 0 else -s), a.y + (s if dy > 0 else -s))   # 45 first
+                    d2 = pcbnew.VECTOR2I(b.x - (s if dx > 0 else -s), b.y - (s if dy > 0 else -s))   # 45 last
+                    return [[a, d1, b], [a, d2, b]]
+
+                out = [pts[0]]
+                i = 0
+                while i < len(pts) - 1:
+                    stop = min([k for k in pinned if k > i] + [len(pts) - 1])
+                    for j in range(stop, i, -1):
+                        ok = None
+                        for path in options(pts[i], pts[j]):
+                            if all(free(p, q) for p, q in zip(path, path[1:])):
+                                ok = path
+                                break
+                        if ok or j == i + 1:
+                            out += (ok or [pts[i], pts[j]])[1:]
+                            i = j
+                            break
+                if len(out) - 1 >= len(chain):
+                    continue
+                for c in chain:
+                    board.Remove(c)
+                    removed += 1
+                obs_bb = [(o, ob) for o, ob in obs_bb if id(o) not in own]
+                for p, q in zip(out, out[1:]):
+                    if p == q:
+                        continue
+                    t = pcbnew.PCB_TRACK(board)
+                    t.SetStart(p); t.SetEnd(q); t.SetWidth(w); t.SetLayer(layer); t.SetNet(chain[0].GetNet())
+                    board.Add(t)
+                    obs_bb.append((t, t.GetBoundingBox()))
+                    added += 1
+                changed += 1
+    print(f'smoothed {changed} chains: {removed} segments -> {added}')
+
+
 if __name__ == '__main__':
     board = pcbnew.LoadBoard(str(PCB))
     if sys.argv[1] == 'route':
@@ -359,4 +549,6 @@ if __name__ == '__main__':
         route(board, net, a, La, c, Lc, w)
     elif sys.argv[1] == 'gndvias':
         gndvias(board)
+    elif sys.argv[1] == 'smooth':
+        smooth(board)
     board.Save(str(PCB))
