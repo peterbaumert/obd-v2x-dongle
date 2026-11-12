@@ -3538,17 +3538,6 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Compensation values: first pass,\nverify with TI WEBENCH"
-		(exclude_from_sim no)
-		(at 210.82 68.58 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "0547c85a-13a3-54f9-bb20-e45849ffcc7b")
-	)
 	(text "LTE modem supply switch (LTE_PWR_EN high = on)"
 		(exclude_from_sim no)
 		(at 106.68 111.76 0)
@@ -3571,6 +3560,17 @@
 			(justify left)
 		)
 		(uuid "37ac35c5-02e6-5bca-a5ee-3e860d181d00")
+	)
+	(text "Compensation per TPS54360 datasheet,\nType II method (see design-review.md)"
+		(exclude_from_sim no)
+		(at 210.82 68.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7241a024-4825-5a4b-be16-1d0c529db774")
 	)
 	(text "LDO 3.3 V (logic)"
 		(exclude_from_sim no)
@@ -3782,13 +3782,13 @@
 	)
 	(wire
 		(pts
-			(xy 147.32 134.62) (xy 147.32 139.7)
+			(xy 15.24 185.42) (xy 17.78 185.42)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "087074a9-c1c0-596f-8c07-5fac33173500")
+		(uuid "01ce1e98-5bfc-5ae5-a6c6-012a6c8cfd82")
 	)
 	(wire
 		(pts
@@ -3872,6 +3872,16 @@
 	)
 	(wire
 		(pts
+			(xy 139.7 144.78) (xy 129.54 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2683a534-ba8e-5de0-883d-0ced549ff0c8")
+	)
+	(wire
+		(pts
 			(xy 193.04 73.66) (xy 193.04 76.2)
 		)
 		(stroke
@@ -3922,16 +3932,6 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 132.08) (xy 233.68 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3c95989b-ca8e-5360-a109-fd595f500cc5")
-	)
-	(wire
-		(pts
 			(xy 203.2 43.18) (xy 205.74 43.18)
 		)
 		(stroke
@@ -3952,16 +3952,6 @@
 	)
 	(wire
 		(pts
-			(xy 30.48 182.88) (xy 30.48 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "49447619-3b34-5652-812c-f07978d733ed")
-	)
-	(wire
-		(pts
 			(xy 93.98 50.8) (xy 93.98 35.56)
 		)
 		(stroke
@@ -3969,6 +3959,16 @@
 			(type default)
 		)
 		(uuid "4c6ebd51-bc1d-5d2b-8fb4-a0662c35f544")
+	)
+	(wire
+		(pts
+			(xy 30.48 182.88) (xy 30.48 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4c947142-e2e4-564a-8a0e-687359f61794")
 	)
 	(wire
 		(pts
@@ -4082,16 +4082,6 @@
 	)
 	(wire
 		(pts
-			(xy 223.52 129.54) (xy 223.52 134.62)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "722a2d4a-41da-52fc-9381-22d7e47e6f51")
-	)
-	(wire
-		(pts
 			(xy 182.88 48.26) (xy 180.34 48.26)
 		)
 		(stroke
@@ -4122,6 +4112,16 @@
 	)
 	(wire
 		(pts
+			(xy 132.08 134.62) (xy 127 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8213fe4b-3daa-56ea-9a1a-3b823324b9b8")
+	)
+	(wire
+		(pts
 			(xy 213.36 27.94) (xy 213.36 40.64)
 		)
 		(stroke
@@ -4139,26 +4139,6 @@
 			(type default)
 		)
 		(uuid "8b0ccf8d-268c-553f-9a93-bb2878216279")
-	)
-	(wire
-		(pts
-			(xy 15.24 185.42) (xy 17.78 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8e3c32b9-0e81-57c4-a814-3781997212fc")
-	)
-	(wire
-		(pts
-			(xy 233.68 132.08) (xy 243.84 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "8ef980da-6198-5f77-ada9-3cdcfc7d95c4")
 	)
 	(wire
 		(pts
@@ -4182,13 +4162,13 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 182.88) (xy 60.96 185.42)
+			(xy 233.68 132.08) (xy 243.84 132.08)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "99de2285-aeb0-5679-8272-2e4f75a91ef0")
+		(uuid "9aca6fa8-b546-5864-83e3-4d3bb7cab984")
 	)
 	(wire
 		(pts
@@ -4212,6 +4192,26 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 182.88) (xy 60.96 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a3ef362d-1a3e-5cc6-8e04-1513785150f1")
+	)
+	(wire
+		(pts
+			(xy 45.72 182.88) (xy 45.72 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a4d592f7-6f6e-54b6-aae6-55917d48dd7d")
+	)
+	(wire
+		(pts
 			(xy 132.08 134.62) (xy 147.32 134.62)
 		)
 		(stroke
@@ -4219,6 +4219,16 @@
 			(type default)
 		)
 		(uuid "a62afce8-9444-5f11-b349-61acd6319f77")
+	)
+	(wire
+		(pts
+			(xy 223.52 129.54) (xy 223.52 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a6c7b487-5774-5b43-90b6-92e0cc0e9109")
 	)
 	(wire
 		(pts
@@ -4242,13 +4252,13 @@
 	)
 	(wire
 		(pts
-			(xy 15.24 182.88) (xy 15.24 185.42)
+			(xy 223.52 132.08) (xy 233.68 132.08)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "b0bf9fde-8989-59d5-94a6-700154e7334a")
+		(uuid "b2a79657-31ed-526b-a194-6718deeb1c4e")
 	)
 	(wire
 		(pts
@@ -4352,13 +4362,13 @@
 	)
 	(wire
 		(pts
-			(xy 45.72 182.88) (xy 45.72 185.42)
+			(xy 147.32 134.62) (xy 147.32 139.7)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d1eb3738-3a78-5b6c-938b-8628e7e5eba6")
+		(uuid "d5a100dc-7609-5fea-8360-9c88f5e27cfd")
 	)
 	(wire
 		(pts
@@ -4452,6 +4462,16 @@
 	)
 	(wire
 		(pts
+			(xy 15.24 182.88) (xy 15.24 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ed9b5f21-60ba-53aa-9aca-27eeb3dfc19d")
+	)
+	(wire
+		(pts
 			(xy 66.04 124.46) (xy 73.66 124.46)
 		)
 		(stroke
@@ -4509,16 +4529,6 @@
 			(type default)
 		)
 		(uuid "fd1ea389-2cbb-5749-b74f-aba129915017")
-	)
-	(wire
-		(pts
-			(xy 139.7 144.78) (xy 129.54 144.78)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "fd8ca330-cffa-5018-8a55-6ba2ef8e1502")
 	)
 	(label "BUCK_COMP"
 		(at 187.96 66.04 180)
@@ -4688,6 +4698,28 @@
 		(uuid "5899292f-4857-510f-8e72-272c5180d176")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 109.22 17.78 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "LTE_PWR_ON_N"
+		(shape output)
+		(at 127 134.62 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e5b10d1f-6505-5861-a1ef-ade499251404")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 127 134.62 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

@@ -180,6 +180,21 @@ simsw = symbol(
     width=12 * G,
 )
 
+# ---------------- TI TPS2552-1 current-limited power switch, latch-off, active-low enable (SOT-23-6, DBV) ----------------
+# Pin numbers per TI SLVS841G Table 5-1 (TPS2552 SOT-23 column).
+pwsw = symbol(
+    'TPS2552-1', 'U',
+    'Package_TO_SOT_SMD:SOT-23-6',
+    'https://www.ti.com/lit/ds/symlink/tps2552-1.pdf',
+    'Current-limited power switch 2.5-6.5 V, limit 75 mA-1.7 A set by RILIM, latch-off on fault, active-low enable',
+    'power switch current limit latch-off load switch',
+    left=[(PI, 'IN', 1), (I, '~{EN}', 3), (P, 'ILIM', 5)],
+    right=[(PO, 'OUT', 6), (OD, '~{FAULT}', 4)],
+    bottom=[(PI, 'GND', 2, 0)],
+    width=10 * G,
+)
+
+
 # ---------------- OPSCO SK6812MINI-HS RGB LED (3.7 x 3.5 mm, top-emitting) ----------------
 # Pin numbers per OPSCO SK6812MINI-HS datasheet Rev. B/0, section 5 (1 GND, 2 DIN, 3 VDD, 4 DOUT).
 # Not the same numbering as KiCad's LED:SK6812MINI (1 DOUT, 2 VSS, 3 DIN, 4 VDD).
@@ -215,7 +230,7 @@ def rail_symbols(names):
 RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8', 'VBUCK_3V8', 'VCELL']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + led + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + led + pwsw + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

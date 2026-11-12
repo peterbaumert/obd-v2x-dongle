@@ -20,13 +20,18 @@ import gen_pcb as G  # noqa: E402  (netlist reader, footprint loader, placement 
 
 T, B = G.T, G.B
 # new parts: ref: (x, y, rot, side)  -- board-relative mm, top view
-NEW_PLACE = {}
+NEW_PLACE = {
+    # GNSS antenna bias: switch in the free top-side area below the U.FL sockets, choke + RF bypass at J403
+    'U405': (41.0, 58.5, 0, T),
+    'L401': (44.2, 52.95, 270, T),   # pad 2 on the GNSS line next to J403's centre pin
+    'C418': (43.0, 52.3, 180, T),    # pad 1 (bias side) towards L401
+}
 # small parts: ref: (anchor ref, anchor pad)
-NEW_ANCHOR = {}
+NEW_ANCHOR = {'R415': ('U405', '5'), 'C419': ('U405', '6'), 'C420': ('U405', '1')}
 # nets whose existing copper must go (pad membership split; would short the new nets)
 RIP_NETS = set()
 # nets renamed in the schematic: existing copper is moved to the new name
-RENAME_NETS = {}
+RENAME_NETS = {'Net-(Q102-G)': 'LTE_PWR_ON_N', 'Net-(J403-In)': '/LTE + GNSS (EC200U)/LTE_ANT_GNSS_UFL'}
 
 
 def main(dry):
@@ -68,7 +73,7 @@ def main(dry):
                 new.GetField(k).SetVisible(False)
         new.SetReference(ref)
         new.SetValue(c['value'])
-        new.SetPath(old.GetPath())
+        new.SetPath(pcbnew.KIID_PATH(c['sheetstamps'] + c['stamp']))
         new.SetSheetname(old.GetSheetname())
         new.SetSheetfile(old.GetSheetfile())
         new.Reference().SetTextSize(old.Reference().GetTextSize())
@@ -226,6 +231,8 @@ def main(dry):
     ripped_nets = set()
     newfps = [fps[r] for r in new]
     for t in list(board.GetTracks()):
+        if t.IsLocked():            # pre-routes (RF lines, SW node) stay; DRC shows any real conflict
+            continue
         for fp in newfps:
             side_layer = pcbnew.B_Cu if fp.IsFlipped() else pcbnew.F_Cu
             bb = fp.GetCourtyard(pcbnew.B_CrtYd if fp.IsFlipped() else pcbnew.F_CrtYd).BBox()

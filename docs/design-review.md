@@ -34,7 +34,11 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
   inner copper, Dk 4.74 per PCBWay; ~4.4 at GHz) gives ≈ 51 Ω (Dk 4.74) to 53 Ω (Dk 4.4) before solder mask,
   which takes off ~1–2 Ω. Microstrip alone would need ~0.30 mm. The lines are only ~9 mm long (U.FL → match → modem).
   **Order with impedance control: 50 Ω ±10 % on L1 referenced to L2** and let PCBWay adjust the width. Via fences on
-  both sides of both lines.
+  both sides of both lines (two GNSS fence vias gave way to the bias choke L401 / C418 next to J403).
+- **GNSS antenna bias**: 3.3 V via U405 (TPS2552-1, latch-off, R_ILIM 232k → 100–137 mA) and L401 27 nH onto the U.FL
+  side; C417 33 pF blocks DC towards the modem. Enabled by LTE_PWR_ON_N (Q102 gate, low = modem powered): the bias
+  is only on while the modem is, and a latched fault clears with the next modem power cycle. No free ESP32 GPIO was
+  left for a separate enable; FAULT is not connected.
 - **USB 2.0 FS**: short D+/D− on the bottom, USBLC6 ESD at the connector; 90 Ω not critical at 12 Mbit/s.
 - **CAN / K-Line**: ESD (NUP2105L, PESD1LIN) at the plug, no CAN termination (by design).
 - **SIM**: 22 Ω series + 33 pF on the lines, no TVS array. Fine while the holder is inside the case; add ESD if the

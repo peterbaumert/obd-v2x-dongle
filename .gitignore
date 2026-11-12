@@ -12,6 +12,8 @@ fp-info-cache
 # Fabrication outputs (generate in CI / on release)
 hardware/fab/
 *.zip
+*-erc.rpt
+*-drc.rpt
 
 # OS / editor
 .DS_Store

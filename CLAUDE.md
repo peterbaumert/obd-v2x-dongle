@@ -29,6 +29,8 @@
 - ERC: `kicad-cli sch erc hardware/obd-v2x-dongle.kicad_sch` (expect 0 errors, 0 warnings).
   PDF: `kicad-cli sch export pdf -o docs/schematic.pdf hardware/obd-v2x-dongle.kicad_sch`.
 - EC200U: PWRKEY must be held low >= 2 s to power on; pin 35 is a BT/Wi-Fi-scan antenna (unused), there is no LTE diversity antenna.
+- J403 (GNSS U.FL) carries 3.3 V active-antenna bias (U405 latch-off switch, on while the modem is powered); C417 is the
+  DC block to the modem. All ESP32 GPIOs are in use.
 
 ## PCB
 - 52 x 74 mm, 4 layers: In1 = solid GND plane (no tracks), In2 = routing + GND pour; parts on both sides;

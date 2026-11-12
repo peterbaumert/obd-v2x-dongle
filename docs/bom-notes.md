@@ -56,6 +56,13 @@ J401 GCT SIM8060-6-0-14-00 (2.2k) · J402–404 Hirose U.FL-R-SMT-1(10) (17k)
 - Mount the three antennas away from the PCB / ground planes (e.g. flex antennas on the inner case walls),
   on different walls, a few cm apart (LTE TX can desensitise GNSS). Plastic case only.
 - Under the dash GNSS reception is poor: optional U.FL->SMA pigtail to an external GNSS antenna behind the windscreen.
+- Combined LTE + GNSS antennas (one body, two U.FL leads) fit: LTE lead -> J402, GNSS lead -> J403.
+- **GNSS antenna bias** (J403): 3.3 V on the U.FL centre pin while the modem is powered, so active GNSS antennas
+  (with LNA) work. U405 TPS2552DBVR-1 (C140331) limits it to 100–137 mA and latches off on a short; it re-arms when
+  the modem is power-cycled (LTE_PWR_EN). Passive antennas that are DC-open just ignore it; a DC-shorted passive
+  antenna trips the latch, and the antenna then works passively. Feed: L401 27 nH (LQG15HS27NJ02D, SRF ~1.7 GHz) with
+  C418 33 pF bypass; C417 33 pF C0G (was the 0 Ω R410) keeps the DC off the modem's ANT_GNSS pin. Active antennas
+  must accept 3.3 V (most are specified 2.7–5 V).
 
 ## Backup battery (sheet 6)
 - Charger BQ25171-Q1 from VIN_PROT via R501 33 Ω 0.5 W + D501 SMF24A clamp (keeps the charger input < 40 V abs max);

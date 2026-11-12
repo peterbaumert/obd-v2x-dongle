@@ -5214,6 +5214,258 @@
 			)
 		)
 		(comp
+			(ref "C417")
+			(value "33pF")
+			(footprint "Capacitor_SMD:C_0402_1005Metric")
+			(fields
+				(field
+					(name "MPN") "0402CG330J500NT")
+				(field
+					(name "Manufacturer") "FH")
+				(field
+					(name "LCSC") "C1562")
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "MPN")
+				(value "0402CG330J500NT")
+			)
+			(property
+				(name "Manufacturer")
+				(value "FH")
+			)
+			(property
+				(name "LCSC")
+				(value "C1562")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "ac3895bb-2683-5395-a90c-645012ffa3fc")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C418")
+			(value "33pF")
+			(footprint "Capacitor_SMD:C_0402_1005Metric")
+			(fields
+				(field
+					(name "MPN") "0402CG330J500NT")
+				(field
+					(name "Manufacturer") "FH")
+				(field
+					(name "LCSC") "C1562")
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "MPN")
+				(value "0402CG330J500NT")
+			)
+			(property
+				(name "Manufacturer")
+				(value "FH")
+			)
+			(property
+				(name "LCSC")
+				(value "C1562")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "da94ec00-a90c-53fc-a8c1-545f6c15e42d")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C419")
+			(value "100nF")
+			(footprint "Capacitor_SMD:C_0402_1005Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "6262f209-8afb-59d6-b0a2-bf77246b38e6")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C420")
+			(value "100nF")
+			(footprint "Capacitor_SMD:C_0402_1005Metric")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "ff5ebeca-69d1-5415-92d8-fbd07f189b2c")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
 			(ref "J401")
 			(value "Nano-SIM")
 			(footprint "Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00")
@@ -5427,6 +5679,78 @@
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
 			(tstamps "45f9a658-680e-5754-b358-2f1ff3f4e420")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "L401")
+			(value "27nH")
+			(footprint "Inductor_SMD:L_0402_1005Metric")
+			(fields
+				(field
+					(name "MPN") "LQG15HS27NJ02D")
+				(field
+					(name "Manufacturer") "Murata")
+				(field
+					(name "LCSC") "C12669")
+				(field
+					(name "Footprint") "Inductor_SMD:L_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "L")
+				(description "Inductor")
+			)
+			(property
+				(name "MPN")
+				(value "LQG15HS27NJ02D")
+			)
+			(property
+				(name "Manufacturer")
+				(value "Murata")
+			)
+			(property
+				(name "LCSC")
+				(value "C12669")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "inductor choke coil reactor magnetic")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "Choke_* *Coil* Inductor_* L_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "709130b3-93a5-5971-8477-5e240314b696")
 			(units
 				(unit
 					(name "A")
@@ -6078,60 +6402,6 @@
 			)
 		)
 		(comp
-			(ref "R410")
-			(value "0R")
-			(footprint "Resistor_SMD:R_0402_1005Metric")
-			(fields
-				(field
-					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
-				(field
-					(name "Datasheet")
-				)
-				(field
-					(name "Description")
-				)
-			)
-			(libsource
-				(lib "Device")
-				(part "R")
-				(description "Resistor")
-			)
-			(property
-				(name "Sheetname")
-				(value "LTE + GNSS (EC200U)")
-			)
-			(property
-				(name "Sheetfile")
-				(value "lte.kicad_sch")
-			)
-			(property
-				(name "ki_keywords")
-				(value "R res resistor")
-			)
-			(property
-				(name "ki_fp_filters")
-				(value "R_*")
-			)
-			(sheetpath
-				(names "/LTE + GNSS (EC200U)/")
-				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
-			)
-			(tstamps "6dab8953-5842-5f98-acd0-8888b5617afe")
-			(units
-				(unit
-					(name "A")
-					(pins
-						(pin
-							(num "1")
-						)
-						(pin
-							(num "2")
-						)
-					)
-				)
-			)
-		)
-		(comp
 			(ref "R411")
 			(value "22R")
 			(footprint "Resistor_SMD:R_0402_1005Metric")
@@ -6333,6 +6603,60 @@
 				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
 			)
 			(tstamps "551c94ec-6a8e-5180-89cc-edfafc670028")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R415")
+			(value "232k")
+			(footprint "Resistor_SMD:R_0402_1005Metric")
+			(fields
+				(field
+					(name "Footprint") "Resistor_SMD:R_0402_1005Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Device")
+				(part "R")
+				(description "Resistor")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "R res resistor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "R_*")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "fc9c4496-4533-5a50-beb3-0dce604438b9")
 			(units
 				(unit
 					(name "A")
@@ -7331,6 +7655,86 @@
 						)
 						(pin
 							(num "11")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U405")
+			(value "TPS2552DBVR-1")
+			(footprint "Package_TO_SOT_SMD:SOT-23-6")
+			(datasheet "https://www.ti.com/lit/ds/symlink/tps2552-1.pdf")
+			(fields
+				(field
+					(name "MPN") "TPS2552DBVR-1")
+				(field
+					(name "Manufacturer") "TI")
+				(field
+					(name "LCSC") "C140331")
+				(field
+					(name "Footprint") "Package_TO_SOT_SMD:SOT-23-6")
+				(field
+					(name "Datasheet") "https://www.ti.com/lit/ds/symlink/tps2552-1.pdf")
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "obd-v2x")
+				(part "TPS2552-1")
+				(description "Current-limited power switch 2.5-6.5 V, limit 75 mA-1.7 A set by RILIM, latch-off on fault, active-low enable")
+			)
+			(property
+				(name "MPN")
+				(value "TPS2552DBVR-1")
+			)
+			(property
+				(name "Manufacturer")
+				(value "TI")
+			)
+			(property
+				(name "LCSC")
+				(value "C140331")
+			)
+			(property
+				(name "Sheetname")
+				(value "LTE + GNSS (EC200U)")
+			)
+			(property
+				(name "Sheetfile")
+				(value "lte.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "power switch current limit latch-off load switch")
+			)
+			(sheetpath
+				(names "/LTE + GNSS (EC200U)/")
+				(tstamps "/01715d65-cdba-4655-b5fc-0dddd6752831/")
+			)
+			(tstamps "9bdff883-0c23-5ae3-8281-c2b98f349f85")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "4")
 						)
 					)
 				)
@@ -10762,6 +11166,56 @@
 		)
 		(libpart
 			(lib "obd-v2x")
+			(part "TPS2552-1")
+			(description "Current-limited power switch 2.5-6.5 V, limit 75 mA-1.7 A set by RILIM, latch-off on fault, active-low enable")
+			(docs "https://www.ti.com/lit/ds/symlink/tps2552-1.pdf")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "TPS2552-1")
+				(field
+					(name "Footprint") "Package_TO_SOT_SMD:SOT-23-6")
+				(field
+					(name "Datasheet") "https://www.ti.com/lit/ds/symlink/tps2552-1.pdf")
+				(field
+					(name "Description") "Current-limited power switch 2.5-6.5 V, limit 75 mA-1.7 A set by RILIM, latch-off on fault, active-low enable")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "IN")
+					(type "power_in")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "3")
+					(name "~{EN}")
+					(type "input")
+				)
+				(pin
+					(num "4")
+					(name "~{FAULT}")
+					(type "open_collector")
+				)
+				(pin
+					(num "5")
+					(name "ILIM")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "OUT")
+					(type "power_out")
+				)
+			)
+		)
+		(libpart
+			(lib "obd-v2x")
 			(part "eSIM_MFF2")
 			(description "Embedded SIM / eUICC chip, MFF2 package (6 x 5 mm QFN-8); exposed pad not connected")
 			(docs "https://mm.digikey.com/Volume0/opasdata/d220001/medias/docus/4887/VIOT-1SIM-MFF2.pdf")
@@ -10916,6 +11370,11 @@
 				(pintype "passive")
 			)
 			(node
+				(ref "C420")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
 				(ref "R201")
 				(pin "1")
 				(pintype "passive")
@@ -10965,6 +11424,12 @@
 				(pinfunction "VCC_14")
 				(pintype "power_in")
 			)
+			(node
+				(ref "U405")
+				(pin "1")
+				(pinfunction "IN_1")
+				(pintype "power_in")
+			)
 		)
 		(net
 			(code "2")
@@ -10976,7 +11441,7 @@
 				(pintype "passive")
 			)
 			(node
-				(ref "R410")
+				(ref "C417")
 				(pin "1")
 				(pintype "passive")
 			)
@@ -10989,6 +11454,33 @@
 		)
 		(net
 			(code "3")
+			(name "/LTE + GNSS (EC200U)/LTE_ANT_GNSS_UFL")
+			(class "RF")
+			(node
+				(ref "C414")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C417")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J403")
+				(pin "1")
+				(pinfunction "In_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "L401")
+				(pin "2")
+				(pinfunction "2_2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "4")
 			(name "/LTE + GNSS (EC200U)/LTE_ANT_MAIN")
 			(class "RF")
 			(node
@@ -11009,7 +11501,7 @@
 			)
 		)
 		(net
-			(code "4")
+			(code "5")
 			(name "/LTE + GNSS (EC200U)/LTE_CTS_1V8")
 			(class "Default")
 			(node
@@ -11026,7 +11518,7 @@
 			)
 		)
 		(net
-			(code "5")
+			(code "6")
 			(name "/LTE + GNSS (EC200U)/LTE_DBG_RXD")
 			(class "Default")
 			(node
@@ -11043,7 +11535,7 @@
 			)
 		)
 		(net
-			(code "6")
+			(code "7")
 			(name "/LTE + GNSS (EC200U)/LTE_DBG_TXD")
 			(class "Default")
 			(node
@@ -11060,7 +11552,7 @@
 			)
 		)
 		(net
-			(code "7")
+			(code "8")
 			(name "/LTE + GNSS (EC200U)/LTE_PWRKEY")
 			(class "Default")
 			(node
@@ -11077,7 +11569,7 @@
 			)
 		)
 		(net
-			(code "8")
+			(code "9")
 			(name "/LTE + GNSS (EC200U)/LTE_RESET_N")
 			(class "Default")
 			(node
@@ -11094,7 +11586,7 @@
 			)
 		)
 		(net
-			(code "9")
+			(code "10")
 			(name "/LTE + GNSS (EC200U)/LTE_RTS_1V8")
 			(class "Default")
 			(node
@@ -11111,7 +11603,7 @@
 			)
 		)
 		(net
-			(code "10")
+			(code "11")
 			(name "/LTE + GNSS (EC200U)/LTE_RXD_1V8")
 			(class "Default")
 			(node
@@ -11128,7 +11620,7 @@
 			)
 		)
 		(net
-			(code "11")
+			(code "12")
 			(name "/LTE + GNSS (EC200U)/LTE_STATUS")
 			(class "Default")
 			(node
@@ -11145,7 +11637,7 @@
 			)
 		)
 		(net
-			(code "12")
+			(code "13")
 			(name "/LTE + GNSS (EC200U)/LTE_TXD_1V8")
 			(class "Default")
 			(node
@@ -11162,7 +11654,7 @@
 			)
 		)
 		(net
-			(code "13")
+			(code "14")
 			(name "/LTE + GNSS (EC200U)/LTE_USB_BOOT")
 			(class "Default")
 			(node
@@ -11179,7 +11671,7 @@
 			)
 		)
 		(net
-			(code "14")
+			(code "15")
 			(name "/LTE + GNSS (EC200U)/LTE_USB_DM")
 			(class "Default")
 			(node
@@ -11196,7 +11688,7 @@
 			)
 		)
 		(net
-			(code "15")
+			(code "16")
 			(name "/LTE + GNSS (EC200U)/LTE_USB_DP")
 			(class "Default")
 			(node
@@ -11213,7 +11705,7 @@
 			)
 		)
 		(net
-			(code "16")
+			(code "17")
 			(name "/LTE + GNSS (EC200U)/LTE_USB_VBUS")
 			(class "Default")
 			(node
@@ -11230,7 +11722,7 @@
 			)
 		)
 		(net
-			(code "17")
+			(code "18")
 			(name "/LTE + GNSS (EC200U)/LTE_USIM_CLK")
 			(class "Default")
 			(node
@@ -11247,7 +11739,7 @@
 			)
 		)
 		(net
-			(code "18")
+			(code "19")
 			(name "/LTE + GNSS (EC200U)/LTE_USIM_DATA")
 			(class "Default")
 			(node
@@ -11269,7 +11761,7 @@
 			)
 		)
 		(net
-			(code "19")
+			(code "20")
 			(name "/LTE + GNSS (EC200U)/LTE_USIM_RST")
 			(class "Default")
 			(node
@@ -11286,7 +11778,7 @@
 			)
 		)
 		(net
-			(code "20")
+			(code "21")
 			(name "/LTE + GNSS (EC200U)/SIM1_CLK")
 			(class "Default")
 			(node
@@ -11302,7 +11794,7 @@
 			)
 		)
 		(net
-			(code "21")
+			(code "22")
 			(name "/LTE + GNSS (EC200U)/SIM1_DAT")
 			(class "Default")
 			(node
@@ -11318,7 +11810,7 @@
 			)
 		)
 		(net
-			(code "22")
+			(code "23")
 			(name "/LTE + GNSS (EC200U)/SIM1_RST")
 			(class "Default")
 			(node
@@ -11334,7 +11826,7 @@
 			)
 		)
 		(net
-			(code "23")
+			(code "24")
 			(name "/LTE + GNSS (EC200U)/SIM1_VDD")
 			(class "Default")
 			(node
@@ -11356,7 +11848,7 @@
 			)
 		)
 		(net
-			(code "24")
+			(code "25")
 			(name "/LTE + GNSS (EC200U)/SIM2_CLK")
 			(class "Default")
 			(node
@@ -11372,7 +11864,7 @@
 			)
 		)
 		(net
-			(code "25")
+			(code "26")
 			(name "/LTE + GNSS (EC200U)/SIM2_DAT")
 			(class "Default")
 			(node
@@ -11388,7 +11880,7 @@
 			)
 		)
 		(net
-			(code "26")
+			(code "27")
 			(name "/LTE + GNSS (EC200U)/SIM2_RST")
 			(class "Default")
 			(node
@@ -11404,7 +11896,7 @@
 			)
 		)
 		(net
-			(code "27")
+			(code "28")
 			(name "/LTE + GNSS (EC200U)/SIM2_VDD")
 			(class "Default")
 			(node
@@ -11426,7 +11918,7 @@
 			)
 		)
 		(net
-			(code "28")
+			(code "29")
 			(name "/LTE + GNSS (EC200U)/SIM_CLK")
 			(class "Default")
 			(node
@@ -11447,7 +11939,7 @@
 			)
 		)
 		(net
-			(code "29")
+			(code "30")
 			(name "/LTE + GNSS (EC200U)/SIM_IO")
 			(class "Default")
 			(node
@@ -11468,7 +11960,7 @@
 			)
 		)
 		(net
-			(code "30")
+			(code "31")
 			(name "/LTE + GNSS (EC200U)/SIM_RST")
 			(class "Default")
 			(node
@@ -11489,7 +11981,7 @@
 			)
 		)
 		(net
-			(code "31")
+			(code "32")
 			(name "/LTE + GNSS (EC200U)/SIM_VDD")
 			(class "Default")
 			(node
@@ -11511,7 +12003,7 @@
 			)
 		)
 		(net
-			(code "32")
+			(code "33")
 			(name "/MCU (ESP32-C5, USB)/ESP_BOOT")
 			(class "Default")
 			(node
@@ -11533,7 +12025,7 @@
 			)
 		)
 		(net
-			(code "33")
+			(code "34")
 			(name "/MCU (ESP32-C5, USB)/LED_DIN")
 			(class "Default")
 			(node
@@ -11550,7 +12042,7 @@
 			)
 		)
 		(net
-			(code "34")
+			(code "35")
 			(name "/MCU (ESP32-C5, USB)/UART0_TX")
 			(class "Default")
 			(node
@@ -11567,7 +12059,7 @@
 			)
 		)
 		(net
-			(code "35")
+			(code "36")
 			(name "/MCU (ESP32-C5, USB)/USB_DN")
 			(class "Default")
 			(node
@@ -11602,7 +12094,7 @@
 			)
 		)
 		(net
-			(code "36")
+			(code "37")
 			(name "/MCU (ESP32-C5, USB)/USB_DP")
 			(class "Default")
 			(node
@@ -11637,7 +12129,7 @@
 			)
 		)
 		(net
-			(code "37")
+			(code "38")
 			(name "/Power/BUCK_COMP")
 			(class "Default")
 			(node
@@ -11658,7 +12150,7 @@
 			)
 		)
 		(net
-			(code "38")
+			(code "39")
 			(name "/Power/BUCK_EN")
 			(class "Default")
 			(node
@@ -11679,7 +12171,7 @@
 			)
 		)
 		(net
-			(code "39")
+			(code "40")
 			(name "/Power/BUCK_FB")
 			(class "Default")
 			(node
@@ -11700,7 +12192,7 @@
 			)
 		)
 		(net
-			(code "40")
+			(code "41")
 			(name "/Power/VBAT_F")
 			(class "Power")
 			(node
@@ -11751,7 +12243,7 @@
 			)
 		)
 		(net
-			(code "41")
+			(code "42")
 			(name "CAN_RX")
 			(class "Default")
 			(node
@@ -11768,7 +12260,7 @@
 			)
 		)
 		(net
-			(code "42")
+			(code "43")
 			(name "CAN_STB")
 			(class "Default")
 			(node
@@ -11790,7 +12282,7 @@
 			)
 		)
 		(net
-			(code "43")
+			(code "44")
 			(name "CAN_TX")
 			(class "Default")
 			(node
@@ -11807,7 +12299,7 @@
 			)
 		)
 		(net
-			(code "44")
+			(code "45")
 			(name "GND")
 			(class "Default")
 			(node
@@ -11967,6 +12459,21 @@
 			)
 			(node
 				(ref "C416")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C418")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C419")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C420")
 				(pin "2")
 				(pintype "passive")
 			)
@@ -12172,6 +12679,11 @@
 			)
 			(node
 				(ref "R414")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "R415")
 				(pin "2")
 				(pintype "passive")
 			)
@@ -12584,6 +13096,12 @@
 				(pintype "power_in")
 			)
 			(node
+				(ref "U405")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "power_in")
+			)
+			(node
 				(ref "U501")
 				(pin "11")
 				(pinfunction "GND_11")
@@ -12633,7 +13151,7 @@
 			)
 		)
 		(net
-			(code "45")
+			(code "46")
 			(name "KL_RX")
 			(class "Default")
 			(node
@@ -12655,7 +13173,7 @@
 			)
 		)
 		(net
-			(code "46")
+			(code "47")
 			(name "KL_SLP_N")
 			(class "Default")
 			(node
@@ -12677,7 +13195,7 @@
 			)
 		)
 		(net
-			(code "47")
+			(code "48")
 			(name "KL_TX")
 			(class "Default")
 			(node
@@ -12694,7 +13212,7 @@
 			)
 		)
 		(net
-			(code "48")
+			(code "49")
 			(name "LTE_1V8")
 			(class "Default")
 			(node
@@ -12728,7 +13246,7 @@
 			)
 		)
 		(net
-			(code "49")
+			(code "50")
 			(name "LTE_PWRKEY_CTL")
 			(class "Default")
 			(node
@@ -12744,7 +13262,7 @@
 			)
 		)
 		(net
-			(code "50")
+			(code "51")
 			(name "LTE_PWR_EN")
 			(class "Default")
 			(node
@@ -12766,7 +13284,35 @@
 			)
 		)
 		(net
-			(code "51")
+			(code "52")
+			(name "LTE_PWR_ON_N")
+			(class "Default")
+			(node
+				(ref "Q102")
+				(pin "1")
+				(pinfunction "G_1")
+				(pintype "input")
+			)
+			(node
+				(ref "Q103")
+				(pin "3")
+				(pinfunction "D_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "R107")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U405")
+				(pin "3")
+				(pinfunction "~{EN}_3")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "53")
 			(name "LTE_RESET_CTL")
 			(class "Default")
 			(node
@@ -12782,7 +13328,7 @@
 			)
 		)
 		(net
-			(code "52")
+			(code "54")
 			(name "LTE_STATUS_3V3")
 			(class "Default")
 			(node
@@ -12799,7 +13345,7 @@
 			)
 		)
 		(net
-			(code "53")
+			(code "55")
 			(name "MCU_CTS_LTE")
 			(class "Default")
 			(node
@@ -12816,7 +13362,7 @@
 			)
 		)
 		(net
-			(code "54")
+			(code "56")
 			(name "MCU_RTS_LTE")
 			(class "Default")
 			(node
@@ -12833,7 +13379,7 @@
 			)
 		)
 		(net
-			(code "55")
+			(code "57")
 			(name "MCU_RX_LTE")
 			(class "Default")
 			(node
@@ -12850,7 +13396,7 @@
 			)
 		)
 		(net
-			(code "56")
+			(code "58")
 			(name "MCU_TX_LTE")
 			(class "Default")
 			(node
@@ -12867,7 +13413,7 @@
 			)
 		)
 		(net
-			(code "57")
+			(code "59")
 			(name "Net-(C105-Pad1)")
 			(class "Default")
 			(node
@@ -12882,7 +13428,7 @@
 			)
 		)
 		(net
-			(code "58")
+			(code "60")
 			(name "Net-(D103-K)")
 			(class "Power")
 			(node
@@ -12910,7 +13456,7 @@
 			)
 		)
 		(net
-			(code "59")
+			(code "61")
 			(name "Net-(D202-K)")
 			(class "Power")
 			(node
@@ -12926,7 +13472,7 @@
 			)
 		)
 		(net
-			(code "60")
+			(code "62")
 			(name "Net-(D203-A1)")
 			(class "Default")
 			(node
@@ -12959,7 +13505,7 @@
 			)
 		)
 		(net
-			(code "61")
+			(code "63")
 			(name "Net-(D501-K)")
 			(class "Default")
 			(node
@@ -12986,7 +13532,7 @@
 			)
 		)
 		(net
-			(code "62")
+			(code "64")
 			(name "Net-(J201-CAN_H)")
 			(class "Default")
 			(node
@@ -13009,7 +13555,7 @@
 			)
 		)
 		(net
-			(code "63")
+			(code "65")
 			(name "Net-(J201-CAN_L)")
 			(class "Default")
 			(node
@@ -13032,7 +13578,7 @@
 			)
 		)
 		(net
-			(code "64")
+			(code "66")
 			(name "Net-(J301-CC1)")
 			(class "Default")
 			(node
@@ -13048,7 +13594,7 @@
 			)
 		)
 		(net
-			(code "65")
+			(code "67")
 			(name "Net-(J301-CC2)")
 			(class "Default")
 			(node
@@ -13064,7 +13610,7 @@
 			)
 		)
 		(net
-			(code "66")
+			(code "68")
 			(name "Net-(J402-In)")
 			(class "RF")
 			(node
@@ -13085,28 +13631,7 @@
 			)
 		)
 		(net
-			(code "67")
-			(name "Net-(J403-In)")
-			(class "RF")
-			(node
-				(ref "C414")
-				(pin "1")
-				(pintype "passive")
-			)
-			(node
-				(ref "J403")
-				(pin "1")
-				(pinfunction "In_1")
-				(pintype "passive")
-			)
-			(node
-				(ref "R410")
-				(pin "2")
-				(pintype "passive")
-			)
-		)
-		(net
-			(code "68")
+			(code "69")
 			(name "Net-(Q101-G)")
 			(class "Default")
 			(node
@@ -13120,28 +13645,6 @@
 				(pin "5")
 				(pinfunction "GATE_5")
 				(pintype "output")
-			)
-		)
-		(net
-			(code "69")
-			(name "Net-(Q102-G)")
-			(class "Default")
-			(node
-				(ref "Q102")
-				(pin "1")
-				(pinfunction "G_1")
-				(pintype "input")
-			)
-			(node
-				(ref "Q103")
-				(pin "3")
-				(pinfunction "D_3")
-				(pintype "passive")
-			)
-			(node
-				(ref "R107")
-				(pin "2")
-				(pintype "passive")
 			)
 		)
 		(net
@@ -13311,6 +13814,49 @@
 		)
 		(net
 			(code "79")
+			(name "Net-(U405-ILIM)")
+			(class "Default")
+			(node
+				(ref "R415")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U405")
+				(pin "5")
+				(pinfunction "ILIM_5")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "80")
+			(name "Net-(U405-OUT)")
+			(class "Default")
+			(node
+				(ref "C418")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C419")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "L401")
+				(pin "1")
+				(pinfunction "1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U405")
+				(pin "6")
+				(pinfunction "OUT_6")
+				(pintype "power_out")
+			)
+		)
+		(net
+			(code "81")
 			(name "Net-(U501-CHM_TMR)")
 			(class "Default")
 			(node
@@ -13326,7 +13872,7 @@
 			)
 		)
 		(net
-			(code "80")
+			(code "82")
 			(name "Net-(U501-ISET)")
 			(class "Default")
 			(node
@@ -13342,7 +13888,7 @@
 			)
 		)
 		(net
-			(code "81")
+			(code "83")
 			(name "Net-(U501-TS)")
 			(class "Default")
 			(node
@@ -13358,7 +13904,7 @@
 			)
 		)
 		(net
-			(code "82")
+			(code "84")
 			(name "Net-(U501-VSET)")
 			(class "Default")
 			(node
@@ -13374,7 +13920,7 @@
 			)
 		)
 		(net
-			(code "83")
+			(code "85")
 			(name "Net-(U502-ILIM)")
 			(class "Default")
 			(node
@@ -13390,7 +13936,7 @@
 			)
 		)
 		(net
-			(code "84")
+			(code "86")
 			(name "Net-(U502-PR1)")
 			(class "Default")
 			(node
@@ -13411,7 +13957,7 @@
 			)
 		)
 		(net
-			(code "85")
+			(code "87")
 			(name "Net-(U502-SS)")
 			(class "Default")
 			(node
@@ -13427,7 +13973,7 @@
 			)
 		)
 		(net
-			(code "86")
+			(code "88")
 			(name "OBD_VBAT")
 			(class "Power")
 			(node
@@ -13443,7 +13989,7 @@
 			)
 		)
 		(net
-			(code "87")
+			(code "89")
 			(name "SIM_SEL")
 			(class "Default")
 			(node
@@ -13471,7 +14017,7 @@
 			)
 		)
 		(net
-			(code "88")
+			(code "90")
 			(name "VBAT_LTE")
 			(class "Power")
 			(node
@@ -13526,7 +14072,7 @@
 			)
 		)
 		(net
-			(code "89")
+			(code "91")
 			(name "VBUCK_3V8")
 			(class "Power")
 			(node
@@ -13558,7 +14104,7 @@
 			)
 		)
 		(net
-			(code "90")
+			(code "92")
 			(name "VBUS_USB")
 			(class "Default")
 			(node
@@ -13599,7 +14145,7 @@
 			)
 		)
 		(net
-			(code "91")
+			(code "93")
 			(name "VCELL")
 			(class "Power")
 			(node
@@ -13632,7 +14178,7 @@
 			)
 		)
 		(net
-			(code "92")
+			(code "94")
 			(name "VIN_PROT")
 			(class "Power")
 			(node
@@ -13714,7 +14260,7 @@
 			)
 		)
 		(net
-			(code "93")
+			(code "95")
 			(name "VSENSE")
 			(class "Default")
 			(node
@@ -13740,7 +14286,7 @@
 			)
 		)
 		(net
-			(code "94")
+			(code "96")
 			(name "VSYS_3V8")
 			(class "Power")
 			(node
@@ -13806,7 +14352,7 @@
 			)
 		)
 		(net
-			(code "95")
+			(code "97")
 			(name "unconnected-(D301-DOUT-Pad4)")
 			(class "Default")
 			(node
@@ -13817,7 +14363,7 @@
 			)
 		)
 		(net
-			(code "96")
+			(code "98")
 			(name "unconnected-(J201-J1850+-Pad2)")
 			(class "Default")
 			(node
@@ -13828,7 +14374,7 @@
 			)
 		)
 		(net
-			(code "97")
+			(code "99")
 			(name "unconnected-(J201-J1850--Pad10)")
 			(class "Default")
 			(node
@@ -13839,7 +14385,7 @@
 			)
 		)
 		(net
-			(code "98")
+			(code "100")
 			(name "unconnected-(J201-L_LINE-Pad15)")
 			(class "Default")
 			(node
@@ -13850,7 +14396,7 @@
 			)
 		)
 		(net
-			(code "99")
+			(code "101")
 			(name "unconnected-(J201-OEM1-Pad1)")
 			(class "Default")
 			(node
@@ -13861,7 +14407,7 @@
 			)
 		)
 		(net
-			(code "100")
+			(code "102")
 			(name "unconnected-(J201-OEM3-Pad3)")
 			(class "Default")
 			(node
@@ -13872,7 +14418,7 @@
 			)
 		)
 		(net
-			(code "101")
+			(code "103")
 			(name "unconnected-(J201-OEM8-Pad8)")
 			(class "Default")
 			(node
@@ -13883,7 +14429,7 @@
 			)
 		)
 		(net
-			(code "102")
+			(code "104")
 			(name "unconnected-(J201-OEM9-Pad9)")
 			(class "Default")
 			(node
@@ -13894,7 +14440,7 @@
 			)
 		)
 		(net
-			(code "103")
+			(code "105")
 			(name "unconnected-(J201-OEM11-Pad11)")
 			(class "Default")
 			(node
@@ -13905,7 +14451,7 @@
 			)
 		)
 		(net
-			(code "104")
+			(code "106")
 			(name "unconnected-(J201-OEM12-Pad12)")
 			(class "Default")
 			(node
@@ -13916,7 +14462,7 @@
 			)
 		)
 		(net
-			(code "105")
+			(code "107")
 			(name "unconnected-(J201-OEM13-Pad13)")
 			(class "Default")
 			(node
@@ -13927,7 +14473,7 @@
 			)
 		)
 		(net
-			(code "106")
+			(code "108")
 			(name "unconnected-(J301-SBU1-PadA8)")
 			(class "Default")
 			(node
@@ -13938,7 +14484,7 @@
 			)
 		)
 		(net
-			(code "107")
+			(code "109")
 			(name "unconnected-(J301-SBU2-PadB8)")
 			(class "Default")
 			(node
@@ -13949,7 +14495,7 @@
 			)
 		)
 		(net
-			(code "108")
+			(code "110")
 			(name "unconnected-(J401-VPP-Pad6)")
 			(class "Default")
 			(node
@@ -13960,7 +14506,7 @@
 			)
 		)
 		(net
-			(code "109")
+			(code "111")
 			(name "unconnected-(U103-NC-Pad4)")
 			(class "Default")
 			(node
@@ -13971,7 +14517,7 @@
 			)
 		)
 		(net
-			(code "110")
+			(code "112")
 			(name "unconnected-(U202-INH-Pad8)")
 			(class "Default")
 			(node
@@ -13982,7 +14528,7 @@
 			)
 		)
 		(net
-			(code "111")
+			(code "113")
 			(name "unconnected-(U301-ANT2-Pad31)")
 			(class "Default")
 			(node
@@ -13993,7 +14539,7 @@
 			)
 		)
 		(net
-			(code "112")
+			(code "114")
 			(name "unconnected-(U301-NC-Pad20)")
 			(class "Default")
 			(node
@@ -14004,7 +14550,7 @@
 			)
 		)
 		(net
-			(code "113")
+			(code "115")
 			(name "unconnected-(U301-NC-Pad22)")
 			(class "Default")
 			(node
@@ -14015,7 +14561,7 @@
 			)
 		)
 		(net
-			(code "114")
+			(code "116")
 			(name "unconnected-(U301-NC{slash}IO15-Pad19)")
 			(class "Default")
 			(node
@@ -14026,7 +14572,7 @@
 			)
 		)
 		(net
-			(code "115")
+			(code "117")
 			(name "unconnected-(U401-ADC0-Pad45)")
 			(class "Default")
 			(node
@@ -14037,7 +14583,7 @@
 			)
 		)
 		(net
-			(code "116")
+			(code "118")
 			(name "unconnected-(U401-ADC1-Pad44)")
 			(class "Default")
 			(node
@@ -14048,7 +14594,7 @@
 			)
 		)
 		(net
-			(code "117")
+			(code "119")
 			(name "unconnected-(U401-ANT_BT{slash}WIFI-Pad35)")
 			(class "Default")
 			(node
@@ -14059,7 +14605,7 @@
 			)
 		)
 		(net
-			(code "118")
+			(code "120")
 			(name "unconnected-(U401-AP_READY-Pad2)")
 			(class "Default")
 			(node
@@ -14070,7 +14616,7 @@
 			)
 		)
 		(net
-			(code "119")
+			(code "121")
 			(name "unconnected-(U401-DCD-Pad63)")
 			(class "Default")
 			(node
@@ -14081,7 +14627,7 @@
 			)
 		)
 		(net
-			(code "120")
+			(code "122")
 			(name "unconnected-(U401-DTR-Pad66)")
 			(class "Default")
 			(node
@@ -14092,7 +14638,7 @@
 			)
 		)
 		(net
-			(code "121")
+			(code "123")
 			(name "unconnected-(U401-NET_MODE-Pad5)")
 			(class "Default")
 			(node
@@ -14103,7 +14649,7 @@
 			)
 		)
 		(net
-			(code "122")
+			(code "124")
 			(name "unconnected-(U401-NET_STATUS-Pad6)")
 			(class "Default")
 			(node
@@ -14114,7 +14660,7 @@
 			)
 		)
 		(net
-			(code "123")
+			(code "125")
 			(name "unconnected-(U401-RI-Pad62)")
 			(class "Default")
 			(node
@@ -14125,7 +14671,7 @@
 			)
 		)
 		(net
-			(code "124")
+			(code "126")
 			(name "unconnected-(U401-USIM_DET-Pad13)")
 			(class "Default")
 			(node
@@ -14136,7 +14682,7 @@
 			)
 		)
 		(net
-			(code "125")
+			(code "127")
 			(name "unconnected-(U401-WAKEUP_IN-Pad1)")
 			(class "Default")
 			(node
@@ -14147,7 +14693,7 @@
 			)
 		)
 		(net
-			(code "126")
+			(code "128")
 			(name "unconnected-(U401-W_DISABLE#-Pad4)")
 			(class "Default")
 			(node
@@ -14158,7 +14704,7 @@
 			)
 		)
 		(net
-			(code "127")
+			(code "129")
 			(name "unconnected-(U402-A6-Pad7)")
 			(class "Default")
 			(node
@@ -14169,7 +14715,7 @@
 			)
 		)
 		(net
-			(code "128")
+			(code "130")
 			(name "unconnected-(U402-A7-Pad8)")
 			(class "Default")
 			(node
@@ -14180,7 +14726,7 @@
 			)
 		)
 		(net
-			(code "129")
+			(code "131")
 			(name "unconnected-(U402-A8-Pad9)")
 			(class "Default")
 			(node
@@ -14191,7 +14737,7 @@
 			)
 		)
 		(net
-			(code "130")
+			(code "132")
 			(name "unconnected-(U402-B6-Pad14)")
 			(class "Default")
 			(node
@@ -14202,7 +14748,7 @@
 			)
 		)
 		(net
-			(code "131")
+			(code "133")
 			(name "unconnected-(U402-B7-Pad13)")
 			(class "Default")
 			(node
@@ -14213,7 +14759,7 @@
 			)
 		)
 		(net
-			(code "132")
+			(code "134")
 			(name "unconnected-(U402-B8-Pad12)")
 			(class "Default")
 			(node
@@ -14224,7 +14770,7 @@
 			)
 		)
 		(net
-			(code "133")
+			(code "135")
 			(name "unconnected-(U403-EP-Pad9)")
 			(class "Default")
 			(node
@@ -14235,7 +14781,7 @@
 			)
 		)
 		(net
-			(code "134")
+			(code "136")
 			(name "unconnected-(U403-NC-Pad4)")
 			(class "Default")
 			(node
@@ -14246,7 +14792,7 @@
 			)
 		)
 		(net
-			(code "135")
+			(code "137")
 			(name "unconnected-(U403-NC-Pad5)")
 			(class "Default")
 			(node
@@ -14257,7 +14803,7 @@
 			)
 		)
 		(net
-			(code "136")
+			(code "138")
 			(name "unconnected-(U403-VPP-Pad2)")
 			(class "Default")
 			(node
@@ -14268,7 +14814,7 @@
 			)
 		)
 		(net
-			(code "137")
+			(code "139")
 			(name "unconnected-(U404-NC-Pad10)")
 			(class "Default")
 			(node
@@ -14279,7 +14825,18 @@
 			)
 		)
 		(net
-			(code "138")
+			(code "140")
+			(name "unconnected-(U405-~{FAULT}-Pad4)")
+			(class "Default")
+			(node
+				(ref "U405")
+				(pin "4")
+				(pinfunction "~{FAULT}_4")
+				(pintype "open_collector+no_connect")
+			)
+		)
+		(net
+			(code "141")
 			(name "unconnected-(U501-STAT1-Pad7)")
 			(class "Default")
 			(node
@@ -14290,7 +14847,7 @@
 			)
 		)
 		(net
-			(code "139")
+			(code "142")
 			(name "unconnected-(U501-STAT2-Pad8)")
 			(class "Default")
 			(node

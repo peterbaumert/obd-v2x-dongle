@@ -39,6 +39,9 @@ BOM = [
     ('Q401,Q402', 'NPN SOT-23', ['MMBT3904']),
     ('J401', 'Nano-SIM holder', ['SIM8060-6-0-14-00']),
     ('J402,J403', 'U.FL connector', ['U.FL-R-SMT-1(10)', 'U.FL-R-SMT-1']),
+    ('U405', 'GNSS antenna bias switch, latch-off', ['TPS2552DBVR-1']),
+    ('L401', 'RF choke 27 nH 0402', ['LQG15HS27NJ02D']),
+    ('C417,C418', '33 pF C0G 0402', ['0402CG330J500NT']),
     ('C401', '220 uF 6.3 V tantalum D', ['T495D227K006ATE100']),
     ('J201', 'OBD-II J1962 male plug', ['J1962', 'OBD2 male', 'OBD-II']),
 ]

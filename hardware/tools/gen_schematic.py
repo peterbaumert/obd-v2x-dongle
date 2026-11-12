@@ -57,6 +57,10 @@ SOURCING = {
     'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
     'U403': ('MFF2 eSIM, optional (DNP)', '', ''),
     'U404': ('FSA2567UMX', 'onsemi', 'C357761'),
+    'U405': ('TPS2552DBVR-1', 'TI', 'C140331'),          # latch-off current-limited switch, GNSS antenna bias
+    'L401': ('LQG15HS27NJ02D', 'Murata', 'C12669'),      # 27 nH RF choke (SRF ~1.7 GHz)
+    'C417': ('0402CG330J500NT', 'FH', 'C1562'),          # 33 pF C0G DC block to the modem's GNSS input
+    'C418': ('0402CG330J500NT', 'FH', 'C1562'),          # 33 pF C0G RF bypass at the choke
     'U501': ('BQ25171QWDRCRQ1', 'Texas Instruments', 'C2861221'),
     'U502': ('TPS2121RUXR', 'Texas Instruments', 'C485916'),
     'J501': ('B2B-PH-SM4-TB(LF)(SN)', 'JST', 'C160352'),
@@ -248,7 +252,7 @@ def power():
     sh.gnd(Cc[2])
     Cp = rv(sh, 'Device:C', 'C106', '47pF', C0603, xcmp + g(6), yc)
     sh.gnd(Cp[2])
-    sh.text('Compensation values: first pass,\nverify with TI WEBENCH', xcmp + g(9), yc + g(1), 1.27)
+    sh.text('Compensation per TPS54360 datasheet,' + chr(10) + 'Type II method (see design-review.md)', xcmp + g(9), yc + g(1), 1.27)
 
     # ---------------- LDO 3.3 V
     yl = g(50)
@@ -288,6 +292,7 @@ def power():
     sh.w(Rg[2], (Rg[2][0], gt[1] + (g(1) if gt[1] > ys else -g(1))))
     yg = Rg[2][1] + g(1)
     sh.w(Rg[2], (Rg[2][0], yg), (gt[0], yg), gt) if gt[1] > ys else None
+    sh.glabel('LTE_PWR_ON_N', (Rg[2][0], yg), 'L', 'output', stub=2)    # low while the modem is powered
     Qn = sh.part('Transistor_FET:2N7002', 'Q103', '2N7002', SOT23, gt[0] - 2.54, yg + g(2) + 5.08, 0,
                  fields={'ref': (gt[0] + 1.27, yg + g(2) + 3.81, 'left'), 'val': (gt[0] + 1.27, yg + g(2) + 6.35, 'left')})
     sh.w((gt[0], yg), Qn['D'])
@@ -589,7 +594,7 @@ LTE_GLOBAL = {'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STA
 
 
 def lte():
-    sh = Sheet('LTE', 'lte.kicad_sch', SHEETS['lte'], ROOT, 'LTE Cat 1 + GNSS: Quectel EC200U-EU (1.8 V I/O)')
+    sh = Sheet('LTE', 'lte.kicad_sch', SHEETS['lte'], ROOT, 'LTE Cat 1 + GNSS: Quectel EC200U-EU (1.8 V I/O)', paper='A3')
     X, Y = g(46), g(36)
     U = sh.part('obd-v2x:EC200U-EU', 'U401', 'EC200U-EU', 'obd-v2x:Quectel_EC200U', X, Y, 0)
     U.fields = {'ref': (X - g(9), U['59'][1] - g(2.5), 'left'), 'val': (X - g(9), U['59'][1] - g(1.5), 'left')}
@@ -746,10 +751,13 @@ def lte():
     # antennas
     sh.text('Antennas (pi-match, shunt caps DNP until tuned)', g(22), g(64), 1.27, True)
     for i, (r, c1, c2, j, src, rf, val) in enumerate((('R409', 'C411', 'C412', 'J402', 'LTE_ANT_MAIN', 'ANT_MAIN_RF', 'U.FL LTE main'),
-                                                      ('R410', 'C413', 'C414', 'J403', 'LTE_ANT_GNSS', 'ANT_GNSS_RF', 'U.FL GNSS'))):
+                                                      ('C417', 'C413', 'C414', 'J403', 'LTE_ANT_GNSS', 'ANT_GNSS_RF', 'U.FL GNSS'))):
         x0, y = g(24 + 16 * i), g(69)
         sh.label(src, (x0, y), 'L')
-        Rr = rh(sh, 'Device:R', r, '0R', R0402, x0 + g(3), y)
+        if r == 'C417':      # GNSS: DC block (the U.FL side carries the active-antenna bias)
+            Rr = rh(sh, 'Device:C', r, '33pF', C0402, x0 + g(3), y)
+        else:
+            Rr = rh(sh, 'Device:R', r, '0R', R0402, x0 + g(3), y)
         sh.w((x0, y), (x0 + g(2), y), Rr[1])
         Ca = rv(sh, 'Device:C', c1, 'DNP', C0402, x0 + g(2), y + g(1), dnp=True)
         Ca.fields = VL(Ca.x, Ca.y)
@@ -765,6 +773,40 @@ def lte():
                      xjc, y, 0, fields={'ref': (xjc - g(1), y - g(3), None), 'val': (xjc - g(1), y - g(2), None)})
         sh.w((xr2, y), Jc['1'])
         sh.gnd(Jc['2'])
+        if j == 'J403':
+            sh.label('LTE_ANT_GNSS_UFL', (xr2 + g(1), y), 'U', stub=2)
+
+    # GNSS active-antenna bias: 3.3 V while the modem is powered, through a latch-off current-limited switch
+    # (100-137 mA) and an RF choke onto the U.FL side. Passive antennas: harmless if DC-open; a DC-shorted one
+    # trips the switch, which stays off until the modem is power-cycled.
+    sh.text('GNSS antenna bias (active + passive antennas)\n3.3 V while the modem is on; latch-off 100-137 mA',
+            g(124), g(30), 1.27, True)
+    XB, YB = g(134), g(20)
+    Ub = sh.part('obd-v2x:TPS2552-1', 'U405', 'TPS2552DBVR-1', 'Package_TO_SOT_SMD:SOT-23-6', XB, YB, 0)
+    Ub.fields = {'ref': (XB - g(3), YB - g(4), 'left'), 'val': (XB - g(3), YB - g(3), 'left')}
+    pin_in, pin_en, pin_ilim = Ub['1'], Ub['3'], Ub['5']
+    xl = pin_in[0] - g(4)
+    sh.w(pin_in, (xl, pin_in[1]), (xl, pin_in[1] - g(2)))
+    sh.rail('+3V3', (xl, pin_in[1] - g(2)))
+    decap(sh, 'C420', '100nF', C0402, xl - g(3), pin_in[1] - g(7), '+3V3')
+    sh.glabel('LTE_PWR_ON_N', pin_en, 'L', 'input', stub=2)
+    Ril = rv(sh, 'Device:R', 'R415', '232k', R0402, pin_ilim[0] - g(1), pin_ilim[1])
+    Ril.fields = VL(Ril.x, Ril.y)
+    sh.w(pin_ilim, Ril[1])
+    sh.gnd(Ril[2])
+    sh.gnd(Ub['2'])
+    sh.nc(Ub, '4')
+    po = Ub['6']
+    xo = po[0] + g(3)
+    sh.w(po, (xo, po[1]))
+    Co = rv(sh, 'Device:C', 'C419', '100nF', C0402, xo, po[1])
+    sh.gnd(Co[2])
+    Cr = rv(sh, 'Device:C', 'C418', '33pF', C0402, xo + g(4), po[1])
+    sh.gnd(Cr[2])
+    Lb = rh(sh, 'Device:L', 'L401', '27nH', 'Inductor_SMD:L_0402_1005Metric', xo + g(7), po[1])
+    sh.w((xo, po[1]), Lb[1])
+    sh.w(Lb[2], (Lb[2][0] + g(2), po[1]))
+    sh.label('LTE_ANT_GNSS_UFL', (Lb[2][0] + g(2), po[1]), 'R')
 
     # test points
     sh.text('Test pads: modem USB\n(firmware update), debug UART', g(3), g(29), 1.27, True)
