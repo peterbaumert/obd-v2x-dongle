@@ -99,10 +99,17 @@ void OtmUplink::event_handler_(void *arg, esp_event_base_t base, int32_t event_i
 void OtmUplink::publish_packet(const std::vector<uint8_t> &frame) {
   if (!this->connected_ || frame.empty())
     return;
-  // Non-blocking: queued in the esp-mqtt outbox, sent by its own task
+  // Non-blocking: queued in the esp-mqtt outbox, sent by its own task. Frames that arrive faster than the link
+  // sends them would grow the outbox without limit, so drop new ones while it is full.
+  if (esp_mqtt_client_get_outbox_size(this->client_) > MAX_OUTBOX) {
+    this->dropped_++;
+    return;
+  }
   if (esp_mqtt_client_enqueue(this->client_, this->topic_packet_.c_str(), reinterpret_cast<const char *>(frame.data()),
-                              frame.size(), 0, 0, false) >= 0)
+                              frame.size(), 0, 0, false) >= 0) {
     this->published_++;
+    this->bytes_ += frame.size() + this->topic_packet_.size();
+  }
 }
 
 void OtmUplink::dump_config() {

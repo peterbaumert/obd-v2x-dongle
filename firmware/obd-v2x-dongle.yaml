@@ -23,7 +23,7 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.5.0"
+    version: "0.6.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
@@ -36,6 +36,9 @@ esp32:
   flash_size: 16MB
   framework:
     type: esp-idf
+
+# 8 MB PSRAM of the N16R8 module (quad SPI on the C5): heap for TLS, WireGuard, PPP and the MQTT outboxes
+psram:
 
 logger:
   hardware_uart: USB_SERIAL_JTAG
@@ -149,7 +152,11 @@ modem:
   rx_pin: GPIO24              # IO24 (pin 23) MCU_RX_LTE <- modem TXD
   rts_pin: GPIO26             # IO26 (pin 27) MCU_RTS_LTE -> modem RTS
   cts_pin: GPIO25             # IO25 (pin 26) MCU_CTS_LTE <- modem CTS
-  baud_rate: 115200
+  # 921600 instead of the default 115200 (~11 kB/s, too slow for busy roads): the component starts at 115200,
+  # switches the EC200U with AT+IPR and remembers the rate. RTS/CTS flow control; the TXS0108E handles this easily.
+  baud_rate: 921600
+  rx_buffer_size: 4096
+  tx_buffer_size: 4096
   apn: !secret lte_apn
   enable_on_boot: false       # lte_power_on enables it once the modem is up
   use_address: !secret wireguard_address   # where the ESPHome Builder finds it (OTA, logs): the tunnel address
@@ -631,6 +638,26 @@ sensor:
       entity_category: diagnostic
       filters:
         - throttle: 60s
+  # OpenTrafficMap upload: data sent (payload + topic since boot; TLS/IP overhead adds roughly 10-20 %) and frames
+  # dropped because they came in faster than the LTE link sends them
+  - platform: template
+    name: "V2X data sent"
+    icon: mdi:upload-network
+    unit_of_measurement: MB
+    device_class: data_size
+    state_class: total_increasing
+    accuracy_decimals: 2
+    entity_category: diagnostic
+    update_interval: 60s
+    lambda: return id(otm).get_bytes() / 1e6;
+  - platform: template
+    name: "V2X upload dropped"
+    icon: mdi:upload-off
+    state_class: total_increasing
+    accuracy_decimals: 0
+    entity_category: diagnostic
+    update_interval: 60s
+    lambda: return id(otm).get_dropped();
   - platform: uptime
     name: "Uptime"
 

@@ -1,7 +1,7 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.5, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
+**Status: v0.6, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
 
 | File | Purpose |
 |---|---|
@@ -21,7 +21,12 @@ Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in
 - **Uplink: LTE only.** The ESP32-C5's Wi-Fi radio runs in 802.11p mode as the ITS-G5 receiver
   ([hn/esphome-its-g5](https://github.com/hn/esphome-its-g5), based on
   [opentrafficmap's firmware](https://codeberg.org/opentrafficmap/its-g5-receiver-firmware)),
-  so the dongle has no Wi-Fi. The EC200U provides IP over PPP (ESPHome `modem:`, CMUX).
+  so the dongle has no Wi-Fi. The EC200U provides IP over PPP (ESPHome `modem:`, CMUX) at 921600 baud with RTS/CTS
+  (115200 would cap it at ~11 kB/s, too little on busy roads). The 8 MB PSRAM holds the TLS, WireGuard and MQTT buffers.
+- **Data usage.** Every received ITS-G5 frame (~300-800 bytes) goes to OpenTrafficMap. With a few equipped cars
+  around that is roughly 10-20 MB per hour of driving, so use a SIM with a normal monthly data allowance (not a
+  small-volume IoT plan). "V2X data sent" shows the volume; if frames come in faster than LTE sends them, the send
+  queue is capped at 64 KB and new frames are dropped ("V2X upload dropped") instead of running out of memory.
 - **WireGuard tunnel to the home network.** The car sits behind the mobile network's carrier NAT. The dongle
   connects out to your WireGuard server (Home Assistant add-on or router), so the MQTT broker, Traccar and the
   update files stay inside your network; only the WireGuard port is open, and it does not answer anything without the
@@ -104,7 +109,7 @@ Car battery, car battery low, unplugged, engine running, power mode · speed, en
 engine load, fuel level, ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/s), VIN, fault codes, fault code count,
 "Clear fault codes" button · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
-V2X packets received / dropped · status LED, "Use eSIM" switch · uptime.
+V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch · uptime.
 
 Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flash = V2X frame.
 
