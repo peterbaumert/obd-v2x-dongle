@@ -1,7 +1,7 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.4, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
+**Status: v0.5, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
 
 | File | Purpose |
 |---|---|
@@ -22,8 +22,15 @@ Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in
   ([hn/esphome-its-g5](https://github.com/hn/esphome-its-g5), based on
   [opentrafficmap's firmware](https://codeberg.org/opentrafficmap/its-g5-receiver-firmware)),
   so the dongle has no Wi-Fi. The EC200U provides IP over PPP (ESPHome `modem:`, CMUX).
-- **Home Assistant via MQTT** (MQTT discovery): the car sits behind the mobile network's carrier NAT,
-  so HA cannot reach the dongle's native API; the dongle publishes to your broker instead.
+- **WireGuard tunnel to the home network.** The car sits behind the mobile network's carrier NAT. The dongle
+  connects out to your WireGuard server (Home Assistant add-on or router), so the MQTT broker, Traccar and the
+  update files stay inside your network; only the WireGuard port is open, and it does not answer anything without the
+  right key. Only the home network's range goes through the tunnel; OpenTrafficMap is reached directly.
+  Keepalive every 25 s keeps the NAT mapping open, so the ESPHome Builder can connect in at the tunnel address.
+- **Home Assistant via MQTT** (MQTT discovery), not the native API: the dongle sleeps most of the time, and with
+  MQTT Home Assistant keeps the last values and the broker holds changed settings until the next wake. The native
+  API is only there for the ESPHome Builder (logs); don't add the dongle to HA's ESPHome integration (duplicate
+  entities).
 - **V2X → OpenTrafficMap:** received frames go to `cits1.opentrafficmap.org:8883` (TLS, anonymous
   publishing) under `its/<node_id>/...`, like the reference receiver. ESPHome's `mqtt:` holds only one
   broker, so `otm_uplink` runs a second esp-mqtt client.
@@ -70,14 +77,20 @@ battery check every 60 s, position every 30 min parked / 120 min with a low batt
 
 ## Firmware updates over LTE
 
-Nothing can connect to the dongle (carrier NAT), so it fetches updates itself (ESPHome `update: http_request`):
+Two ways, both through the tunnel:
+
+**ESPHome default (`ota: esphome`):** in the ESPHome Builder, *Install → Wirelessly* to the dongle's tunnel address
+(the config sets `use_address` to the `wireguard_address`, so the Builder knows where to connect). Works while the dongle is
+awake and the tunnel is up: driving, "Stay awake", or a computer on USB-C. Encrypted with the API key.
+
+**The dongle fetches it itself (`update: http_request`)** for a parked car or when the Builder can't connect:
 
 1. Raise `version` under `esphome: project:` in `obd-v2x-dongle.yaml` and compile (ESPHome Builder:
    *Install → Manual download → OTA format*, or `esphome compile`).
 2. `python firmware/tools/make_release.py <the .ota.bin> <dir>` writes `firmware.ota.bin` and `manifest.json`.
-3. Put both on an https server the dongle can reach, at the URL in `ota_manifest_url` (secrets). Easiest: Home
-   Assistant's `config/www/<random name>/` is served as `https://<your HA>/local/<random name>/`. That path needs no
-   login, and the image contains your secrets (MQTT password, ...), so use a long random directory name.
+3. Put both where `ota_manifest_url` (secrets) points. Easiest: Home Assistant's `config/www/<dir>/`, served as
+   `http://<HA's home address>:8123/local/<dir>/` and reached through the tunnel. Don't use a public URL: the image
+   contains your secrets (MQTT password, WireGuard key, ...).
 4. The dongle checks at every network connect and every 6 h. Home Assistant shows a "Firmware" update entity.
    *Install* only reaches it while it is awake (driving, "Stay awake"). For a parked car turn on
    "Install updates automatically": the next wake with network installs it.
@@ -97,7 +110,8 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
 
 ## Build and flash
 
-1. Add the keys from `secrets.example.yaml` to your ESPHome `secrets.yaml` (APN, MQTT broker, OpenTrafficMap node ID).
+1. Set up a WireGuard peer for the dongle (Home Assistant WireGuard add-on or your router) and add the keys from
+   `secrets.example.yaml` to your ESPHome `secrets.yaml` (APN, MQTT broker, Traccar, WireGuard, API key, OpenTrafficMap node ID).
 2. Home Assistant ESPHome add-on (2026.11+ / beta): copy `obd-v2x-dongle.yaml` and the `components/` folder into
    `/config/esphome/`, then *Install → Plug into this computer* with the dongle on USB-C (ESP32 USB-Serial-JTAG).
    Or locally: `esphome run obd-v2x-dongle.yaml`. On Windows run ESPHome from PowerShell/cmd, not Git Bash
@@ -106,8 +120,7 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
    broken, hold BOOT and press RESET (pinholes in the case bottom) to start the ESP32's ROM bootloader. A sleeping
    dongle: press RESET (it then stays awake for "Sleep after engine off"), or just plug in a computer.
    There is no Wi-Fi fallback: the radio is the V2X receiver.
-4. First flash over USB. After that, updates go over LTE (see above); ESPHome's normal OTA (the builder connecting
-   to the device) does not work: no Wi-Fi, and the car is not reachable from outside.
+4. First flash over USB. After that, updates go over LTE through the WireGuard tunnel (see above).
 
 ## Roadmap
 

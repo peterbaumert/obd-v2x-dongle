@@ -2,6 +2,7 @@
 #
 # Uplink: LTE (Quectel EC200U-EU) via ESPHome's modem component (PPP + CMUX, ESPHome >= 2026.11).
 # The ESP32-C5's Wi-Fi radio is the ITS-G5 / 802.11p receiver, so there is no Wi-Fi.
+#   - WireGuard tunnel to the owner's home network (MQTT broker, Traccar, updates; ESPHome Builder OTA + logs)
 #   - Owner's MQTT broker (Home Assistant MQTT discovery): car battery, OBD-II live data, LTE, V2X counters
 #   - OpenTrafficMap MQTT server: received ITS-G5 frames (components/otm_uplink)
 #   - Traccar server: GPS position (OsmAnd protocol over HTTP)
@@ -22,7 +23,7 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.4.0"
+    version: "0.5.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
@@ -151,6 +152,7 @@ modem:
   baud_rate: 115200
   apn: !secret lte_apn
   enable_on_boot: false       # lte_power_on enables it once the modem is up
+  use_address: !secret wireguard_address   # where the ESPHome Builder finds it (OTA, logs): the tunnel address
 
 switch:
   - platform: template
@@ -213,18 +215,49 @@ mqtt:
                  "\"device\":{\"ids\":\"" + get_mac_address() + "\"}}";
     - update.check: fw_update   # look for new firmware whenever the network comes up
 
-# ---------------------------------------------------------------- firmware updates over LTE
-# The dongle is behind the mobile network's NAT, so nothing can connect to it: it fetches new firmware itself.
-# Release: compile, then `python firmware/tools/make_release.py <name>.ota.bin <dir>` and put the two files on a
-# web server the dongle can reach (e.g. Home Assistant's config/www/<random name>/ -> https://<ha>/local/<random name>/).
-# The binary contains the secrets (MQTT password, ...): use a hard-to-guess directory name, never a public place.
-# Home Assistant shows a "Firmware" update entity; Install only reaches the dongle while it is awake (driving,
-# "Stay awake"), so for a parked car turn on "Install updates automatically" and it installs at the next wake.
+# ---------------------------------------------------------------- WireGuard tunnel to the home network
+# The dongle sits behind the mobile network's NAT. WireGuard connects it to your home network, so the MQTT broker,
+# Traccar and the update files stay inside it (nothing exposed but the WireGuard port), and the ESPHome Builder can
+# reach the dongle at its tunnel address for "Install -> Wirelessly" and logs. Only the home network's range goes
+# through the tunnel (peer_allowed_ips); OpenTrafficMap is reached directly.
+time:
+  - platform: sntp            # WireGuard needs the time for its handshake
+    id: sntp_time
+
+wireguard:
+  address: !secret wireguard_address              # the dongle's tunnel address, e.g. 10.6.0.5
+  private_key: !secret wireguard_private_key
+  peer_endpoint: !secret wireguard_endpoint       # your home's public name/IP
+  peer_port: !secret wireguard_port
+  peer_public_key: !secret wireguard_peer_public_key
+  peer_allowed_ips:
+    - !secret wireguard_home_network              # e.g. 192.168.178.0/24 (+ the tunnel network if separate)
+    - !secret wireguard_tunnel_network            # e.g. 10.6.0.0/24
+  peer_persistent_keepalive: 25s   # keeps the carrier NAT mapping open, so the Builder can connect in
+  reboot_timeout: 0s               # no reboot without a tunnel (home offline must not disturb the car side)
+
+# Native API: only for the ESPHome Builder (logs). Don't add the dongle to Home Assistant's ESPHome integration:
+# its entities come via MQTT, which keeps the last values and settings while it sleeps.
+api:
+  encryption:
+    key: !secret api_encryption_key
+  reboot_timeout: 0s               # it sleeps most of the time, no client is normal
+
+# ---------------------------------------------------------------- firmware updates
+# Two ways, both over LTE:
+#  - esphome: the default. ESPHome Builder "Install -> Wirelessly" to the tunnel address while the dongle is
+#    awake (driving, "Stay awake", or a computer on USB-C).
+#  - http_request: the dongle fetches the update itself (parked car, tunnel down). Release: compile, then
+#    `python firmware/tools/make_release.py <name>.ota.bin <dir>` and put both files where ota_manifest_url points,
+#    e.g. Home Assistant's config/www/<dir>/ -> http://<HA's home address>:8123/local/<dir>/ through the tunnel.
+#    Home Assistant shows a "Firmware" update entity; for a parked car turn on "Install updates automatically".
 # safe_mode + OTA rollback: firmware that crashes within 2 min after an update is rolled back by the bootloader.
 safe_mode:
   boot_is_good_after: 2min
 
 ota:
+  - platform: esphome
+    encryption: {}                 # same key as the api (api_encryption_key)
   - platform: http_request
     id: ota_lte
 
