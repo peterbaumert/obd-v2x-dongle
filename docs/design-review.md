@@ -42,13 +42,14 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 | **Nano-SIM** | **bottom, middle; hinged holder** | **case must be opened** – see open decisions |
 | U.FL (LTE main, GNSS) | top, right edge | inside the case ✓ |
 | U.FL 5.9 GHz | on the ESP32 module (bottom) | inside the case ✓ |
-| Test pads: ESP UART, modem USB/USB_BOOT/debug UART | bottom | case open; modem firmware updates need the modem USB pads |
+| Test pads: ESP UART0 TX + SIM_SEL, modem USB/USB_BOOT/debug UART | bottom | case open; modem firmware updates need the modem USB pads |
 
 ## Open decisions
 
-1. **SIM** – decided: the nano-SIM holder is SIM 1 (works with Telekom / Vodafone / congstar plug-in SIMs and with
-   removable eSIM cards). The soldered MFF2 eSIM footprint (U403) stays on the board, not fitted, for a possible
-   SGP.32 IoT eSIM later. Consumer eSIM profiles on a soldered chip would need an LPA in our firmware and the
+1. **SIM** – decided: both SIMs on the modem's one SIM interface through the FSA2567 switch U404, selected by the
+   ESP (SIM_SEL = IO12, formerly UART0 RX; console/flashing use USB). Default (SIM_SEL low) is the nano-SIM holder
+   (works with Telekom / Vodafone / congstar plug-in SIMs and with removable eSIM cards). The soldered MFF2 eSIM
+   (U403) is not fitted yet, for a possible SGP.32 IoT eSIM later. Consumer eSIM profiles on a soldered chip would need an LPA in our firmware and the
    EC200U's support for it is unclear.
 2. **Backup battery** – decided: 1S Li-ion/LiPo with BQ25171-Q1 charger and TPS2121 power mux (sheet 6).
 3. **Mounting holes** – none; the case has to clamp the board (plug + edges).

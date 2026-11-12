@@ -19,23 +19,18 @@ import gen_pcb as G  # noqa: E402  (netlist reader, footprint loader, placement 
 T, B = G.T, G.B
 # new parts: ref: (x, y, rot, side)  -- board-relative mm, top view
 NEW_PLACE = {
-    # backup battery block, bottom side under the modem
-    'U502': (45.0, 48.5, 0, B),
-    'C506': (44.5, 54.0, 0, B),
-    'U501': (36.0, 50.0, 0, B),
-    'J501': (31.5, 59.3, 0, B),
-    # eSIM next to the nano-SIM holder and the modem's SIM pins
-    'U403': (23.0, 53.5, 90, B),
+    # SIM switch, bottom side between the ESP and the modem (open area: room to fan out the 0.4 mm pads)
+    'U404': (16.0, 33.0, 0, B),   # open on all layers (outside the modem's top-side pads): vias anywhere
 }
 # small parts: ref: (anchor ref, anchor pad)
 NEW_ANCHOR = {
-    'C507': ('U502', '1'), 'R505': ('U502', '6'), 'R506': ('U502', '6'), 'R507': ('U502', '10'), 'C504': ('U502', '11'),
-    'R501': ('U501', '1'), 'D501': ('U501', '1'), 'C501': ('U501', '1'), 'C502': ('U501', '10'),
-    'R502': ('U501', '2'), 'R503': ('U501', '9'), 'R504': ('U501', '6'), 'RT501': ('J501', '1'), 'C505': ('J501', '1'),
-    'R411': ('U403', '3'), 'R412': ('U403', '6'), 'R413': ('U403', '7'), 'C415': ('U403', '8'),
+    'C416': ('U404', '14'), 'R414': ('U404', '2'),
 }
 # nets whose existing copper must go (pad membership split; would short the new nets)
-RIP_NETS = set()   # e.g. {'VSYS_3V8'} when a net is split (was used for the backup-battery change)
+LTE = '/LTE + GNSS (EC200U)/'
+RIP_NETS = {LTE + 'LTE_USIM_DATA', LTE + 'LTE_USIM_CLK', LTE + 'LTE_USIM_RST', LTE + 'SIM_VDD'}
+# nets renamed in the schematic: existing copper is moved to the new name
+RENAME_NETS = {'/MCU (ESP32-C5, USB)/UART0_RX': 'SIM_SEL'}
 
 
 def main(dry):
@@ -81,6 +76,14 @@ def main(dry):
                 p.SetNet(net(want))
                 changed_pads += 1
     print('pad nets changed:', changed_pads)
+
+    # renamed nets: copper follows
+    for t in board.GetTracks():
+        if t.GetNetname() in RENAME_NETS:
+            t.SetNet(net(RENAME_NETS[t.GetNetname()]))
+    for z in board.Zones():
+        if z.GetNetname() in RENAME_NETS:
+            z.SetNet(net(RENAME_NETS[z.GetNetname()]))
 
     # remove copper of split nets
     rip = [t for t in board.GetTracks() if t.GetNetname() in RIP_NETS]
