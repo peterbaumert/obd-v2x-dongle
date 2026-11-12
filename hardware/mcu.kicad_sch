@@ -3102,6 +3102,18 @@
 			(embedded_fonts no)
 		)
 	)
+	(text "Test pads: UART0 TX, SIM_SEL (IO12, was RXD0)"
+		(exclude_from_sim no)
+		(at 162.56 142.24 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+				(bold yes)
+			)
+			(justify left)
+		)
+		(uuid "7dc30b14-ef28-5aa2-b7b2-58e258f71780")
+	)
 	(text "USB-C: flashing / bench power"
 		(exclude_from_sim no)
 		(at 15.24 111.76 0)
@@ -3113,18 +3125,6 @@
 			(justify left)
 		)
 		(uuid "86efd3c2-309c-5ae8-a83c-ff36f0c20f68")
-	)
-	(text "UART0 test pads"
-		(exclude_from_sim no)
-		(at 162.56 142.24 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "98c69c81-8b65-50d0-8d6e-d69ce7976f18")
 	)
 	(text "ESP32-C5: 5.9 GHz ITS-G5 receive via U.FL on the module"
 		(exclude_from_sim no)
@@ -3758,16 +3758,6 @@
 		)
 		(uuid "16e331a7-3940-5390-97f3-6eba81f78bab")
 	)
-	(label "UART0_RX"
-		(at 195.58 71.12 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2051551a-62a3-5656-9902-3eee1bd5d93e")
-	)
 	(label "USB_DN"
 		(at 101.6 160.02 180)
 		(effects
@@ -3838,16 +3828,6 @@
 		)
 		(uuid "c615db20-f981-5b4a-8286-332e127c5f9e")
 	)
-	(label "UART0_RX"
-		(at 190.5 160.02 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e7b7df91-07f6-558b-b540-c40e0b5e2150")
-	)
 	(label "LED_DIN"
 		(at 195.58 88.9 0)
 		(effects
@@ -3890,6 +3870,28 @@
 		(uuid "015d0a7b-46e3-5a39-9125-d1c7dbc19c34")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 71.12 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "SIM_SEL"
+		(shape bidirectional)
+		(at 190.5 160.02 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "140bea69-84d3-5b81-9d92-cc4ea513bf24")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 160.02 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3956,6 +3958,28 @@
 		(uuid "341b943d-4fac-5634-aeb4-859fbb74eabe")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 139.7 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "SIM_SEL"
+		(shape output)
+		(at 195.58 71.12 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "35c7b2d1-5563-5fc3-b378-171939303ae8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 195.58 71.12 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6756,7 +6780,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "UART0_RX"
+		(property "Value" "SIM_SEL"
 			(at 199.39 161.29 90)
 			(show_name no)
 			(do_not_autoplace no)

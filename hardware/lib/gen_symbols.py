@@ -165,6 +165,21 @@ mux = symbol(
     width=12 * G,
 )
 
+# ---------------- onsemi FSA2567 dual SIM switch (UQFN-16 1.8x2.6, 0.4 mm, case 523BF) ----------------
+# Pin numbers per onsemi FSA2567/D Figure 3 (UMLP16). Sel low: 1x = common, Sel high: 2x = common.
+simsw = symbol(
+    'FSA2567', 'U',
+    'Package_DFN_QFN:UQFN-16_1.8x2.6mm_P0.4mm',
+    'https://www.onsemi.com/pdf/datasheet/fsa2567-d.pdf',
+    'Dual SIM card analog switch (4PDT), 0.4 Ohm VSIM path, 1.65-4.3 V; Sel low = SIM 1, high = SIM 2',
+    'SIM switch multiplexer dual SIM analog',
+    left=[(PI, 'VCC', 14), None, (P, 'VSIM', 16), (P, 'RST', 4), (P, 'CLK', 8), (P, 'DAT', 12), None, (I, 'Sel', 2)],
+    right=[(PO, '1VSIM', 1), (P, '1RST', 5), (P, '1CLK', 9), (P, '1DAT', 13), None,
+           (PO, '2VSIM', 15), (P, '2RST', 3), (P, '2CLK', 7), (P, '2DAT', 11)],
+    bottom=[(PI, 'GND', 6, 0), (NC, 'NC', 10, 2)],
+    width=12 * G,
+)
+
 
 # ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
 def rail_symbols(names):
@@ -186,7 +201,7 @@ def rail_symbols(names):
 RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8', 'VBUCK_3V8', 'VCELL']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

@@ -56,6 +56,7 @@ SOURCING = {
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('SIM8060-6-0-14-00-A', 'GCT', 'C6296715'),
     'U403': ('MFF2 eSIM, optional (DNP)', '', ''),
+    'U404': ('FSA2567UMX', 'onsemi', 'C357761'),
     'U501': ('BQ25171QWDRCRQ1', 'Texas Instruments', 'C2861221'),
     'U502': ('TPS2121RUXR', 'Texas Instruments', 'C485916'),
     'J501': ('B2B-PH-SM4-TB(LF)(SN)', 'JST', 'C160352'),
@@ -338,7 +339,7 @@ def decap(sh, ref, val, fp, x, y_top, rail, lib='Device:C'):
     return c
 
 
-def testpad(sh, ref, net, x, y, rail=None):
+def testpad(sh, ref, net, x, y, rail=None, glob=False):
     """Test pad drawn horizontally: connection at (x, y), pad to the right, label to the left."""
     x, y = round(x, 4), round(y, 4)
     tp = sh.part('Connector:TestPoint', ref, net, 'TestPoint:TestPoint_Pad_D1.0mm', x, y, 270,
@@ -350,6 +351,9 @@ def testpad(sh, ref, net, x, y, rail=None):
     elif rail:
         sh.w(tp['1'], (x - g(1), y))
         sh.rail(net, (x - g(1), y), rot=90)
+    elif glob:
+        sh.w(tp['1'], (x - g(1), y))
+        sh.glabel(net, (x - g(1), y), 'L')
     else:
         sh.w(tp['1'], (x - g(1), y))
         sh.label(net, (x - g(1), y), 'L')
@@ -468,7 +472,8 @@ def vehicle():
 
 # =====================================================================================
 MCU_GLOBAL = {'KL_RX', 'VSENSE', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'CAN_TX', 'CAN_RX', 'KL_TX', 'KL_SLP_N',
-              'LTE_PWR_EN', 'LTE_STATUS_3V3', 'CAN_STB', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_CTS_LTE', 'MCU_RTS_LTE'}
+              'LTE_PWR_EN', 'LTE_STATUS_3V3', 'CAN_STB', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_CTS_LTE', 'MCU_RTS_LTE',
+              'SIM_SEL'}
 
 
 def mcu():
@@ -483,11 +488,11 @@ def mcu():
     shapes = {'VSENSE': 'input', 'KL_RX': 'input', 'CAN_RX': 'input', 'LTE_STATUS_3V3': 'input'}
     shapes.update({n: 'output' for n in ('LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'CAN_TX', 'KL_TX', 'KL_SLP_N', 'LTE_PWR_EN', 'CAN_STB')})
     lab_row(sh, U, left, 'L', 2, MCU_GLOBAL, shapes)
-    right = [('25', 'UART0_TX'), ('24', 'UART0_RX'), ('13', 'USB_DN'), ('14', 'USB_DP'), ('21', 'MCU_TX_LTE'),
+    right = [('25', 'UART0_TX'), ('24', 'SIM_SEL'), ('13', 'USB_DN'), ('14', 'USB_DP'), ('21', 'MCU_TX_LTE'),
              ('23', 'MCU_RX_LTE'), ('26', 'MCU_CTS_LTE'), ('27', 'MCU_RTS_LTE'), ('18', 'LED_DIN'), ('15', 'ESP_BOOT'),
              ('31', None), ('20', None), ('22', None)]
     lab_row(sh, U, right, 'R', 2, MCU_GLOBAL, {'MCU_TX_LTE': 'output', 'MCU_RX_LTE': 'input',
-                                                'MCU_CTS_LTE': 'input', 'MCU_RTS_LTE': 'output'})
+                                                'MCU_CTS_LTE': 'input', 'MCU_RTS_LTE': 'output', 'SIM_SEL': 'output'})
     sh.gnd(U['1'])
     # 3V3 + EN
     p3 = U['2']
@@ -573,9 +578,9 @@ def mcu():
     sh.glabel('VBUS_USB', E.out('VBUS', 1), 'U', 'input')
     sh.gnd(E['GND'])
     # test points
-    sh.text('UART0 test pads', g(64), g(56), 1.5, True)
-    for i, (ref, net) in enumerate((('TP301', 'UART0_TX'), ('TP302', 'UART0_RX'), ('TP303', 'GND'))):
-        testpad(sh, ref, net, g(76), g(60) + g(3) * i)
+    sh.text('Test pads: UART0 TX, SIM_SEL (IO12, was RXD0)', g(64), g(56), 1.5, True)
+    for i, (ref, net) in enumerate((('TP301', 'UART0_TX'), ('TP302', 'SIM_SEL'), ('TP303', 'GND'))):
+        testpad(sh, ref, net, g(76), g(60) + g(3) * i, glob=net in MCU_GLOBAL)
     return sh
 
 
@@ -657,25 +662,44 @@ def lte():
     decap(sh, 'C405', '100nF', C0603, g(104), g(10), 'LTE_1V8')
     decap(sh, 'C406', '100nF', C0603, g(109), g(10), '+3V3')
 
-    # SIM 1 = nano-SIM holder J401 (default: any operator, incl. consumer SIMs / removable eUICC cards);
-    # the soldered MFF2 eSIM U403 shares the lines and is not fitted by default
-    sh.text('SIM 1 = nano-SIM J401 (default): R405-R407 fitted.\nOptional soldered eSIM: fit U403, C415, R411-R413, remove R405-R407 (never both).',
-            g(44), g(5.6), 1.27, True)
+    # SIM switch U404 (FSA2567): the modem's single SIM interface goes to the nano-SIM holder J401 (Sel low, default
+    # via R414) or to the soldered MFF2 eSIM U403 (Sel high). SIM_SEL is driven by the ESP (IO12 / RXD0).
+    sh.text('SIM switch: SIM_SEL low (default) = nano-SIM J401, high = eSIM U403', g(64), g(63.5), 1.27, True)
+    XW, YW = g(60), g(58)
+    W = sh.part('obd-v2x:FSA2567', 'U404', 'FSA2567UMX', 'Package_DFN_QFN:UQFN-16_1.8x2.6mm_P0.4mm', XW, YW, 0)
+    W.fields = {'ref': (XW + g(2), W['14'][1] - g(2.6), 'left'), 'val': (XW + g(2), W['14'][1] - g(1.6), 'left')}
+    sh.w(W['14'], (W['14'][0] - g(2), W['14'][1]))
+    sh.rail('+3V3', (W['14'][0] - g(2), W['14'][1]))
+    decap(sh, 'C416', '100nF', C0402, g(38), g(54), '+3V3')
+    lab_row(sh, W, [('16', 'SIM_VDD'), ('4', 'LTE_USIM_RST'), ('8', 'LTE_USIM_CLK'), ('12', 'LTE_USIM_DATA')], 'L', 2, set())
+    lab_row(sh, W, [('1', 'SIM1_VDD'), ('5', 'SIM1_RST'), ('9', 'SIM1_CLK'), ('13', 'SIM1_DAT'),
+                    ('15', 'SIM2_VDD'), ('3', 'SIM2_RST'), ('7', 'SIM2_CLK'), ('11', 'SIM2_DAT')], 'R', 2, set())
+    ps = W['2']
+    sh.w(ps, (ps[0] - g(2), ps[1]), (ps[0] - g(4), ps[1]))
+    sh.glabel('SIM_SEL', (ps[0] - g(4), ps[1]), 'L', 'input')
+    Rsel = rv(sh, 'Device:R', 'R414', '100k', R0402, ps[0] - g(2), ps[1])
+    Rsel.fields = VL(Rsel.x, Rsel.y)
+    sh.gnd(Rsel[2])
+    sh.gnd(W['6'])
+    sh.nc(W, '10')
+
+    # SIM 2 = soldered MFF2 eSIM U403 (chip DNP until one is chosen; its series resistors and cap are fitted)
+    sh.text('SIM 2 = soldered eSIM U403 (fit an MFF2 eUICC)', g(44), g(5.6), 1.27, True)
     XE, YE = g(74), g(20)
     E = sh.part('obd-v2x:eSIM_MFF2', 'U403', 'eSIM MFF2', 'Package_SON:WSON-8-1EP_6x5mm_P1.27mm_EP3.4x4mm', XE, YE, 0,
                 dnp=True)
     E.fields = {'ref': (XE + g(1), E['8'][1] - g(2.5), 'left'), 'val': (XE + g(1), E['8'][1] - g(1.5), 'left')}
     # series resistors on rows 3 grid apart; each wire drops in its own column to its pin row (no crossings)
-    for yr, xc, pin, src, rref in ((g(10), g(62), '7', 'LTE_USIM_RST', 'R413'), (g(13), g(60), '6', 'LTE_USIM_CLK', 'R412'),
-                                   (g(16), g(58), '3', 'LTE_USIM_DATA', 'R411')):
-        Re = rh(sh, 'Device:R', rref, '22R', R0402, g(52), yr, dnp=True)
+    for yr, xc, pin, src, rref in ((g(10), g(62), '7', 'SIM2_RST', 'R413'), (g(13), g(60), '6', 'SIM2_CLK', 'R412'),
+                                   (g(16), g(58), '3', 'SIM2_DAT', 'R411')):
+        Re = rh(sh, 'Device:R', rref, '22R', R0402, g(52), yr)
         sh.w(Re[2], (xc, yr), (xc, E[pin][1]), E[pin])
         sh.w(Re[1], (g(51), yr))
         sh.label(src, (g(51), yr), 'L')
     xv, yv = g(66), g(7.5)
     sh.w(E['8'], (xv, E['8'][1]), (xv, yv))
-    sh.label('SIM_VDD', (xv, yv), 'L')
-    Ce = rv(sh, 'Device:C', 'C415', '100nF', C0402, g(70), yv, dnp=True)
+    sh.label('SIM2_VDD', (xv, yv), 'L')
+    Ce = rv(sh, 'Device:C', 'C415', '100nF', C0402, g(70), yv)
     sh.w((xv, yv), Ce[1])
     sh.gnd(Ce[2])
     sh.w(E['1'], (E['1'][0] + g(2), E['1'][1]))
@@ -683,8 +707,8 @@ def lte():
     for pin in ('2', '4', '5', '9'):
         sh.nc(E, pin)
 
-    # SIM holder (alternative to the eSIM)
-    sh.text('Nano-SIM (default SIM)', g(80), g(38), 1.27, True)
+    # SIM 1 = nano-SIM holder (default: any operator, incl. consumer SIMs / removable eUICC cards)
+    sh.text('SIM 1 = nano-SIM J401 (default)', g(80), g(38), 1.27, True)
     XJ, YJ = g(104), g(44)
     S = sh.part('Connector:SIM_Card', 'J401', 'Nano-SIM', 'Connector_Card:nanoSIM_GCT_SIM8060-6-0-14-00', XJ, YJ, 0)
     S.fields = {'ref': (XJ - g(4), YJ - g(5), 'left'), 'val': (XJ - g(4), YJ + g(4), 'left')}
@@ -693,10 +717,10 @@ def lte():
     sh.gnd(S.out('GND', 1), rot=270)
     xj = S['VCC'][0]
     sh.w(S['VCC'], (xj - g(2), S['VCC'][1]))
-    sh.label('SIM_VDD', (xj - g(2), S['VCC'][1]), 'L')
+    sh.label('SIM1_VDD', (xj - g(2), S['VCC'][1]), 'L')
     xR = xj - g(12)
-    for pin, net, rref, src, dy in (('RST', 'SIM_RST', 'R407', 'LTE_USIM_RST', -2), ('CLK', 'SIM_CLK', 'R406', 'LTE_USIM_CLK', 0),
-                                    ('I/O', 'SIM_IO', 'R405', 'LTE_USIM_DATA', 0)):
+    for pin, net, rref, src, dy in (('RST', 'SIM_RST', 'R407', 'SIM1_RST', -2), ('CLK', 'SIM_CLK', 'R406', 'SIM1_CLK', 0),
+                                    ('I/O', 'SIM_IO', 'R405', 'SIM1_DAT', 0)):
         y = S[pin][1]
         yr = y + g(dy)
         Rs = rh(sh, 'Device:R', rref, '22R', R0402, xR, yr)
@@ -706,7 +730,7 @@ def lte():
         sh.label(src, (xR - g(1), yr), 'L')
     # SIM caps + data pull-up
     for i, (ref, val, net, fp) in enumerate((('C407', '33pF', 'SIM_IO', C0402), ('C408', '33pF', 'SIM_CLK', C0402),
-                                             ('C409', '33pF', 'SIM_RST', C0402), ('C410', '100nF', 'SIM_VDD', C0402))):
+                                             ('C409', '33pF', 'SIM_RST', C0402), ('C410', '100nF', 'SIM1_VDD', C0402))):
         x = g(80 + 6 * i)
         c = rv(sh, 'Device:C', ref, val, fp, x, g(56))
         sh.w(c[1], (x, g(54)))
