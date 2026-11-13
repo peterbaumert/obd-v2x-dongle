@@ -128,6 +128,43 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
    There is no Wi-Fi fallback: the radio is the V2X receiver.
 4. First flash over USB. After that, updates go over LTE through the WireGuard tunnel (see above).
 
+## Testing the car with a WiCAN (`tools/obd_probe.py`)
+
+Before a value goes into the `obd2` component, check what the car actually answers, from a laptop with a
+[WiCAN OBD](https://docs.meatpi.com/wican-obd/) (ELM327 over Wi-Fi, same CAN pins 6/14 as the dongle).
+Python standard library only. Candidates come from [OBDb](https://github.com/OBDb/Mercedes-Benz-C-Class)
+(CC-BY-SA-4.0); for a 2015 C-Class only the standard mode-01 PIDs are confirmed, the Mercedes DIDs are untested.
+
+The script only sends read services (01, 21, 22, 1A, 3E, 10 01/03) and refuses anything that could write, code,
+reset or clear codes. It refuses to run unless the engine is running (`--no-engine-check` for ignition-only tests).
+Unplug the WiCAN afterwards: it and the dongle must not poll at the same time.
+
+**Setup:** WiCAN web UI → Protocol *ELM327*, Port Type *TCP*, note the port (default assumed `3333`, else `--port`).
+Join the WiCAN's Wi-Fi (`192.168.80.1`, else `--host`), start the engine.
+
+1. Standard OBD: which mode-01 PIDs each ECU supports, one decoded read of each.
+   `python firmware/tools/obd_probe.py standard`
+2. Mercedes candidates (odometer, oil temp, fuel litres, gear, ATF temp, boost/DPF), decoded with OBDb's formulas.
+   Compare the odometer with the instrument cluster.
+   `python firmware/tools/obd_probe.py mercedes`
+3. ECU discovery behind the gateway: tester present (3E 00) to every 11-bit ID, takes a few minutes.
+   `python firmware/tools/obd_probe.py find-ecus`
+   If only 7E8–7EF answer, the WiCAN is probably filtering response IDs; repeat the discovery over SLCAN/SavvyCAN.
+4. DID scan of one ECU found in step 3 (request ID `XXX`, response ID `YYY`). Try other ranges if little answers
+   (e.g. `--from 0100 --to 01FF`, `--from 1000 --to 10FF`, `--from 2000 --to 20FF`), add `--extended` for the
+   extended session.
+   `python firmware/tools/obd_probe.py dids --tx XXX --rx YYY --out scan.json`
+5. Hunt for a state bit (door, lock, window, trunk): watch every DID that answered while you change it in the car;
+   each changed byte is printed with time and changed bits.
+   `python firmware/tools/obd_probe.py watch --scan scan.json`
+
+Also: `diff a.json b.json` (byte differences between two scans: scan, change something, scan again) and
+`raw --tx 7E0 --rx 7E8 22016B` (one request). Body modules are asleep when the car is parked, so such values are
+only available with the ignition on.
+
+**Privacy:** VINs are masked on screen and in scan files. The raw logs in `firmware/tools/probe-logs/` (git-ignored)
+still contain them – don't share those unedited, and never commit a VIN.
+
 ## Roadmap
 
 | Feature | State / plan |

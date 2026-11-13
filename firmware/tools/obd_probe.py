@@ -7,6 +7,8 @@ so it cannot code, reset or clear anything.
 Setup: WiCAN web UI -> Protocol "ELM327", port type TCP (note the port). Join the WiCAN's Wi-Fi (default AP
 192.168.80.1) or put it on your network. Engine running (the script checks RPM; --no-engine-check for ignition-only).
 
+Step-by-step test order: firmware/README.md, "Testing the car with a WiCAN".
+
     python firmware/tools/obd_probe.py [--host 192.168.80.1] [--port 3333] <command> ...
 
     standard                      which mode-01 PIDs each ECU supports, then one decoded read of each
