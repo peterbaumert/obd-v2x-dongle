@@ -144,14 +144,16 @@ def tht(num, x, y, drill, dia, shape='circle'):
 
 
 def obd_plug():
-    """J1962 male plug, 90 deg THT (Jiatel CR-PG001 rev C drawing, same mould sold widely as
+    """J1962 male plug, 90 deg THT (Jiatel CR-PG001 drawing, same mould sold widely as
     'OBD2 16 pin male 90 degree PCB'). Hole pattern: 2 x 8, pitch 4.00, rows 3.00 apart, hole 1.35 +0.1.
 
     Origin = pin 1. Mating face points to -y (towards the board edge / car socket).
     Row y=0 (nearer the housing) = pins 1..8, row y=+3 = pins 9..16, pin n and n+8 aligned.
-    Pin 1 at x=0, pin 8 at x=-28 (top view).
-    !! Row/end assignment inferred from the drawing: verify with a multimeter on a real plug before
-       ordering boards (pin 16 = +12 V).
+    Pin 1 at x=0, pin 8 at x=-28 (top view). From the drawing: top view numbers the outer tails 9..16,
+    section A-A shows the contact row nearer the board bending into the leg row nearer the housing,
+    and the outer leg row 5.65 behind the housing rear face.
+    The housing has a retention groove right behind its 1.5 mm rear flange: the board edge sits at the rear
+    face so the case can grip the groove on all four sides (housing fully off the board).
     """
     P, ROW, DRILL, DIA = 4.0, 3.0, 1.45, 2.3
     body = ''
@@ -161,20 +163,17 @@ def obd_plug():
         body += tht(k + 9, x, ROW, DRILL, DIA)
     cx = -P * 3.5                                   # centre between pin 1 and pin 8
     hw = 37.6 / 2                                   # housing width
-    rear = -(6.5 - ROW)                             # housing rear face, 6.5 from the outer leg row
+    rear = -(5.65 - ROW)                            # housing rear face, 5.65 from the outer leg row
     front = rear - 20.0                             # housing / shroud front (20.0 deep)
     body += rect(cx - hw, front, cx + hw, rear, 'F.Fab', 0.1)
     body += rect(cx - hw - 0.5, front - 0.5, cx + hw + 0.5, ROW + DIA / 2 + 0.5, 'F.CrtYd', 0.05)
-    # silk: housing rear edge + sides down to the courtyard, pin-1 marker
-    body += line(cx - hw - 0.15, rear, cx + hw + 0.15, rear, 'F.SilkS', 0.15)
-    body += line(cx - hw - 0.15, rear, cx - hw - 0.15, rear - 3, 'F.SilkS', 0.15)
-    body += line(cx + hw + 0.15, rear, cx + hw + 0.15, rear - 3, 'F.SilkS', 0.15)
+    # silk: pin-1 marker only (the housing sits off the board, in front of its edge)
     body += line(1.8, -1.8, 1.8, 1.8, 'F.SilkS', 0.15)
     body += line(cx - hw, front + 2, cx + hw, front + 2, 'F.Fab', 0.1)
     assert body.count('(pad ') == 16
     return footprint('OBD2_J1962_Plug_PCB',
                      'OBD-II SAE J1962 male plug, 16 pin, 90 deg THT, 2x8 P4.00 rows 3.00. '
-                     'Jiatel CR-PG001 rev C drawing. Mating face towards -y. Verify pinout on a sample',
+                     'Jiatel CR-PG001 drawing. Mating face towards -y, housing rear face 2.65 in front of pin 1',
                      'OBD OBD2 J1962 plug connector', 26, body)
 
 

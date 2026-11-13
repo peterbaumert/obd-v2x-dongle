@@ -50,20 +50,20 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 
 | Item | Setting |
 |---|---|
-| Board | 52 × 74 mm, 4 layers, 1.6 mm, FR-4 TG150+, 1 oz outer / 1 oz inner, standard stack-up (7628 prepreg) |
+| Board | 52 × 65 mm, 4 layers, 1.6 mm, FR-4 TG150+, 1 oz outer / 1 oz inner, standard stack-up (7628 prepreg) |
 | Impedance | 50 Ω ±10 % single-ended on L1 (RF net class, 0.32 mm GCPW, gap 0.25 mm), reference L2 |
 | Rules met | track/space 0.15/0.15 mm (min 0.1), via 0.6/0.3 mm, annular ring 0.15 mm (= minimum), hole-to-hole ≥ 0.35 mm, copper-to-edge 0.3 mm, silk text ≥ 0.8 mm / 0.15 mm stroke |
 | Vias | tented, not filled (no via-in-pad except the ESP32 module's EPAD thermal vias) |
 | Finish / mask | ENIG recommended (0.4 mm-pitch U404, LGA modem); green mask, smallest mask web 0.155 mm (U404) |
 | Assembly | both sides; fiducials 3 per side; J201 OBD plug **not assembled** (hand-solder); DNP parts are left out of BOM and CPL |
-| Panel | parts sit 1–2 mm from the edges and J301 (USB-C) overhangs the rear edge by 0.3 mm: let PCBWay add 5 mm rails with tab routing (no V-cut), rails clear of J201 / J301 |
+| Panel | parts sit 1–2 mm from the edges and J301 (USB-C) overhangs the rear edge by 0.3 mm: let PCBWay add 5 mm rails with tab routing (no V-cut), rails clear of J201 / J301. J201's housing sits entirely in front of the front edge (20 mm); it is hand-soldered after delivery, so the panel never carries it |
 | Files | `obd-v2x-dongle-gerber.zip` (Gerber X2 + Excellon), `obd-v2x-dongle-bom.csv`, `obd-v2x-dongle-cpl.csv` (origin = board bottom-left; PCBWay checks rotations) |
 
 ## Accessibility (case design)
 
 | What | Where | Access |
 |---|---|---|
-| OBD plug | top, front edge | – |
+| OBD plug | top, front edge; housing entirely in front of the board edge (edge = housing rear face) | case rib in the retention groove behind the 1.5 mm rear flange, all four sides |
 | USB-C (power, ESP32 flashing/logs) | bottom, rear edge, 0.3 mm overhang | case cut-out ✓ |
 | RESET / BOOT buttons | bottom, near rear edge, top-actuated | pinholes in the case bottom (BOOT rarely needed: the C5's USB-Serial-JTAG can enter download mode itself) |
 | RGB LED | bottom, rear-left corner | light pipe / window in the case bottom |

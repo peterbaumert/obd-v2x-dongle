@@ -33,15 +33,19 @@
   DC block to the modem. All ESP32 GPIOs are in use.
 
 ## PCB
-- 52 x 74 mm, 4 layers: In1 = solid GND plane (no tracks), In2 = routing + GND pour; parts on both sides;
-  OBD plug at the front edge, housing overhangs 12 mm.
+- 52 x 65 mm, 4 layers: In1 = solid GND plane (no tracks), In2 = routing + GND pour; parts on both sides;
+  OBD plug at the front edge: the front edge is the plug's housing rear face, the whole housing (20 mm) sits
+  in front of the board so the case can grip its retention groove on all four sides.
 - The board was bootstrapped by `hardware/tools/gen_pcb.py` (run with KiCad's bundled Python, `<KiCad>/bin/python`).
   `preroute.py` (RF lines, buck SW node) and `silk.py` (reference placement) also run with it.
   It refuses to overwrite an existing board; `--force` regenerates and **loses all routing/manual moves**.
   From routing on, edit `obd-v2x-dongle.kicad_pcb` in KiCad; schematic changes via Tools > Update PCB from Schematic.
 - Check: `kicad-cli pcb drc --schematic-parity --refill-zones hardware/obd-v2x-dongle.kicad_pcb` (parity must be 0).
-- Routed with Freerouting (export DSN with In1 set to `(type power)` so it stays a solid plane, outer GND pours
-  removed from the export) plus `hardware/tools/maze.py` for single connections and GND stitching vias.
+- Routed with Freerouting (export DSN with In1 set to `(type power)` **and** a `(plane GND (polygon In1.Cu ...))`
+  entry, otherwise Freerouting treats In1 as a signal layer and routes on it; outer GND pours removed from the export)
+  plus `hardware/tools/maze.py` for single connections and GND stitching vias. Use the Freerouting jar (Java 25);
+  the native freerouting-cli build crashes on serialization. Load/save the board from `hardware/` with pcbnew,
+  saving a board loaded from elsewhere rewrites `obd-v2x-dongle.kicad_pro` with default rules.
   The buck switch node is locked 1 mm F.Cu tracks; keep other nets out of it.
 - Schematic changes reach the routed board via `hardware/tools/sync_pcb.py` (adds new parts, updates nets/fields,
   rips copper of split nets and under new parts); then `route_unconnected.py` / Freerouting (lock pre-routes and
