@@ -421,7 +421,9 @@ def smooth(board, margin=0.02):
                 if p.GetNetname() == net and p.IsOnLayer(layer):
                     for t in ts:
                         for q in (t.GetStart(), t.GetEnd()):
-                            if p.GetEffectiveShape(layer).Collide(q, 0):
+                            # a staircase vertex that merely lies inside the pad (degree 2) is not an anchor;
+                            # the pad-touch check below pins what must stay
+                            if p.GetEffectiveShape(layer).Collide(q, 0) and deg.get(key(q)) != 2:
                                 anchors.add(key(q))
             seen = set()
             for t0 in ts:
@@ -462,6 +464,12 @@ def smooth(board, margin=0.02):
                         continue
                     sh = o.GetEffectiveShape(layer)
                     hit = [k for k, q in enumerate(pts) if sh.Collide(q, w // 2 + 1)]
+                    if isinstance(o, pcbnew.PAD) and hit:
+                        # a pad at a chain end only pins that end: the vertices of a staircase next to the pad
+                        # may go (the end point keeps the connection)
+                        ends = [k for k in (0, len(pts) - 1) if k in hit]
+                        if ends:
+                            hit = ends
                     if hit:
                         pinned.update(hit)
                     elif any(sh.Collide(pcbnew.SHAPE_SEGMENT(c.GetStart(), c.GetEnd(), c.GetWidth()), 0) for c in chain):
