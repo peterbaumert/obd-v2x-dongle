@@ -28,3 +28,6 @@ hardware/tools/stock.json
 # ESPHome firmware: local secrets and build output
 firmware/secrets.yaml
 firmware/.esphome/
+
+# OBD probe logs (may contain the VIN)
+firmware/tools/probe-logs/

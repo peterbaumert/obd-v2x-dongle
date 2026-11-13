@@ -11,6 +11,7 @@ ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Que
 | `components/ec200u_gnss/` | GPS position from the EC200U's GNSS receiver (`AT+QGPSLOC`) |
 | `components/power_manager/` | parking mode / deep sleep (modes, wake timing in RTC memory) |
 | `tools/make_release.py` | packs a compiled firmware as an update for the dongle (manifest + image) |
+| `tools/obd_probe.py` | read-only OBD/UDS probe from a laptop via a WiCAN (ELM327 over TCP): supported PIDs, Mercedes DIDs, ECU/DID scan, live change watch (`--help`) |
 | `secrets.example.yaml` | keys the configuration needs (copy to `secrets.yaml`, which git ignores) |
 
 Requires **ESPHome 2026.11 or newer**: the LTE `modem:` component first ships in that release
