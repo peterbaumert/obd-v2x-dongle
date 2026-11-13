@@ -72,6 +72,8 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 | U.FL 5.9 GHz | on the ESP32 module (bottom) | inside the case ✓ |
 | Test pads: ESP UART0 TX + SIM_SEL, modem USB/USB_BOOT/debug UART | bottom | case open; modem firmware updates need the modem USB pads |
 
+Case: `mechanical/` (build123d script, STL/STEP, see its README).
+
 ## Open decisions
 
 1. **SIM** – decided: both SIMs on the modem's one SIM interface through the FSA2567 switch U404, selected by the

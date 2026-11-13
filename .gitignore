@@ -20,6 +20,9 @@ hardware/fab/
 Thumbs.db
 .vscode/
 
+# Case build (board 3D model exported by mechanical/case.py)
+mechanical/build/
+
 # Python
 __pycache__/
 *.pyc

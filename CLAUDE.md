@@ -56,3 +56,9 @@
   impedance control on L1). No vias in SMD pads (maze.py enforces it; only the ESP32 EPAD thermal vias).
 - Fab outputs: `<KiCad>/bin/python hardware/tools/fab.py` -> `hardware/fab/` (Gerber zip, BOM, CPL; git-ignored), also
   refreshes `docs/bom.csv`. Order settings in `docs/design-review.md`.
+
+## Case
+- `mechanical/case.py` (build123d, system Python: `pip install build123d pyvista`) generates the two-part case
+  (`mechanical/out/*.stl|step|png`). `python mechanical/case.py --check --render` exports the board STEP via kicad-cli,
+  checks the case against PCB, parts and OBD plug (must say "check passed"). Re-run after board changes.
+- Plug dimensions marked MEASURE are from the drawing / estimated: update from the real Elecbee plug.
