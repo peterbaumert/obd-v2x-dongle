@@ -171,10 +171,12 @@ Mercedes app at two different times:
 | odometer | `0x309` | bytes 0–2, little-endian, × 0.1 km |
 | range | `0x147` | bytes 4–5, little-endian, km (2047 = invalid) |
 | fuel level | `0x21D` | byte 3, % (68 / 66 matched the app; confirm after a fill-up) |
-| doors open | `0x33F` | byte 0 bits: `0x10` driver, `0x20` front passenger, `0x40` rear left (`0x80` rear right expected), `0x01` interior light |
+| doors open | `0x33F` | byte 0 bits: `0x10` driver, `0x20` front passenger, `0x40` rear left, `0x80` rear right, `0x01` interior light |
+| boot open | `0x33F` | byte 1 bit 0 (`0x02` closed, `0x03` open) |
+| locked | `0x2FB` | bytes 0–1: `55 19` locked, `AA 0A` unlocked |
 
 The bus (or the WiCAN, below 13.1 V with its sleep mode on) goes quiet within seconds to a minute without the engine
-running, so record with the engine on. To find more (rear right, boot, locks): WiCAN Protocol *SLCAN*, then
+running, so record with the engine on. To find more: WiCAN Protocol *SLCAN*, then
 `python firmware/tools/obd_probe.py sniff` — the WiCAN is opened listen-only (no ACK, no transmit), every frame is
 logged with its time; press Enter at each action (type a note first, e.g. `driver door open`), `q` + Enter to stop.
 
