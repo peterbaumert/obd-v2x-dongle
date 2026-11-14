@@ -124,6 +124,11 @@
       "name": "tpms",
       "guess": "tyre pressures (cluster showed 240/230/260/255 kPa) are NOT in the stationary logs - the TPMS sensors sleep when parked and only refresh while driving",
       "status": "needs a sniff while driving above ~25 km/h"
+    },
+    {
+      "name": "service_interval",
+      "guess": "ASSYST PLUS 'Service A in N days' (cluster showed 115 days); value 115 is NOT on the broadcast bus",
+      "status": "diagnostic only - held in the cluster, read via UDS (not continuously broadcast); would need the cluster's DID, which is on a Mercedes-specific CAN ID that must not be probed by sweeping"
     }
   ],
   "number_formula": "value = raw * scale + offset (offset defaults to 0)",
