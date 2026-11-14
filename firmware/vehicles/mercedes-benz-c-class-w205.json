@@ -123,6 +123,35 @@
       "verified": "listen-only recording, driver's belt buckled and unbuckled once (order confirmed by the person recording)"
     },
     {
+      "name": "passenger_seatbelt",
+      "id": "0x225",
+      "start_byte": 2,
+      "length": 1,
+      "values": {"0x23": "unbuckled", "0x24": "buckled"},
+      "verified": "listen-only recording, buckled and unbuckled once (order confirmed)"
+    },
+    {
+      "name": "brake_pedal",
+      "id": "0x351",
+      "start_byte": 1,
+      "mask": "0x20",
+      "verified": "listen-only recording, pressed and released once (order confirmed); 0x087 bytes 2-5 ramp like brake pressure at the same time"
+    },
+    {
+      "name": "reverse_gear",
+      "id": "0x2CF",
+      "start_byte": 5,
+      "mask": "0x01",
+      "verified": "listen-only recording, reverse engaged once with the clutch held (manual gearbox, order confirmed)"
+    },
+    {
+      "name": "eco_start_stop",
+      "id": "0x141",
+      "start_byte": 0,
+      "mask": "0x20",
+      "verified": "listen-only recording: set after ignition on, cleared by the first press of the ECO Start/Stop button, set again by the second (byte 3 goes 0x60 -> 0x20 at the same time)"
+    },
+    {
       "name": "light_switch",
       "id": "0x335",
       "start_byte": 4,
@@ -147,46 +176,15 @@
       "status": "unconfirmed"
     },
     {
-      "name": "brake_pedal",
-      "id": "0x351",
-      "start_byte": 1,
-      "mask": "0x20",
-      "guess": "set while the brake pedal is pressed; 0x087 bytes 2-5 also ramp like brake pressure at the same time",
-      "status": "seen once"
-    },
-    {
-      "name": "passenger_seatbelt",
-      "id": "0x225",
-      "start_byte": 2,
-      "guess": "0x23 -> 0x24 when the passenger belt was buckled, back to 0x23 when unbuckled",
-      "status": "seen once"
-    },
-    {
-      "name": "parking_brake",
       "id": "0x353",
       "start_byte": 7,
-      "guess": "0x33 / 0x44; changed at 31.5 s and back at 58.2 s, only the second change lines up with a mark",
-      "status": "unconfirmed, needs the action order for marks 9-14 and 22-25"
-    },
-    {
-      "id": "0x2CF",
-      "start_byte": 5,
-      "mask": "0x01",
-      "guess": "set for ~2.4 s between marks 24 and 25 (reverse gear or parking brake?)",
-      "status": "unconfirmed, needs the action order"
-    },
-    {
-      "name": "start_stop_enabled",
-      "id": "0x141",
-      "start_byte": 0,
-      "mask": "0x20",
-      "guess": "cleared when the ECO Start/Stop button was pressed and set again on the second press (byte 3 goes 0x60 -> 0x20 at the same time)",
-      "status": "seen once, mapping uncertain"
+      "guess": "0x33 / 0x44, changed at times that match no action (not the parking brake)",
+      "status": "unknown"
     },
     {
       "name": "not_on_this_bus",
-      "guess": "turn signals, hazard lights, power windows and the clutch pedal did not show up (no blinking or switching bits); they live on the comfort/body CAN",
-      "status": "checked, absent"
+      "guess": "electric parking brake, turn signals, hazard lights, power windows and the clutch pedal did not show up; they live on the comfort/body CAN",
+      "status": "checked with a marked recording, absent"
     },
     {
       "id": "0x15A",

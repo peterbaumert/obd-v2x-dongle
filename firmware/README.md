@@ -180,10 +180,14 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 | locked | `0x2FB` | bytes 0–1: `55 19` locked, `AA 0A` unlocked |
 | battery voltage | `0x122` | byte 0, × 0.1 V |
 | driver seatbelt | `0x020` | byte 4 bit `0x02` = buckled |
+| passenger seatbelt | `0x225` | byte 2: `23` unbuckled, `24` buckled |
+| brake pedal | `0x351` | byte 1 bit `0x20` |
+| reverse gear | `0x2CF` | byte 5 bit `0x01` |
+| ECO Start/Stop | `0x141` | byte 0 bit `0x20` (set after ignition on, toggled by the button) |
 | light switch | `0x335` | byte 4: `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam (`0x04` = fog button) |
 
-More candidates (brake pedal, passenger belt, parking brake, Start/Stop) and what is *not* on this bus (indicators, windows, clutch) are in
-the profile.
+Not on this bus (checked with a marked recording): electric parking brake, indicators, hazards, windows, clutch — they
+are on the comfort CAN. Open candidates are in the profile.
 
 The bus (or the WiCAN, below 13.1 V with its sleep mode on) goes quiet within seconds to a minute without the engine
 running, so record with the engine on. To find more: WiCAN Protocol *SLCAN*, then
