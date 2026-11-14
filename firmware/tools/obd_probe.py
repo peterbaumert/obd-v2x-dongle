@@ -6,8 +6,9 @@ so it cannot code, reset or clear anything.
 
 Setup: WiCAN web UI -> Protocol "ELM327", port type TCP (note the port). Join the WiCAN's Wi-Fi (default AP
 192.168.80.1) or put it on your network. Engine running (the script checks RPM; --no-engine-check for ignition-only).
-ELM327 mode only sees response IDs 7E8..7EF. For Mercedes modules with their own IDs (instrument cluster, EZS, ...)
-set the WiCAN to Protocol "SLCAN" and add --slcan: raw CAN frames, the script does ISO-TP itself.
+ELM327 mode only sees response IDs 7E8..7EF. --slcan (WiCAN Protocol "SLCAN", raw CAN, the script does ISO-TP itself)
+reaches any response ID, but only for known request/response pairs: find-ecus is disabled there, because a tester
+present sweep over raw CAN made a W205 start a Mercedes service call (a module took one frame for a button press).
 
 Step-by-step test order: firmware/README.md, "Testing the car with a WiCAN".
 
@@ -467,6 +468,14 @@ def cmd_mercedes(elm, args):
 
 def cmd_find_ecus(elm, args):
     lo, hi = int(args.lo, 16), int(args.hi, 16)
+    # Tester present to arbitrary IDs is not harmless: on a W205 a SLCAN sweep made a module act on one of the
+    # frames as if it were a normal message (it started a Mercedes service call). So: no sweep over raw CAN,
+    # and never below 400 (normal function messages live there).
+    if isinstance(elm, Slcan):
+        raise ValueError('find-ecus is disabled in SLCAN mode: a sweep over raw CAN triggered a car function. '
+                         'Use dids/raw/watch with known --tx/--rx IDs instead.')
+    if lo < 0x400:
+        raise ValueError('find-ecus refuses request IDs below 400 (normal function messages live there).')
     elm.timeout_ms(args.timeout)
     found = {}
     show(f'Tester present to {lo:03X}..{hi:03X}, any response ID accepted ...')
@@ -483,9 +492,7 @@ def cmd_find_ecus(elm, args):
             print(f'  ... {tx:03X}', file=sys.stderr)
     elm.timeout_ms(200)
     show(f'\n{len(found)} ECU(s) answered.')
-    if isinstance(elm, Elm):
-        show('ELM327 mode only sees response IDs 7E8..7EF (a WiCAN has no wildcard filter). For the instrument '
-             'cluster, EZS etc. set the WiCAN to Protocol SLCAN and repeat with --slcan.')
+    show('ELM327 mode only sees response IDs 7E8..7EF (a WiCAN has no wildcard filter).')
     for tx, rxs in sorted(found.items()):
         for rx in rxs:
             elm.target(tx, rx)
