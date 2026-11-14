@@ -136,8 +136,13 @@ class Elm:
     def target(self, tx, rx=None):
         """Address one ECU (tx = request ID, rx = response ID; None = accept any response ID)."""
         self.at(f'ATSH{tx:03X}')
-        self.at(f'ATCRA{rx:03X}' if rx is not None else 'ATCRA')
-        if tx != 0x7DF:
+        if rx is None or (0x7E8 <= rx <= 0x7EF and (tx == 0x7DF or tx == rx - 8)):
+            # OBD IDs: the adapter's default filter (7E8..7EF) and automatic flow control already fit.
+            # Explicit ATCRA/ATFCSM settings here made a WiCAN miss the engine ECU's answers.
+            self.at('ATCRA')
+            self.at('ATFCSM0')
+        else:
+            self.at(f'ATCRA{rx:03X}')
             self.at(f'ATFCSH{tx:03X}')
             self.at('ATFCSD300000')
             self.at('ATFCSM1')
@@ -373,7 +378,8 @@ def cmd_find_ecus(elm, args):
     elm.timeout_ms(200)
     show(f'\n{len(found)} ECU(s) answered.')
     if found and all(rx in range(0x7E8, 0x7F0) for rxs in found.values() for rx in rxs):
-        show('Only 7E8..7EF answered: the adapter may filter other response IDs. Repeat with SavvyCAN/SLCAN to be sure.')
+        show('Only 7E8..7EF answered: a WiCAN in ELM327 mode only passes 7E8..7EF without a receive filter, so ECUs '
+             'with other response IDs (instrument cluster, EZS, ...) are invisible here.')
     for tx, rxs in sorted(found.items()):
         for rx in rxs:
             elm.target(tx, rx)
