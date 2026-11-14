@@ -173,7 +173,7 @@
       "verified": "set briefly twice when the fog light button was pressed (momentary, not the lamp state)"
     },
     {
-      "name": "tyre_pressure_rear_left",
+      "name": "tyre_pressure_rear_right",
       "id": "0x409",
       "start_byte": 0,
       "length": 1,
@@ -182,43 +182,7 @@
       "invalid": [
         255
       ],
-      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
-    },
-    {
-      "name": "tyre_pressure_rear_right",
-      "id": "0x409",
-      "start_byte": 1,
-      "length": 1,
-      "scale": 2.5,
-      "unit": "kPa",
-      "invalid": [
-        255
-      ],
-      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
-    },
-    {
-      "name": "tyre_pressure_front_right",
-      "id": "0x409",
-      "start_byte": 2,
-      "length": 1,
-      "scale": 2.5,
-      "unit": "kPa",
-      "invalid": [
-        255
-      ],
-      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
-    },
-    {
-      "name": "tyre_pressure_front_left",
-      "id": "0x409",
-      "start_byte": 3,
-      "length": 1,
-      "scale": 2.5,
-      "unit": "kPa",
-      "invalid": [
-        255
-      ],
-      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres at two times (12:55: 230/240/255/260, 13:37: 225/245/255/260; the cluster rounds down to 5). Left/right from the cluster drawing: car seen from its left side, the values under the near (solid) wheels are the left ones"
     },
     {
       "name": "parking_brake",
@@ -242,6 +206,42 @@
       "start_byte": 1,
       "mask": "0x04",
       "verified": "cleared when A/C was switched off, set again when switched on (one recording with notes)"
+    },
+    {
+      "name": "tyre_pressure_rear_left",
+      "id": "0x409",
+      "start_byte": 1,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres at two times (12:55: 230/240/255/260, 13:37: 225/245/255/260; the cluster rounds down to 5). Left/right from the cluster drawing: car seen from its left side, the values under the near (solid) wheels are the left ones"
+    },
+    {
+      "name": "tyre_pressure_front_left",
+      "id": "0x409",
+      "start_byte": 2,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres at two times (12:55: 230/240/255/260, 13:37: 225/245/255/260; the cluster rounds down to 5). Left/right from the cluster drawing: car seen from its left side, the values under the near (solid) wheels are the left ones"
+    },
+    {
+      "name": "tyre_pressure_front_right",
+      "id": "0x409",
+      "start_byte": 3,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres at two times (12:55: 230/240/255/260, 13:37: 225/245/255/260; the cluster rounds down to 5). Left/right from the cluster drawing: car seen from its left side, the values under the near (solid) wheels are the left ones"
     }
   ],
   "candidates": [

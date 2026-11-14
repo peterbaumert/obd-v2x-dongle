@@ -185,7 +185,7 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 | brake pedal | `0x351` | byte 1 bit `0x20` |
 | parking brake | `0x225` | byte 2, mask `0x0F`: `3` applied, `4` released, `1`/`2`/`9` motor running |
 | A/C on | `0x353` | byte 1 bit `0x04` |
-| tyre pressures | `0x409` | bytes 0–3 = rear left, rear right, front right, front left, × 2.5 kPa, `FF` = no data yet (sensors report while driving) |
+| tyre pressures | `0x409` | bytes 0–3 = rear right, rear left, front left, front right, × 2.5 kPa, `FF` = no data yet (sensors report while driving) |
 | ECO Start/Stop | `0x141` | byte 0 bit `0x20` (set after ignition on, toggled by the button) |
 | light switch | `0x335` | byte 4 (mask `0xFB`): `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam; bit `0x04` = fog button |
 
