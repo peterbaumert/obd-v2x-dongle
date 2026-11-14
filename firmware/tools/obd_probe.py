@@ -22,6 +22,8 @@ Step-by-step test order: firmware/README.md, "Testing the car with a WiCAN".
                                   22 xxxx over a DID range on one ECU, keeps everything that is not "out of range"
     watch --tx .. --rx .. (--dids 2001,2002 | --scan scan.json) [--interval 0.5]
                                   polls DIDs and prints only bytes that change: open/close a door, lock, etc.
+    sniff                         LISTEN ONLY (WiCAN Protocol SLCAN, opened silent): records all bus traffic with
+                                  timestamps, sends nothing; Enter (+ optional note) = numbered mark, q + Enter = stop
     diff a.json b.json            byte differences between two scans (scan, change something, scan again)
     raw --tx 7E0 --rx 7E8 22016B  one request (read services only)
 
@@ -29,12 +31,14 @@ Every session is logged raw to firmware/tools/probe-logs/ (git-ignored). VINs ar
 files, but the raw .log keeps the bytes (a VIN is split across CAN frames there): don't share raw logs unedited.
 """
 import argparse
+import atexit
 import datetime
 import json
 import pathlib
 import re
 import socket
 import sys
+import threading
 import time
 
 LOG_DIR = pathlib.Path(__file__).resolve().parent / 'probe-logs'
@@ -82,10 +86,22 @@ class Log:
         stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
         self.path = LOG_DIR / f'{stamp}-{name}.log'
         self.f = self.path.open('w', encoding='utf-8')
+        self.t0 = self.last_flush = time.time()
+        self.lock = threading.Lock()
+        atexit.register(self.close)
 
     def write(self, line):
-        self.f.write(mask_vin(line) + '\n')
-        self.f.flush()
+        """Line with seconds since start; flushed at most twice a second (sniff logs many frames)."""
+        with self.lock:
+            now = time.time()
+            self.f.write(f'{now - self.t0:9.3f} {mask_vin(line)}\n')
+            if now - self.last_flush > 0.5:
+                self.f.flush()
+                self.last_flush = now
+
+    def close(self):
+        with self.lock:
+            self.f.flush()
 
 
 class Elm:
@@ -173,8 +189,9 @@ class Slcan:
         self.tx, self.rx = 0x7DF, None
         self.timeout = 0.2
 
-    def _send(self, text):
-        self.log.write(f'> {text}')
+    def _send(self, text, log=True):
+        if log:
+            self.log.write(f'> {text}')
         self.sock.sendall(text.encode() + b'\r')  # one command per write: WiCAN parses per packet
 
     def _frames(self, until):
@@ -209,7 +226,8 @@ class Slcan:
 
     def _send_frame(self, cid, data):
         data = data + b'\xAA' * (8 - len(data))
-        self._send(f't{cid:03X}8{data.hex().upper()}')
+        self.log.write(f'> {cid:03X} {data.hex(" ").upper()}')  # spaced, so the VIN mask can't hide it
+        self._send(f't{cid:03X}8{data.hex().upper()}', log=False)
 
     def init(self):
         for c in ('C', 'S6', 'O'):  # close, 500 kbit/s, open (normal mode, frames are acknowledged)
@@ -615,6 +633,59 @@ def cmd_raw(elm, args):
         show('no answer')
 
 
+# --------------------------------------------------------------------------- sniff (listen only)
+
+def cmd_sniff(args):
+    """Record all bus traffic with the WiCAN in SLCAN listen-only mode: nothing is sent to the car, frames are not
+    even acknowledged. Enter (optionally with a note) writes a numbered MARK into the log."""
+    log = Log('sniff')
+    print(f'log: {log.path}', file=sys.stderr)
+    try:
+        bus = Slcan(args.host, args.port, log)
+    except OSError as e:
+        sys.exit(f'Cannot reach {args.host}:{args.port} ({e}). WiCAN in SLCAN mode (TCP) and on this Wi-Fi?')
+    for c in ('C', 'S6', 'L'):  # close, 500 kbit/s, open LISTEN-ONLY (silent: no ACK, no transmit)
+        bus._send(c)
+        time.sleep(0.2)
+    marks, stop = [0], threading.Event()
+
+    def read_marks():
+        while True:
+            try:
+                note = input()
+            except (EOFError, OSError):
+                return
+            if note.strip().lower() == 'q':
+                stop.set()
+                return
+            marks[0] += 1
+            log.write(f'MARK {marks[0]} {note.strip()}')
+            print(f'  MARK {marks[0]} {note.strip()}', flush=True)
+
+    threading.Thread(target=read_marks, daemon=True).start()
+    show('Listening only (nothing is sent). Press Enter at each action, optionally type a note first '
+         '(e.g. "driver door open"). q + Enter (or Ctrl+C) to stop.')
+    count, ids, last = 0, set(), time.time()
+    try:
+        while not stop.is_set():
+            f = bus._frames(time.time() + 1.0)  # logs every frame with its time
+            if f:
+                count += 1
+                ids.add(f[0])
+            if time.time() - last > 10:
+                print(f'  {count} frames, {len(ids)} IDs, {marks[0]} marks', file=sys.stderr, flush=True)
+                last = time.time()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        try:
+            bus._send('C')
+        except OSError:
+            pass
+        log.close()
+    show(f'\n{count} frames from {len(ids)} IDs, {marks[0]} marks. Log: {log.path}')
+
+
 # --------------------------------------------------------------------------- main
 
 def main():
@@ -646,6 +717,7 @@ def main():
     p.add_argument('--scan', help='watch every DID that answered in this dids scan file')
     p.add_argument('--extended', action='store_true')
     p.add_argument('--interval', type=float, default=0.3)
+    sub.add_parser('sniff', help='listen only (WiCAN Protocol SLCAN): record all bus traffic, Enter = mark')
     p = sub.add_parser('diff')
     p.add_argument('a')
     p.add_argument('b')
@@ -657,6 +729,8 @@ def main():
 
     if args.cmd == 'diff':
         return cmd_diff(None, args)
+    if args.cmd == 'sniff':
+        return cmd_sniff(args)  # always SLCAN listen-only, no engine check (that would send a request)
     if args.cmd == 'watch' and not args.scan and not (args.tx and args.rx and args.dids):
         ap.error('watch needs --scan FILE or --tx, --rx and --dids')
 

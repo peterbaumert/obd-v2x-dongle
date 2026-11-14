@@ -162,6 +162,13 @@ Join the WiCAN's Wi-Fi (`192.168.80.1`, else `--host`), start the engine.
    each changed byte is printed with time and changed bits.
    `python firmware/tools/obd_probe.py watch --scan scan.json`
 
+**Passive recording (preferred on the W205):** the OBD port there carries a live vehicle bus (100+ broadcast IDs), so
+many values are readable without sending anything. Confirmed on a 2015 W205 (diesel): odometer `0x309` bytes 0–2
+little-endian × 0.1 km, range `0x147` bytes 4–5 little-endian km, fuel level `0x2B9` byte 3 % (to be confirmed after a
+fill-up). To find more (doors, locks, boot): WiCAN Protocol *SLCAN*, then
+`python firmware/tools/obd_probe.py sniff` — the WiCAN is opened listen-only (no ACK, no transmit), every frame is
+logged with its time; press Enter at each action (type a note first, e.g. `driver door open`), `q` + Enter to stop.
+
 Also: `diff a.json b.json` (byte differences between two scans: scan, change something, scan again) and
 `raw --tx 7E0 --rx 7E8 22016B` (one request). Body modules are asleep when the car is parked, so such values are
 only available with the ignition on.
