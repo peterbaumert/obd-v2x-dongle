@@ -179,11 +179,10 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 | boot open | `0x33F` | byte 1 bit 0 (`0x02` closed, `0x03` open) |
 | locked | `0x2FB` | bytes 0–1: `55 19` locked, `AA 0A` unlocked |
 | battery voltage | `0x122` | byte 0, × 0.1 V |
-| reverse gear | `0x020` | byte 4 bit `0x02` |
-| parking brake | `0x353` | byte 7: `33` applied, `44` released |
+| driver seatbelt | `0x020` | byte 4 bit `0x02` = buckled |
 | light switch | `0x335` | byte 4: `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam (`0x04` = fog button) |
 
-More candidates (brake pedal, seatbelt, Start/Stop) and what is *not* on this bus (indicators, windows, clutch) are in
+More candidates (brake pedal, passenger belt, parking brake, Start/Stop) and what is *not* on this bus (indicators, windows, clutch) are in
 the profile.
 
 The bus (or the WiCAN, below 13.1 V with its sleep mode on) goes quiet within seconds to a minute without the engine
