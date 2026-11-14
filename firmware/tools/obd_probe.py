@@ -388,7 +388,8 @@ def cmd_standard(elm, args):
     for cid in sorted(support):
         pids = sorted(p for p in support[cid] if p % 0x20)
         show(f'\nECU {cid:03X} supports: ' + ' '.join(f'{p:02X}' for p in pids))
-        elm.target(cid - 8, cid)
+        # stay on the functional address 7DF and pick this ECU's answer: the W205 engine ECU answers mode 01
+        # only there, not physically on 7E0
         for pid in pids:
             res = final(elm.request(bytes([0x01, pid]))[0]).get(cid)
             name, fn = PID01.get(pid, (f'PID {pid:02X}', None))
