@@ -163,9 +163,18 @@ Join the WiCAN's Wi-Fi (`192.168.80.1`, else `--host`), start the engine.
    `python firmware/tools/obd_probe.py watch --scan scan.json`
 
 **Passive recording (preferred on the W205):** the OBD port there carries a live vehicle bus (100+ broadcast IDs), so
-many values are readable without sending anything. Confirmed on a 2015 W205 (diesel): odometer `0x309` bytes 0–2
-little-endian × 0.1 km, range `0x147` bytes 4–5 little-endian km, fuel level `0x2B9` byte 3 % (to be confirmed after a
-fill-up). To find more (doors, locks, boot): WiCAN Protocol *SLCAN*, then
+many values are readable without sending anything. Found on a 2015 W205 (diesel), each checked against the
+Mercedes app at two different times:
+
+| Value | CAN ID | Field |
+|---|---|---|
+| odometer | `0x309` | bytes 0–2, little-endian, × 0.1 km |
+| range | `0x147` | bytes 4–5, little-endian, km (2047 = invalid) |
+| fuel level | `0x21D` | byte 3, % (68 / 66 matched the app; confirm after a fill-up) |
+| doors open | `0x33F` | byte 0 bits: `0x10` driver, `0x20` front passenger, `0x40` rear left (`0x80` rear right expected), `0x01` interior light |
+
+The bus (or the WiCAN, below 13.1 V with its sleep mode on) goes quiet within seconds to a minute without the engine
+running, so record with the engine on. To find more (rear right, boot, locks): WiCAN Protocol *SLCAN*, then
 `python firmware/tools/obd_probe.py sniff` — the WiCAN is opened listen-only (no ACK, no transmit), every frame is
 logged with its time; press Enter at each action (type a note first, e.g. `driver door open`), `q` + Enter to stop.
 
