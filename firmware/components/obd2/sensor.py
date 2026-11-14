@@ -25,6 +25,10 @@ SIGNAL_DEFAULTS = {
     "outside_temperature": dict(unit_of_measurement=UNIT_CELSIUS, device_class=DEVICE_CLASS_TEMPERATURE,
                                 accuracy_decimals=1),
     "battery_voltage": dict(unit_of_measurement=UNIT_VOLT, device_class=DEVICE_CLASS_VOLTAGE, accuracy_decimals=1),
+} | {
+    f"tyre_pressure_{pos}": dict(unit_of_measurement="kPa", device_class="pressure", icon="mdi:car-tire-alert",
+                                 accuracy_decimals=1)
+    for pos in ("front_left", "front_right", "rear_left", "rear_right")
 }
 
 

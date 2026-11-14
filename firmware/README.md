@@ -110,8 +110,8 @@ the bootloader goes back to the previous one. USB-C stays the fallback.
 Car battery, car battery low, unplugged, engine running, power mode · speed, engine RPM, coolant / intake / ambient temperature,
 engine load, fuel level (OBD), ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/s), VIN, fault codes, fault code count,
 "Clear fault codes" button · vehicle profile select and the profile's broadcast values: odometer, range, fuel level,
-outside temperature, vehicle voltage, four doors, boot, locked, driver seatbelt, brake pedal, reverse gear,
-ECO start/stop, light switch · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
+outside temperature, vehicle voltage, four tyre pressures, four doors, boot, locked, driver seatbelt, brake pedal,
+parking brake, A/C, ECO start/stop, light switch · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
 V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch · uptime.
 
@@ -183,12 +183,15 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 | battery voltage | `0x122` | byte 0, × 0.1 V |
 | driver seatbelt | `0x020` | byte 4 bit `0x02` = buckled |
 | brake pedal | `0x351` | byte 1 bit `0x20` |
-| reverse gear | `0x2CF` | byte 5 bit `0x01` |
+| parking brake | `0x225` | byte 2, mask `0x0F`: `3` applied, `4` released, `1`/`2`/`9` motor running |
+| A/C on | `0x353` | byte 1 bit `0x04` |
+| tyre pressures | `0x409` | bytes 0–3 = rear left, rear right, front right, front left, × 2.5 kPa, `FF` = no data yet (sensors report while driving) |
 | ECO Start/Stop | `0x141` | byte 0 bit `0x20` (set after ignition on, toggled by the button) |
 | light switch | `0x335` | byte 4 (mask `0xFB`): `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam; bit `0x04` = fog button |
 
-Not on this bus (checked with a marked recording): electric parking brake, indicators, hazards, windows, clutch — they
-are on the comfort CAN. Open candidates (passenger seat/belt, `0x353`, …) are in the profile.
+Not on this bus (checked with marked recordings): indicators, hazards, windows, clutch, passenger belt, climate
+SYNC/AUTO, cluster messages — they are on the comfort CAN. Open candidates (reverse, `0x353` byte 7, …) are in the
+profile.
 
 **In the firmware:** every profile in `vehicles/` is compiled in; the *Vehicle profile* select in Home Assistant
 picks the active one (stored in flash, "None" = OBD requests only). The `obd2` component decodes those frames

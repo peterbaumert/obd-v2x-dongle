@@ -8,7 +8,7 @@ from .profiles import KIND_ENUM, signal_index, signals_validator
 CONF_VIN = "vin"
 CONF_FAULT_CODES = "fault_codes"
 CONF_SIGNALS = "signals"
-SIGNAL_ICONS = {"light_switch": "mdi:car-light-dimmed", "locked": "mdi:car-key", "passenger_seatbelt": "mdi:seatbelt"}
+SIGNAL_ICONS = {"light_switch": "mdi:car-light-dimmed", "locked": "mdi:car-key", "parking_brake": "mdi:car-brake-parking"}
 
 
 def _signal_schema(name, sig):

@@ -20,6 +20,8 @@ SIGNAL_DEFAULTS = {
     "reverse_gear": dict(icon="mdi:car-shift-pattern"),
     "eco_start_stop": dict(icon="mdi:engine-off-outline"),
     "fog_light_button": dict(icon="mdi:car-light-fog"),
+    "parking_brake": dict(icon="mdi:car-brake-parking"),
+    "ac_on": dict(icon="mdi:air-conditioner"),
 }
 
 

@@ -121,8 +121,10 @@ binary_sensor:
         name: "Driver seatbelt"
       brake_pedal:
         name: "Brake pedal"
-      reverse_gear:
-        name: "Reverse gear"
+      parking_brake:
+        name: "Parking brake"
+      ac_on:
+        name: "A/C"
       eco_start_stop:
         name: "ECO start/stop"
         entity_category: diagnostic
@@ -649,6 +651,14 @@ sensor:
         name: "Outside temperature"
       battery_voltage:
         name: "Vehicle voltage"
+      tyre_pressure_front_left:   # unknown until the tyre sensors report (they wake while driving)
+        name: "Tyre pressure front left"
+      tyre_pressure_front_right:
+        name: "Tyre pressure front right"
+      tyre_pressure_rear_left:
+        name: "Tyre pressure rear left"
+      tyre_pressure_rear_right:
+        name: "Tyre pressure rear right"
   - platform: modem
     rssi:
       name: "LTE signal"

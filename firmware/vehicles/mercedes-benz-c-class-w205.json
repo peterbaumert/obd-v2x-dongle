@@ -118,7 +118,7 @@
         "0xAA0A": "unlocked"
       },
       "on": "locked",
-      "verified": "listen-only recording, locked and unlocked with the key once"
+      "verified": "listen-only recording, locked and unlocked with the key once; also seen: unlock button inside the car, and auto-lock when driving off"
     },
     {
       "name": "battery_voltage",
@@ -142,13 +142,6 @@
       "start_byte": 1,
       "mask": "0x20",
       "verified": "listen-only recording, pressed and released once (order confirmed); 0x087 bytes 2-5 ramp like brake pressure at the same time"
-    },
-    {
-      "name": "reverse_gear",
-      "id": "0x2CF",
-      "start_byte": 5,
-      "mask": "0x01",
-      "verified": "listen-only recording, reverse engaged once with the clutch held (manual gearbox, order confirmed)"
     },
     {
       "name": "eco_start_stop",
@@ -178,6 +171,77 @@
       "start_byte": 4,
       "mask": "0x04",
       "verified": "set briefly twice when the fog light button was pressed (momentary, not the lamp state)"
+    },
+    {
+      "name": "tyre_pressure_rear_left",
+      "id": "0x409",
+      "start_byte": 0,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
+    },
+    {
+      "name": "tyre_pressure_rear_right",
+      "id": "0x409",
+      "start_byte": 1,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
+    },
+    {
+      "name": "tyre_pressure_front_right",
+      "id": "0x409",
+      "start_byte": 2,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
+    },
+    {
+      "name": "tyre_pressure_front_left",
+      "id": "0x409",
+      "start_byte": 3,
+      "length": 1,
+      "scale": 2.5,
+      "unit": "kPa",
+      "invalid": [
+        255
+      ],
+      "verified": "0xFF until the sensor has reported (they wake while driving); bytes filled in one by one during a drive. x2.5 kPa matched the cluster for all four tyres (260/257.5/230/242.5 vs 260/255/230/240, cluster rounds to 5). Wheel positions assume the cluster shows front-left, front-right, rear-left, rear-right"
+    },
+    {
+      "name": "parking_brake",
+      "id": "0x225",
+      "start_byte": 2,
+      "length": 1,
+      "mask": "0x0F",
+      "values": {
+        "0x03": "applied",
+        "0x04": "released",
+        "0x09": "applying",
+        "0x01": "applying",
+        "0x02": "releasing"
+      },
+      "on": "applied",
+      "verified": "two recordings with notes: 0x24 -> 0x29/0x21 (motor) -> 0x23 applied, 0x32/0x22 -> 0x24 released; stayed released while driving. High nibble varies (0x3x briefly at start, 0x4x twice while driving), hence mask 0x0F"
+    },
+    {
+      "name": "ac_on",
+      "id": "0x353",
+      "start_byte": 1,
+      "mask": "0x04",
+      "verified": "cleared when A/C was switched off, set again when switched on (one recording with notes)"
     }
   ],
   "candidates": [
@@ -189,32 +253,32 @@
       "status": "unconfirmed"
     },
     {
-      "name": "passenger_seat",
-      "id": "0x225",
-      "start_byte": 2,
-      "guess": "NOT the passenger belt: wanders through 0x21..0x32 while reaching over to the passenger side (probably the seat occupancy / weight sensor); 0x353 byte 7 changed in the same seconds",
-      "status": "unconfirmed"
+      "name": "passenger_seatbelt",
+      "status": "not found: the earlier 0x225 guess was the parking brake"
+    },
+    {
+      "name": "reverse_gear",
+      "id": "0x2CF",
+      "start_byte": 5,
+      "mask": "0x01",
+      "guess": "set when reverse was engaged, but on a drive it went 0x01 -> 0x03 and stayed set while driving forward",
+      "status": "not reverse alone; unknown"
     },
     {
       "id": "0x353",
       "start_byte": 7,
-      "guess": "0x33 / 0x44, changed at times that match no action (not the parking brake)",
+      "guess": "byte 7 0x33 / 0x44: went to 0x44 for ~5 s right at an unlock and for ~27 s once without any action; byte 1 bit 0x04 is the A/C (signal ac_on)",
       "status": "unknown"
     },
     {
       "name": "not_on_this_bus",
-      "guess": "electric parking brake, turn signals, hazard lights, power windows and the clutch pedal did not show up; they live on the comfort/body CAN",
+      "guess": "electric parking brake switch itself, turn signals, hazard lights, power windows, clutch pedal, climate SYNC / AUTO buttons and cluster messages (washer fluid) did not show up; they live on the comfort/body CAN",
       "status": "checked with a marked recording, absent"
     },
     {
       "id": "0x15A",
       "guess": "door state again, 2-bit fields in two multiplexed frames; 0x33F is simpler",
       "status": "seen, not decoded"
-    },
-    {
-      "name": "tpms",
-      "guess": "tyre pressures (cluster showed 240/230/260/255 kPa) are NOT in the stationary logs - the TPMS sensors sleep when parked and only refresh while driving",
-      "status": "needs a sniff while driving above ~25 km/h"
     },
     {
       "name": "service_interval",
