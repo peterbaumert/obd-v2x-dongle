@@ -304,24 +304,25 @@ def main():
     if a.render:
         import render
         render.render(bottom, lid, plug_model(), OUT, board=import_step(str(BUILD / 'board.step')))
+    print_layout(bottom, lid, 'case_print.stl')
     if a.fit_test:
-        fit_test(bottom, lid)
+        # front end only (plug ribs, screw holes, front ledges) for a quick test print
+        cut = box(X_OUT0 - 1, X_OUT1 + 1, BYF - 12.0, FRONT_OUT + 1, Z_OUT_BOT - 1, Z_OUT_TOP + 1)
+        print_layout(bottom & cut, lid & cut, 'fit_test_plug_end.stl')
 
 
-def fit_test(bottom, lid, behind_edge=12.0):
-    """front end of both shells (plug ribs, screw holes, front ledges) in print orientation:
-    bottom shell on its floor, lid upside down, side by side"""
-    cut = box(X_OUT0 - 1, X_OUT1 + 1, BYF - behind_edge, FRONT_OUT + 1, Z_OUT_BOT - 1, Z_OUT_TOP + 1)
+def print_layout(bottom, lid, name):
+    """both shells in print orientation (bottom shell on its floor, lid upside down), side by side, one STL"""
     pieces = []
-    for k, s in enumerate((bottom & cut, (lid & cut).rotate(Axis.X, 180))):
+    for k, s in enumerate((bottom, lid.rotate(Axis.X, 180))):
         bb = s.bounding_box()
         cx = (k - 0.5) * (bb.size.X + 10)
         pieces.append(s.translate((cx - (bb.min.X + bb.max.X) / 2, -(bb.min.Y + bb.max.Y) / 2, -bb.min.Z)))
     test = Compound(pieces)
-    path = OUT / 'fit_test_plug_end.stl'
+    path = OUT / name
     export_stl(test, str(path), tolerance=0.02, angular_tolerance=0.2)
     bb = test.bounding_box()
-    print(f'fit test: {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm, {test.volume / 1000:.1f} cm3 -> {path.name}')
+    print(f'{name}: {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm, {test.volume / 1000:.1f} cm3 -> {path.name}')
 
 
 if __name__ == '__main__':
