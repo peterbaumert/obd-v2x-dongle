@@ -53,4 +53,5 @@ the real plug and on your cell:
 | `FLANGE`, `GROOVE_W`, `GROOVE_D` | 1.5 / 2.5 / 1.0 mm | rear flange thickness, groove width and depth |
 | `CELL_*` | 38 × 26 × 4.5 mm | the cell you buy |
 
-A test print of just the front part (plug + ribs) is worth doing before the full case.
+Test-print just the plug end first: `python mechanical/case.py --fit-test` writes `out/fit_test_plug_end.stl`
+(front 12 mm of both shells behind the board edge, in print orientation, ~15 cm³).
