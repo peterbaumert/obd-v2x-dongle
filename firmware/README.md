@@ -173,6 +173,7 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 |---|---|---|
 | odometer | `0x309` | bytes 0–2, little-endian, × 0.1 km |
 | range | `0x147` | bytes 4–5, little-endian, km (2047 = invalid) |
+| outside temp | `0x309` | byte 3, raw × 0.5 − 40 °C (same message as the odometer) |
 | fuel level | `0x21D` | byte 3, % (68 / 66 matched the app; confirm after a fill-up) |
 | doors open | `0x33F` | byte 0 bits: `0x10` driver, `0x20` front passenger, `0x40` rear left, `0x80` rear right, `0x01` interior light |
 | boot open | `0x33F` | byte 1 bit 0 (`0x02` closed, `0x03` open) |

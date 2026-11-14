@@ -18,8 +18,8 @@ Never put a VIN, number plate, owner data or exact readings of a specific car in
 
 A signal is one of:
 
-- **number**: `id`, `start_byte`, `length` (bytes), `byte_order` (`little`/`big`, default `big`), `scale` (value =
-  raw × scale), `unit`, optional `invalid` (raw values meaning "not available")
+- **number**: `id`, `start_byte`, `length` (bytes), `byte_order` (`little`/`big`, default `big`), `scale` and
+  optional `offset` (value = raw × scale + offset), `unit`, optional `invalid` (raw values meaning "not available")
 - **flag**: `id`, `start_byte`, `mask` — true when `byte & mask` is non-zero
 - **enum**: `id`, `start_byte`, `length`, `byte_order`, `values` (raw value → state)
 

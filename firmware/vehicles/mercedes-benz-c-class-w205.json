@@ -37,6 +37,16 @@
       "verified": "matched the instrument cluster and the Mercedes app at two different readings; falls by 1 km every few minutes while idling"
     },
     {
+      "name": "outside_temperature",
+      "id": "0x309",
+      "start_byte": 3,
+      "length": 1,
+      "scale": 0.5,
+      "offset": -40,
+      "unit": "celsius",
+      "verified": "0x5E = 7.0 C, matched the cluster; stable across two recordings. Same message as the odometer."
+    },
+    {
       "name": "fuel_level",
       "id": "0x21D",
       "start_byte": 3,
@@ -109,8 +119,14 @@
       "id": "0x15A",
       "guess": "door state again, 2-bit fields in two multiplexed frames; 0x33F is simpler",
       "status": "seen, not decoded"
+    },
+    {
+      "name": "tpms",
+      "guess": "tyre pressures (cluster showed 240/230/260/255 kPa) are NOT in the stationary logs - the TPMS sensors sleep when parked and only refresh while driving",
+      "status": "needs a sniff while driving above ~25 km/h"
     }
   ],
+  "number_formula": "value = raw * scale + offset (offset defaults to 0)",
   "obd": {
     "functional_only": true,
     "notes": "The engine ECU answers mode 01 only on the functional address 0x7DF, not physically on 0x7E0 (UDS service 22 on 0x7E0 works).",
