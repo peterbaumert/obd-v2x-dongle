@@ -148,8 +148,10 @@ Join the WiCAN's Wi-Fi (`192.168.80.1`, else `--host`), start the engine.
    Compare the odometer with the instrument cluster.
    `python firmware/tools/obd_probe.py mercedes`
 3. ECU discovery behind the gateway: tester present (3E 00) to every 11-bit ID, takes a few minutes.
-   `python firmware/tools/obd_probe.py find-ecus`
-   If only 7E8–7EF answer, the WiCAN is probably filtering response IDs; repeat the discovery over SLCAN/SavvyCAN.
+   In ELM327 mode a WiCAN only passes response IDs 7E8–7EF (no wildcard filter), so Mercedes modules with their
+   own IDs (instrument cluster, EZS, …) stay invisible. Set the WiCAN to Protocol *SLCAN* (TCP, same port) and add
+   `--slcan`: the script then gets raw CAN frames and does ISO-TP itself. `--slcan` works with every command.
+   `python firmware/tools/obd_probe.py --slcan find-ecus --from 100`
 4. DID scan of one ECU found in step 3 (request ID `XXX`, response ID `YYY`). Try other ranges if little answers
    (e.g. `--from 0100 --to 01FF`, `--from 1000 --to 10FF`, `--from 2000 --to 20FF`), add `--extended` for the
    extended session.

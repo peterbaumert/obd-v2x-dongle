@@ -6,6 +6,8 @@ so it cannot code, reset or clear anything.
 
 Setup: WiCAN web UI -> Protocol "ELM327", port type TCP (note the port). Join the WiCAN's Wi-Fi (default AP
 192.168.80.1) or put it on your network. Engine running (the script checks RPM; --no-engine-check for ignition-only).
+ELM327 mode only sees response IDs 7E8..7EF. For Mercedes modules with their own IDs (instrument cluster, EZS, ...)
+set the WiCAN to Protocol "SLCAN" and add --slcan: raw CAN frames, the script does ISO-TP itself.
 
 Step-by-step test order: firmware/README.md, "Testing the car with a WiCAN".
 
@@ -130,6 +132,9 @@ class Elm:
             self.cmd(c)
         self.timeout_ms(200)
 
+    def describe(self):
+        return ' '.join(self.cmd('ATI')) + ', battery ' + ' '.join(self.cmd('ATRV'))
+
     def timeout_ms(self, ms):
         self.at(f'ATST{max(1, min(255, ms // 4)):02X}')
 
@@ -152,6 +157,107 @@ class Elm:
         if not is_read_only(req):
             raise ValueError(f'refusing non-read service: {req.hex(" ").upper()}')
         lines = self.cmd(req.hex().upper(), timeout)
+        msgs = {cid: [mask_payload(m) for m in ms] for cid, ms in parse_frames(lines).items()}
+        return msgs, lines
+
+
+class Slcan:
+    """Same interface as Elm, but over SLCAN (WiCAN protocol "SLCAN"): raw CAN frames, no adapter filter, so ECUs
+    with any response ID are visible. ISO-TP (single/first/consecutive frames, flow control) is done here."""
+
+    def __init__(self, host, port, log):
+        self.log = log
+        self.sock = socket.create_connection((host, port), timeout=5)
+        self.buf = b''
+        self.tx, self.rx = 0x7DF, None
+        self.timeout = 0.2
+
+    def _send(self, text):
+        self.log.write(f'> {text}')
+        self.sock.sendall(text.encode() + b'\r')  # one command per write: WiCAN parses per packet
+
+    def _frames(self, until):
+        """Received standard frames (id, data) until the deadline (or until one arrives)."""
+        while True:
+            while b'\r' in self.buf:
+                line, _, self.buf = self.buf.partition(b'\r')
+                line = line.decode(errors='replace').strip()
+                if len(line) >= 5 and line[0] == 't':
+                    try:
+                        cid, dlc = int(line[1:4], 16), int(line[4], 16)
+                        data = bytes.fromhex(line[5:5 + 2 * dlc])
+                    except ValueError:
+                        continue
+                    self.log.write(f'< {cid:03X} {data.hex(" ").upper()}')
+                    return cid, data
+            left = until - time.time()
+            if left <= 0:
+                return None
+            self.sock.settimeout(left)
+            try:
+                chunk = self.sock.recv(4096)
+            except socket.timeout:
+                return None
+            if not chunk:
+                raise ConnectionError('adapter closed the connection')
+            self.buf += chunk
+
+    def _drain(self):
+        while self._frames(time.time() + 0.02):
+            pass
+
+    def _send_frame(self, cid, data):
+        data = data + b'\xAA' * (8 - len(data))
+        self._send(f't{cid:03X}8{data.hex().upper()}')
+
+    def init(self):
+        for c in ('C', 'S6', 'O'):  # close, 500 kbit/s, open (normal mode, frames are acknowledged)
+            self._send(c)
+            time.sleep(0.2)
+        self._drain()
+
+    def describe(self):
+        return 'SLCAN (raw CAN, 500 kbit/s)'
+
+    def timeout_ms(self, ms):
+        self.timeout = ms / 1000
+
+    def target(self, tx, rx=None):
+        self.tx, self.rx = tx, rx
+
+    def request(self, req, timeout=3.0):
+        if not is_read_only(req):
+            raise ValueError(f'refusing non-read service: {req.hex(" ").upper()}')
+        if len(req) > 7:
+            raise ValueError('requests longer than 7 bytes are not supported')
+        self._drain()
+        self._send_frame(self.tx, bytes([len(req)]) + req)
+        start = time.time()
+        end, hard_end = start + self.timeout, start + max(timeout, 5.0)
+        lines, multi, ok = [], set(), (req[0] + 0x40, 0x7F)
+        while True:
+            f = self._frames(min(end, hard_end))
+            if f is None:
+                break
+            cid, data = f
+            if cid == self.tx or (self.rx is not None and cid != self.rx) or len(data) < 2:
+                continue
+            # only frames that can be an answer to this request (the bus may carry other traffic)
+            pci = data[0] >> 4
+            if pci == 0:
+                if not (1 <= (data[0] & 0x0F) <= 7 and data[1] in ok):
+                    continue
+            elif pci == 1:
+                if len(data) < 3 or data[2] not in ok:
+                    continue
+                multi.add(cid)
+            elif not (pci == 2 and cid in multi):
+                continue
+            lines.append(f'{cid:03X} ' + data.hex(' ').upper())
+            if pci == 1:
+                self._send_frame(self.tx, b'\x30\x00\x00')  # flow control: send everything, no gap
+            pending = pci == 0 and len(data) >= 4 and data[1] == 0x7F and data[3] == 0x78
+            end = time.time() + (5.0 if pending else self.timeout)
         msgs = {cid: [mask_payload(m) for m in ms] for cid, ms in parse_frames(lines).items()}
         return msgs, lines
 
@@ -366,8 +472,7 @@ def cmd_find_ecus(elm, args):
     for tx in range(lo, hi + 1):
         if tx == 0x7DF:
             continue
-        elm.at(f'ATSH{tx:03X}')
-        elm.at('ATCRA')
+        elm.target(tx)
         msgs = final(elm.request(bytes([0x3E, 0x00]), timeout=1.0)[0])
         for rx, p in msgs.items():
             if p[:1] == b'\x7E' or p[:2] == b'\x7F\x3E':
@@ -377,9 +482,9 @@ def cmd_find_ecus(elm, args):
             print(f'  ... {tx:03X}', file=sys.stderr)
     elm.timeout_ms(200)
     show(f'\n{len(found)} ECU(s) answered.')
-    if found and all(rx in range(0x7E8, 0x7F0) for rxs in found.values() for rx in rxs):
-        show('Only 7E8..7EF answered: a WiCAN in ELM327 mode only passes 7E8..7EF without a receive filter, so ECUs '
-             'with other response IDs (instrument cluster, EZS, ...) are invisible here.')
+    if isinstance(elm, Elm):
+        show('ELM327 mode only sees response IDs 7E8..7EF (a WiCAN has no wildcard filter). For the instrument '
+             'cluster, EZS etc. set the WiCAN to Protocol SLCAN and repeat with --slcan.')
     for tx, rxs in sorted(found.items()):
         for rx in rxs:
             elm.target(tx, rx)
@@ -509,6 +614,8 @@ def main():
     ap.add_argument('--host', default='192.168.80.1')
     ap.add_argument('--port', type=int, default=3333)
     ap.add_argument('--no-engine-check', action='store_true', help='allow running with the engine off')
+    ap.add_argument('--slcan', action='store_true',
+                    help='talk SLCAN (WiCAN Protocol "SLCAN") instead of ELM327: sees every response ID')
     sub = ap.add_subparsers(dest='cmd', required=True)
     sub.add_parser('standard')
     sub.add_parser('mercedes')
@@ -547,12 +654,13 @@ def main():
 
     log = Log(args.cmd)
     print(f'log: {log.path}', file=sys.stderr)
+    mode = 'SLCAN' if args.slcan else 'ELM327'
     try:
-        elm = Elm(args.host, args.port, log)
+        elm = (Slcan if args.slcan else Elm)(args.host, args.port, log)
     except OSError as e:
-        sys.exit(f'Cannot reach {args.host}:{args.port} ({e}). WiCAN in ELM327/TCP mode and on this Wi-Fi?')
+        sys.exit(f'Cannot reach {args.host}:{args.port} ({e}). WiCAN in {mode} mode (TCP) and on this Wi-Fi?')
     elm.init()
-    show('Adapter: ' + ' '.join(elm.cmd('ATI')) + ', battery ' + ' '.join(elm.cmd('ATRV')))
+    show('Adapter: ' + elm.describe())
     engine_check(elm, args)
     try:
         {'standard': cmd_standard, 'mercedes': cmd_mercedes, 'find-ecus': cmd_find_ecus, 'dids': cmd_dids,
