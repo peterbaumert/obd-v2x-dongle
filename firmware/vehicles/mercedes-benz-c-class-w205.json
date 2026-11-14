@@ -4,12 +4,17 @@
     "make": "Mercedes-Benz",
     "model": "C-Class",
     "generation": "W205",
-    "model_years": [2015],
+    "model_years": [
+      2015
+    ],
     "variant": "C 220 BlueTEC (diesel), EU",
     "notes": "Measured on one car with a WiCAN and firmware/tools/obd_probe.py. Other W205 variants / years likely share the broadcast signals but are unverified."
   },
   "bus": {
-    "obd_pins": [6, 14],
+    "obd_pins": [
+      6,
+      14
+    ],
     "bitrate": 500000,
     "id_bits": 11,
     "notes": "The OBD port carries a LIVE vehicle bus (100+ broadcast IDs), not an isolated diagnostic bus. Everything below under 'signals' is read by listening only. The bus goes quiet a few seconds (ignition position 1) to about a minute (position 2) after the engine stops; with the engine running it stays awake."
@@ -33,7 +38,9 @@
       "byte_order": "little",
       "scale": 1,
       "unit": "km",
-      "invalid": [2047],
+      "invalid": [
+        2047
+      ],
       "verified": "matched the instrument cluster and the Mercedes app at two different readings; falls by 1 km every few minutes while idling"
     },
     {
@@ -53,7 +60,10 @@
       "length": 1,
       "scale": 1,
       "unit": "%",
-      "verified": "matched the Mercedes app at 68 % and 66 %; still to check after a fill-up (should read about 100)"
+      "invalid": [
+        127
+      ],
+      "verified": "matched the Mercedes app at 68 % and 66 %; 0x7F (127) right after the engine stops = not available; reads ~2 % higher with the engine running than with ignition only; still to check after a fill-up (should read about 100)"
     },
     {
       "name": "door_driver_open",
@@ -103,7 +113,11 @@
       "start_byte": 0,
       "length": 2,
       "byte_order": "big",
-      "values": {"0x5519": "locked", "0xAA0A": "unlocked"},
+      "values": {
+        "0x5519": "locked",
+        "0xAA0A": "unlocked"
+      },
+      "on": "locked",
       "verified": "listen-only recording, locked and unlocked with the key once"
     },
     {
@@ -121,14 +135,6 @@
       "start_byte": 4,
       "mask": "0x02",
       "verified": "listen-only recording, driver's belt buckled and unbuckled once (order confirmed by the person recording)"
-    },
-    {
-      "name": "passenger_seatbelt",
-      "id": "0x225",
-      "start_byte": 2,
-      "length": 1,
-      "values": {"0x23": "unbuckled", "0x24": "buckled"},
-      "verified": "listen-only recording, buckled and unbuckled once (order confirmed)"
     },
     {
       "name": "brake_pedal",
@@ -156,8 +162,15 @@
       "id": "0x335",
       "start_byte": 4,
       "length": 1,
-      "values": {"0x10": "parking light (left/right position 1)", "0x20": "parking light (position 2)", "0x40": "sidelights", "0x01": "auto", "0x08": "low beam"},
-      "verified": "listen-only recording, switch turned through every position left to right; bit 0x04 is set while the front fog light button is pressed (0x05 seen twice)"
+      "values": {
+        "0x10": "parking light (left/right position 1)",
+        "0x20": "parking light (position 2)",
+        "0x40": "sidelights",
+        "0x01": "auto",
+        "0x08": "low beam"
+      },
+      "verified": "listen-only recording, switch turned through every position left to right; bit 0x04 is set while the front fog light button is pressed (0x05 seen twice); mask 0xFB leaves out the fog button bit",
+      "mask": "0xFB"
     },
     {
       "name": "fog_light_button",
@@ -173,6 +186,13 @@
       "start_byte": 3,
       "length": 1,
       "guess": "unknown: 62-68 in early recordings, 81-82 later with the engine running; not fuel level, not voltage (voltage is 0x122)",
+      "status": "unconfirmed"
+    },
+    {
+      "name": "passenger_seat",
+      "id": "0x225",
+      "start_byte": 2,
+      "guess": "NOT the passenger belt: wanders through 0x21..0x32 while reaching over to the passenger side (probably the seat occupancy / weight sensor); 0x353 byte 7 changed in the same seconds",
       "status": "unconfirmed"
     },
     {
@@ -214,20 +234,80 @@
       "0x7E5/0x7ED": "unknown"
     },
     "mode01_supported": {
-      "0x7E8": ["01", "04", "05", "0B", "0C", "0D", "0F", "10", "11", "13", "1C", "1F", "21", "23", "24", "30", "31", "33", "42", "45", "46", "49", "4A", "4C", "51", "5C", "66", "67", "68", "6C", "6D", "77", "85", "87", "88"],
-      "0x7EC": ["01", "04", "05", "0C", "0D", "21", "30", "31"]
+      "0x7E8": [
+        "01",
+        "04",
+        "05",
+        "0B",
+        "0C",
+        "0D",
+        "0F",
+        "10",
+        "11",
+        "13",
+        "1C",
+        "1F",
+        "21",
+        "23",
+        "24",
+        "30",
+        "31",
+        "33",
+        "42",
+        "45",
+        "46",
+        "49",
+        "4A",
+        "4C",
+        "51",
+        "5C",
+        "66",
+        "67",
+        "68",
+        "6C",
+        "6D",
+        "77",
+        "85",
+        "87",
+        "88"
+      ],
+      "0x7EC": [
+        "01",
+        "04",
+        "05",
+        "0C",
+        "0D",
+        "21",
+        "30",
+        "31"
+      ]
     },
-    "mode01_not_supported": ["2F", "5E", "A6"],
+    "mode01_not_supported": [
+      "2F",
+      "5E",
+      "A6"
+    ],
     "uds_0x7E0": {
       "answers": {
         "0x2030": "raw 0x0298..0x0365 seen; NOT fuel level (another W205 shows the same range at about 53 %), meaning unknown",
         "0x2017": "raw 200 with a cold engine, probably / 10 = degC (the OBDb formula gives 94 degC, wrong)"
       },
-      "out_of_range": ["0x016B", "0x2095", "0x2071", "0x016F", "0x0163", "0x0168"]
+      "out_of_range": [
+        "0x016B",
+        "0x2095",
+        "0x2071",
+        "0x016F",
+        "0x0163",
+        "0x0168"
+      ]
     }
   },
   "never_transmit": {
     "notes": "Frames sent to normal message IDs on this bus are acted on. A tester-present / read-DID sweep over raw CAN started a Mercedes service call and unlocked the doors (unlock right after a frame on 0x245). Only listen, and only send OBD/UDS requests to the known diagnostic IDs above.",
-    "ids_seen_acting": ["0x245", "0x2C9", "0x355"]
+    "ids_seen_acting": [
+      "0x245",
+      "0x2C9",
+      "0x355"
+    ]
   }
 }

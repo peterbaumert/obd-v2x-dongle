@@ -9,11 +9,55 @@ namespace esphome::obd2 {
 static const char *const TAG = "obd2";
 static const uint32_t OBD_REQUEST_ID = 0x7DF;   // functional request address
 static const uint32_t OBD_RESPONSE_ID = 0x7E8;  // ECU responses 0x7E8..0x7EF
-static const uint32_t OBD_RESPONSE_MASK = 0x7F8;
 static const uint32_t ECU_REQUEST_OFFSET = 8;   // physical request address = response address - 8 (0x7E0..0x7E7)
 static const uint32_t REPLY_WINDOW_MS = 1000;   // collect answers of all ECUs to a VIN / DTC / clear request
 static const uint32_t VIN_RETRY_MS = 30000;
 static const uint8_t PAD = 0x55;
+
+void Obd2Component::add_number(uint8_t signal, uint16_t can_id, uint8_t start, uint8_t len, bool little, float scale,
+                               float offset) {
+  this->profiles_.back().defs.push_back({can_id, signal, SignalKind::NUMBER, start, len, little, 0, scale, offset, {}, {}});
+}
+
+void Obd2Component::add_flag(uint8_t signal, uint16_t can_id, uint8_t start, uint8_t mask) {
+  this->profiles_.back().defs.push_back({can_id, signal, SignalKind::FLAG, start, 1, false, mask, 1, 0, {}, {}});
+}
+
+void Obd2Component::add_enum(uint8_t signal, uint16_t can_id, uint8_t start, uint8_t len, bool little,
+                             uint32_t mask) {
+  this->profiles_.back().defs.push_back({can_id, signal, SignalKind::ENUM, start, len, little, mask, 1, 0, {}, {}});
+}
+
+void Obd2Component::add_enum_value(uint32_t raw, const char *name, bool on) {
+  this->profiles_.back().defs.back().values.push_back({raw, name, on});
+}
+
+void Obd2Component::add_invalid(uint32_t raw) { this->profiles_.back().defs.back().invalid.push_back(raw); }
+
+void Obd2Component::set_profile(int index) {
+  if (index < 0 || index >= static_cast<int>(this->profiles_.size()))
+    index = -1;
+  this->profile_ = index;
+  // The ISR queues only these IDs: the OBD responses plus the profile's broadcast frames
+  for (auto &w : this->want_ids_)
+    w = 0;
+  for (uint32_t id = OBD_RESPONSE_ID; id < OBD_RESPONSE_ID + NUM_ECUS; id++)
+    this->want_id_(id);
+  for (auto &o : this->outs_) {
+    o.known = false;
+    o.dirty = false;
+    if (o.sensor != nullptr)
+      o.sensor->publish_state(NAN);  // unknown until the new profile's frame arrives
+  }
+  if (index < 0) {
+    ESP_LOGI(TAG, "Vehicle profile: none (OBD requests only)");
+    return;
+  }
+  const Profile &p = this->profiles_[index];
+  for (const auto &d : p.defs)
+    this->want_id_(d.can_id);
+  ESP_LOGI(TAG, "Vehicle profile: %s (%u signals)", p.title, static_cast<unsigned>(p.defs.size()));
+}
 
 void Obd2Component::add_pid(uint8_t pid, sensor::Sensor *sens, bool fast) {
   this->pids_.push_back({pid, sens});
@@ -38,7 +82,8 @@ void Obd2Component::setup() {
       order.push_back(this->schedule_[i]);
   this->schedule_ = order;
 
-  this->rx_queue_ = xQueueCreate(32, sizeof(RxFrame));
+  this->rx_queue_ = xQueueCreate(64, sizeof(RxFrame));
+  this->set_profile(this->profile_);  // OBD response IDs; the profile select sets the real one later
 
   twai_onchip_node_config_t cfg{};
   cfg.io_cfg.tx = static_cast<gpio_num_t>(this->tx_pin_);
@@ -54,9 +99,11 @@ void Obd2Component::setup() {
     this->mark_failed();
     return;
   }
+  // Accept every standard frame; the ISR keeps only the IDs in want_ids_ (the profile can change at runtime,
+  // the hardware filter only while the node is stopped)
   twai_mask_filter_config_t filter{};
-  filter.id = OBD_RESPONSE_ID;
-  filter.mask = OBD_RESPONSE_MASK;
+  filter.id = 0;
+  filter.mask = 0;
   twai_node_config_mask_filter(this->node_, 0, &filter);
 
   twai_event_callbacks_t cbs{};
@@ -72,13 +119,32 @@ void Obd2Component::setup() {
   }
 }
 
+void Obd2Component::enable_node_() {
+  if (this->node_enabled_)
+    return;
+  if (this->standby_pin_ != nullptr)
+    this->standby_pin_->digital_write(false);
+  twai_node_enable(this->node_);
+  this->node_enabled_ = true;
+}
+
+void Obd2Component::disable_node_() {
+  this->listening_ = false;
+  if (!this->node_enabled_)
+    return;
+  twai_node_disable(this->node_);
+  if (this->standby_pin_ != nullptr)
+    this->standby_pin_->digital_write(true);
+  this->node_enabled_ = false;
+  ESP_LOGI(TAG, "Stopped: CAN controller off, transceiver in standby");
+}
+
 void Obd2Component::set_active(bool active) {
   if (active == this->active_ || this->node_ == nullptr)
     return;
   this->active_ = active;
   if (active) {
-    if (this->standby_pin_ != nullptr)
-      this->standby_pin_->digital_write(false);
+    this->listening_ = false;
     this->tx_inflight_ = 0;
     this->tx_head_ = 0;
     this->bus_off_ = false;
@@ -87,14 +153,18 @@ void Obd2Component::set_active(bool active) {
     this->pending_ = Pending::NONE;
     this->want_dtc_ = this->dtc_sensor_ != nullptr || this->dtc_count_sensor_ != nullptr;
     this->last_vin_try_ = millis() - VIN_RETRY_MS;
-    twai_node_enable(this->node_);
+    this->enable_node_();
     ESP_LOGI(TAG, "Active: polling %u PIDs", static_cast<unsigned>(this->pids_.size()));
   } else {
-    twai_node_disable(this->node_);
-    if (this->standby_pin_ != nullptr)
-      this->standby_pin_->digital_write(true);
     this->want_clear_ = false;
-    ESP_LOGI(TAG, "Stopped: CAN controller off, transceiver in standby");
+    if (this->profile_ >= 0 && this->listen_after_stop_ > 0) {
+      // Keep receiving the profile's broadcast frames (doors, lock) for a while; nothing is sent
+      this->listening_ = true;
+      this->listen_until_ = millis() + this->listen_after_stop_;
+      ESP_LOGI(TAG, "Engine stopped: listening only for %u s", static_cast<unsigned>(this->listen_after_stop_ / 1000));
+    } else {
+      this->disable_node_();
+    }
   }
 }
 
@@ -113,6 +183,9 @@ bool IRAM_ATTR Obd2Component::on_rx_(twai_node_handle_t node, const twai_rx_done
   frame.buffer = buf;
   frame.buffer_len = sizeof(buf);
   if (twai_node_receive_from_isr(node, &frame) != ESP_OK)
+    return false;
+  const uint32_t id = frame.header.id;
+  if (frame.header.ide || id >= 0x800 || !((self->want_ids_[id >> 5] >> (id & 31)) & 1))
     return false;
   RxFrame rx{};
   rx.id = frame.header.id;
@@ -138,6 +211,9 @@ bool IRAM_ATTR Obd2Component::on_state_(twai_node_handle_t, const twai_state_cha
 }
 
 bool Obd2Component::send_(uint32_t id, const uint8_t *data, uint8_t len) {
+  // Only while active (engine running): never transmit while just listening
+  if (!this->active_)
+    return false;
   // Frames finish in order, so with fewer than TX_SLOTS in flight the slot at tx_head_ is free
   if (this->tx_inflight_ >= TX_SLOTS)
     return false;
@@ -166,9 +242,13 @@ void Obd2Component::loop() {
   RxFrame rx;
   while (this->rx_queue_ != nullptr && xQueueReceive(this->rx_queue_, &rx, 0) == pdTRUE)
     this->handle_frame_(rx);
+  this->publish_signals_(millis());
 
-  if (!this->active_)
+  if (!this->active_) {
+    if (this->listening_ && static_cast<int32_t>(millis() - this->listen_until_) >= 0)
+      this->disable_node_();
     return;
+  }
   if (this->bus_off_.exchange(false)) {
     ESP_LOGW(TAG, "Bus off, recovering");
     twai_node_recover(this->node_);
@@ -263,7 +343,83 @@ void Obd2Component::finish_pending_() {
   }
 }
 
+void Obd2Component::decode_signals_(const RxFrame &f) {
+  if (this->profile_ < 0)
+    return;
+  for (const auto &d : this->profiles_[this->profile_].defs)
+    if (d.can_id == f.id)
+      this->decode_(d, f);
+}
+
+void Obd2Component::decode_(const SignalDef &d, const RxFrame &f) {
+  if (d.start + d.len > f.len)
+    return;
+  uint32_t raw = 0;
+  if (d.kind == SignalKind::FLAG) {
+    raw = (f.data[d.start] & d.mask) != 0;
+  } else {
+    for (uint8_t i = 0; i < d.len; i++) {
+      const uint32_t b = f.data[d.start + i];
+      raw = d.little ? raw | (b << (8 * i)) : (raw << 8) | b;
+    }
+    if (d.kind == SignalKind::ENUM && d.mask != 0)
+      raw &= d.mask;  // other bits of the byte belong to other signals
+  }
+  SignalOut &o = this->outs_[d.signal];
+  if (o.known && o.raw == raw)
+    return;
+  o.known = true;
+  o.raw = raw;
+  switch (d.kind) {
+    case SignalKind::NUMBER: {
+      bool invalid = false;
+      for (uint32_t v : d.invalid)
+        invalid |= v == raw;
+      o.value = invalid ? NAN : raw * d.scale + d.offset;
+      o.dirty = true;  // numbers are rate limited in publish_signals_()
+      break;
+    }
+    case SignalKind::FLAG:
+      if (o.binary != nullptr)
+        o.binary->publish_state(raw != 0);
+      break;
+    case SignalKind::ENUM: {
+      const EnumValue *found = nullptr;
+      bool has_on = false;
+      for (const auto &v : d.values) {
+        has_on |= v.on;
+        if (v.raw == raw)
+          found = &v;
+      }
+      if (o.binary != nullptr && has_on)
+        o.binary->publish_state(found != nullptr && found->on);
+      if (o.text != nullptr) {
+        if (found != nullptr) {
+          o.text->publish_state(found->name);
+        } else {
+          char buf[24];
+          snprintf(buf, sizeof(buf), "unknown 0x%0*X", d.len * 2, static_cast<unsigned>(raw));
+          o.text->publish_state(buf);
+        }
+      }
+      break;
+    }
+  }
+}
+
+void Obd2Component::publish_signals_(uint32_t now) {
+  for (auto &o : this->outs_) {
+    if (!o.dirty || now - o.last_pub < this->signal_interval_)
+      continue;
+    o.dirty = false;
+    o.last_pub = now;
+    if (o.sensor != nullptr)
+      o.sensor->publish_state(o.value);
+  }
+}
+
 void Obd2Component::handle_frame_(const RxFrame &f) {
+  this->decode_signals_(f);
   if (f.id < OBD_RESPONSE_ID || f.id >= OBD_RESPONSE_ID + NUM_ECUS || f.len < 2)
     return;
   const uint8_t ecu = f.id - OBD_RESPONSE_ID;
@@ -405,6 +561,10 @@ void Obd2Component::dump_config() {
                 this->tx_pin_, this->rx_pin_, static_cast<unsigned>(this->bit_rate_),
                 static_cast<unsigned>(this->poll_interval_), static_cast<unsigned>(this->pids_.size()),
                 static_cast<unsigned>(this->dtc_interval_ / 1000), YESNO(this->vin_sensor_ != nullptr));
+  ESP_LOGCONFIG(TAG, "  Vehicle profiles: %u compiled, active: %s, listen after stop: %u s",
+                static_cast<unsigned>(this->profiles_.size()),
+                this->profile_ < 0 ? "none" : this->profiles_[this->profile_].title,
+                static_cast<unsigned>(this->listen_after_stop_ / 1000));
   LOG_PIN("  Standby pin: ", this->standby_pin_);
 }
 

@@ -108,8 +108,10 @@ the bootloader goes back to the previous one. USB-C stays the fallback.
 ## Entities (Home Assistant)
 
 Car battery, car battery low, unplugged, engine running, power mode · speed, engine RPM, coolant / intake / ambient temperature,
-engine load, fuel level, ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/s), VIN, fault codes, fault code count,
-"Clear fault codes" button · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
+engine load, fuel level (OBD), ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/s), VIN, fault codes, fault code count,
+"Clear fault codes" button · vehicle profile select and the profile's broadcast values: odometer, range, fuel level,
+outside temperature, vehicle voltage, four doors, boot, locked, driver seatbelt, brake pedal, reverse gear,
+ECO start/stop, light switch · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
 V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch · uptime.
 
@@ -119,8 +121,8 @@ Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flas
 
 1. Set up a WireGuard peer for the dongle (Home Assistant WireGuard add-on or your router) and add the keys from
    `secrets.example.yaml` to your ESPHome `secrets.yaml` (APN, MQTT broker, Traccar, WireGuard, API key, OpenTrafficMap node ID).
-2. Home Assistant ESPHome add-on (2026.11+ / beta): copy `obd-v2x-dongle.yaml` and the `components/` folder into
-   `/config/esphome/`, then *Install → Plug into this computer* with the dongle on USB-C (ESP32 USB-Serial-JTAG).
+2. Home Assistant ESPHome add-on (2026.11+ / beta): copy `obd-v2x-dongle.yaml`, the `components/` folder and the
+   `vehicles/` folder (vehicle profiles, compiled in at build time) into `/config/esphome/`, then *Install → Plug into this computer* with the dongle on USB-C (ESP32 USB-Serial-JTAG).
    Or locally: `esphome run obd-v2x-dongle.yaml`. On Windows run ESPHome from PowerShell/cmd, not Git Bash
    (ESP-IDF's installer refuses MSYS).
 3. **Emergency access is always USB-C**: flash and logs over the ESP32's USB-Serial-JTAG. If the firmware is
@@ -174,20 +176,27 @@ Mercedes app at two different times (machine-readable, with the OBD findings:
 | odometer | `0x309` | bytes 0–2, little-endian, × 0.1 km |
 | range | `0x147` | bytes 4–5, little-endian, km (2047 = invalid) |
 | outside temp | `0x309` | byte 3, raw × 0.5 − 40 °C (same message as the odometer) |
-| fuel level | `0x21D` | byte 3, % (68 / 66 matched the app; confirm after a fill-up) |
+| fuel level | `0x21D` | byte 3, % (68 / 66 matched the app, 127 = invalid; confirm after a fill-up) |
 | doors open | `0x33F` | byte 0 bits: `0x10` driver, `0x20` front passenger, `0x40` rear left, `0x80` rear right, `0x01` interior light |
 | boot open | `0x33F` | byte 1 bit 0 (`0x02` closed, `0x03` open) |
 | locked | `0x2FB` | bytes 0–1: `55 19` locked, `AA 0A` unlocked |
 | battery voltage | `0x122` | byte 0, × 0.1 V |
 | driver seatbelt | `0x020` | byte 4 bit `0x02` = buckled |
-| passenger seatbelt | `0x225` | byte 2: `23` unbuckled, `24` buckled |
 | brake pedal | `0x351` | byte 1 bit `0x20` |
 | reverse gear | `0x2CF` | byte 5 bit `0x01` |
 | ECO Start/Stop | `0x141` | byte 0 bit `0x20` (set after ignition on, toggled by the button) |
-| light switch | `0x335` | byte 4: `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam (`0x04` = fog button) |
+| light switch | `0x335` | byte 4 (mask `0xFB`): `10`/`20` parking, `40` sidelights, `01` auto, `08` low beam; bit `0x04` = fog button |
 
 Not on this bus (checked with a marked recording): electric parking brake, indicators, hazards, windows, clutch — they
-are on the comfort CAN. Open candidates are in the profile.
+are on the comfort CAN. Open candidates (passenger seat/belt, `0x353`, …) are in the profile.
+
+**In the firmware:** every profile in `vehicles/` is compiled in; the *Vehicle profile* select in Home Assistant
+picks the active one (stored in flash, "None" = OBD requests only). The `obd2` component decodes those frames
+listen-only — nothing is sent for them — publishes flags and states on change and numbers at most every
+`signal_interval`, and keeps receiving for `listen_after_stop` after the engine stops, so doors and the lock state
+are still seen when you leave the car. Entities are declared per signal name under `signals:` of the obd2
+`sensor` / `binary_sensor` / `text_sensor` platforms; the build fails with a list of valid names if one is wrong.
+A new car: add a JSON file, rebuild, select it.
 
 The bus (or the WiCAN, below 13.1 V with its sleep mode on) goes quiet within seconds to a minute without the engine
 running, so record with the engine on. To find more: WiCAN Protocol *SLCAN*, then
@@ -207,6 +216,7 @@ still contain them – don't share those unedited, and never commit a VIN.
 |---|---|
 | GPS position, Traccar | done (untested on hardware); possible upstream improvement: a `send_at` reply callback in ESPHome's modem component instead of the logger listener |
 | Backup cell, OTA over LTE, VIN / fault codes | done (untested on hardware) |
-| More OBD | pending fault codes (mode 07), check-engine light (PID 01), 29-bit / 250 kbit/s auto-detect, K-line (older cars), OEM PIDs (e.g. Mercedes odometer / fuel level) |
+| Vehicle profiles | done: broadcast signals decoded listen-only from `vehicles/*.json`, switchable in Home Assistant (untested on hardware); next: wake on bus activity while parked (TCAN334 wake-up on RXD), more profiles |
+| More OBD | pending fault codes (mode 07), check-engine light (PID 01), 29-bit / 250 kbit/s auto-detect, K-line (older cars) |
 | Trip logic | trip start/stop from engine running + speed, distance, idling time (like a Teltonika FMC003) |
 | Crash / towing detection | needs an accelerometer – not on this board revision |

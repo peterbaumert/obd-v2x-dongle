@@ -12,6 +12,28 @@ from esphome.const import (
 )
 
 from . import CONF_OBD2_ID, Obd2Component
+from .profiles import KIND_NUMBER, UNITS, signal_index, signals_validator
+
+CONF_SIGNALS = "signals"
+# defaults for well-known profile signals; anything else gets the unit from the profile
+SIGNAL_DEFAULTS = {
+    "odometer": dict(unit_of_measurement="km", device_class="distance", state_class="total_increasing",
+                     icon="mdi:counter", accuracy_decimals=1),
+    "range": dict(unit_of_measurement="km", device_class="distance", icon="mdi:gas-station-outline",
+                  accuracy_decimals=0),
+    "fuel_level": dict(unit_of_measurement=UNIT_PERCENT, icon="mdi:gas-station", accuracy_decimals=0),
+    "outside_temperature": dict(unit_of_measurement=UNIT_CELSIUS, device_class=DEVICE_CLASS_TEMPERATURE,
+                                accuracy_decimals=1),
+    "battery_voltage": dict(unit_of_measurement=UNIT_VOLT, device_class=DEVICE_CLASS_VOLTAGE, accuracy_decimals=1),
+}
+
+
+def _signal_schema(name, sig):
+    kw = {"state_class": STATE_CLASS_MEASUREMENT, "accuracy_decimals": 1}
+    if sig.unit:
+        kw["unit_of_measurement"] = UNITS.get(sig.unit, sig.unit)
+    kw.update(SIGNAL_DEFAULTS.get(name, {}))
+    return sensor.sensor_schema(**kw)
 
 # config key -> (mode 01 PID, unit, device class, icon, decimals)
 PIDS = {
@@ -41,6 +63,7 @@ CONFIG_SCHEMA = cv.Schema(
     {cv.GenerateID(CONF_OBD2_ID): cv.use_id(Obd2Component)}
     | {cv.Optional(k): _schema(*v[1:]) for k, v in PIDS.items()}
     | {cv.Optional(CONF_DTC_COUNT): sensor.sensor_schema(icon="mdi:engine-off", accuracy_decimals=0)}
+    | {cv.Optional(CONF_SIGNALS): signals_validator("sensor", lambda s: s.kind == KIND_NUMBER, _signal_schema)}
 )
 
 
@@ -52,3 +75,5 @@ async def to_code(config):
             cg.add(hub.add_pid(pid, sens, key in FAST))
     if CONF_DTC_COUNT in config:
         cg.add(hub.set_dtc_count_sensor(await sensor.new_sensor(config[CONF_DTC_COUNT])))
+    for name, conf in config.get(CONF_SIGNALS, {}).items():
+        cg.add(hub.set_signal_sensor(signal_index(name), await sensor.new_sensor(conf)))

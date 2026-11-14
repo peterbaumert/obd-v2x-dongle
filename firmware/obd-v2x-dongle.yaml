@@ -102,6 +102,30 @@ binary_sensor:
     lambda: |-
       float v = id(car_battery).state;
       return !std::isnan(v) && v < id(set_unplugged_voltage).state;
+  - platform: obd2            # vehicle profile broadcast values (listen only), see firmware/vehicles/
+    obd2_id: obd
+    signals:
+      door_driver_open:
+        name: "Driver door"
+      door_passenger_open:
+        name: "Passenger door"
+      door_rear_left_open:
+        name: "Rear left door"
+      door_rear_right_open:
+        name: "Rear right door"
+      boot_open:
+        name: "Boot"
+      locked:
+        name: "Locked"
+      driver_seatbelt:
+        name: "Driver seatbelt"
+      brake_pedal:
+        name: "Brake pedal"
+      reverse_gear:
+        name: "Reverse gear"
+      eco_start_stop:
+        name: "ECO start/stop"
+        entity_category: diagnostic
 
 # ---------------------------------------------------------------- LTE modem (EC200U-EU)
 script:
@@ -526,12 +550,22 @@ text_sensor:
       entity_category: diagnostic
     fault_codes:
       name: "Fault codes"
+    signals:
+      light_switch:
+        name: "Light switch"
 
 button:
   - platform: obd2
     obd2_id: obd
     clear_fault_codes:
       name: "Clear fault codes"
+
+select:
+  - platform: obd2
+    obd2_id: obd
+    vehicle_profile:
+      name: "Vehicle profile"   # which firmware/vehicles/*.json decodes the bus; stored in flash
+      initial_profile: none
 
 # ---------------------------------------------------------------- V2X: ITS-G5 receive -> OpenTrafficMap
 otm_uplink:
@@ -565,6 +599,8 @@ obd2:
   bit_rate: 500000
   poll_interval: 250ms        # one request per 250 ms, round robin (speed/RPM twice per round)
   dtc_interval: 5min          # stored fault codes (mode 03): on engine start and every 5 min
+  listen_after_stop: 3min     # with a vehicle profile: keep receiving (no requests) after the engine stops
+  signal_interval: 1s         # profile numbers (voltage, range, ...) published at most once per second
 
 # ---------------------------------------------------------------- sensors
 sensor:
@@ -593,7 +629,7 @@ sensor:
     engine_load:
       name: "Engine load"
     fuel_level:
-      name: "Fuel level"
+      name: "Fuel level (OBD)"  # PID 2F, not supported by every car (e.g. W205): see the profile signal below
     intake_temperature:
       name: "Intake air temperature"
     ambient_temperature:
@@ -602,6 +638,17 @@ sensor:
       name: "ECU voltage"
     dtc_count:
       name: "Fault code count"
+    signals:                  # vehicle profile broadcast values (listen only), see firmware/vehicles/
+      odometer:
+        name: "Odometer"
+      range:
+        name: "Range"
+      fuel_level:
+        name: "Fuel level"
+      outside_temperature:
+        name: "Outside temperature"
+      battery_voltage:
+        name: "Vehicle voltage"
   - platform: modem
     rssi:
       name: "LTE signal"

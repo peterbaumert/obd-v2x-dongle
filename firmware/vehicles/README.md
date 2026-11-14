@@ -1,7 +1,9 @@
 # Vehicle profiles
 
 One JSON file per car (`<make>-<model>-<generation>.json`): what the car's bus carries and how to read it. The
-firmware will pick a profile for the passive sensors; until then the files document what was measured.
+firmware compiles every file in this folder in (`components/obd2/profiles.py`); the *Vehicle profile* select in
+Home Assistant chooses the active one, and its `signals` feed the entities declared under `signals:` in the YAML.
+Only `signals` are used by the firmware; `candidates`, `obd` and `never_transmit` are documentation.
 
 Never put a VIN, number plate, owner data or exact readings of a specific car in here.
 
@@ -21,7 +23,12 @@ A signal is one of:
 - **number**: `id`, `start_byte`, `length` (bytes), `byte_order` (`little`/`big`, default `big`), `scale` and
   optional `offset` (value = raw × scale + offset), `unit`, optional `invalid` (raw values meaning "not available")
 - **flag**: `id`, `start_byte`, `mask` — true when `byte & mask` is non-zero
-- **enum**: `id`, `start_byte`, `length`, `byte_order`, `values` (raw value → state)
+- **enum**: `id`, `start_byte`, `length`, `byte_order`, `values` (raw value → state), optional `mask` (only these
+  bits belong to the field, e.g. when another flag shares the byte), optional `on` (the state that counts as "on"
+  when the signal is used as a binary sensor, e.g. `"on": "locked"`)
+
+Only 11-bit IDs, fields within bytes 0–7, numbers up to 4 bytes. The firmware (`components/obd2`) compiles every
+profile in this folder in and checks these rules at build time.
 
 Bytes are numbered from 0 in the CAN frame. Every signal has a `verified` note saying how it was checked.
 
