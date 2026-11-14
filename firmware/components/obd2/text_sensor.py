@@ -3,7 +3,7 @@ from esphome.components import text_sensor
 import esphome.config_validation as cv
 
 from . import CONF_OBD2_ID, Obd2Component
-from .profiles import KIND_ENUM, signal_index, signals_validator
+from .profiles import KIND_ENUM, CONF_RESTORE, signal_index, signals_validator
 
 CONF_VIN = "vin"
 CONF_FAULT_CODES = "fault_codes"
@@ -32,3 +32,5 @@ async def to_code(config):
         cg.add(hub.set_dtc_sensor(await text_sensor.new_text_sensor(config[CONF_FAULT_CODES])))
     for name, conf in config.get(CONF_SIGNALS, {}).items():
         cg.add(hub.set_signal_text_sensor(signal_index(name), await text_sensor.new_text_sensor(conf)))
+        if conf[CONF_RESTORE]:
+            cg.add(hub.set_signal_restore(signal_index(name)))

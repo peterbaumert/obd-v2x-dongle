@@ -13,6 +13,7 @@ static const uint32_t ECU_REQUEST_OFFSET = 8;   // physical request address = re
 static const uint32_t REPLY_WINDOW_MS = 1000;   // collect answers of all ECUs to a VIN / DTC / clear request
 static const uint32_t VIN_RETRY_MS = 30000;
 static const uint8_t PAD = 0x55;
+static const uint32_t RESTORE_PREF_VERSION = 0x0B2D5160;  // keeps the signal store apart from other entity prefs
 
 void Obd2Component::add_number(uint8_t signal, uint16_t can_id, uint8_t start, uint8_t len, bool little, float scale,
                                float offset) {
@@ -43,20 +44,45 @@ void Obd2Component::set_profile(int index) {
     w = 0;
   for (uint32_t id = OBD_RESPONSE_ID; id < OBD_RESPONSE_ID + NUM_ECUS; id++)
     this->want_id_(id);
-  for (auto &o : this->outs_) {
+  const Profile *p = index < 0 ? nullptr : &this->profiles_[index];
+  if (p != nullptr)
+    for (const auto &d : p->defs)
+      this->want_id_(d.can_id);
+
+  for (size_t i = 0; i < this->outs_.size(); i++) {
+    SignalOut &o = this->outs_[i];
     o.known = false;
     o.dirty = false;
-    if (o.sensor != nullptr)
-      o.sensor->publish_state(NAN);  // unknown until the new profile's frame arrives
+    const SignalDef *def = nullptr;
+    if (p != nullptr)
+      for (const auto &d : p->defs)
+        if (d.signal == i) {
+          def = &d;
+          break;
+        }
+    if (def != nullptr && o.restore && o.saved.valid && o.saved.profile == index) {
+      this->apply_(*def, o, o.saved.raw);  // last known value from flash until the bus says otherwise
+    } else if (def == nullptr && o.sensor != nullptr) {
+      o.sensor->publish_state(NAN);  // the profile doesn't have this signal
+    }
   }
-  if (index < 0) {
+  if (p == nullptr)
     ESP_LOGI(TAG, "Vehicle profile: none (OBD requests only)");
-    return;
+  else
+    ESP_LOGI(TAG, "Vehicle profile: %s (%u signals)", p->title, static_cast<unsigned>(p->defs.size()));
+}
+
+void Obd2Component::save_signals_() {
+  bool any = false;
+  for (auto &o : this->outs_) {
+    if (!o.restore || !o.save_dirty)
+      continue;
+    o.pref.save(&o.saved);
+    o.save_dirty = false;
+    any = true;
   }
-  const Profile &p = this->profiles_[index];
-  for (const auto &d : p.defs)
-    this->want_id_(d.can_id);
-  ESP_LOGI(TAG, "Vehicle profile: %s (%u signals)", p.title, static_cast<unsigned>(p.defs.size()));
+  if (any)
+    global_preferences->sync();  // a few writes per drive: at engine stop and when listening ends
 }
 
 void Obd2Component::add_pid(uint8_t pid, sensor::Sensor *sens, bool fast) {
@@ -83,6 +109,20 @@ void Obd2Component::setup() {
   this->schedule_ = order;
 
   this->rx_queue_ = xQueueCreate(64, sizeof(RxFrame));
+  for (auto &o : this->outs_) {
+    if (!o.restore)
+      continue;
+    EntityBase *e = o.sensor != nullptr ? static_cast<EntityBase *>(o.sensor)
+                    : o.binary != nullptr ? static_cast<EntityBase *>(o.binary)
+                                          : static_cast<EntityBase *>(o.text);
+    if (e == nullptr) {
+      o.restore = false;
+      continue;
+    }
+    o.pref = e->make_entity_preference<SavedRaw>(RESTORE_PREF_VERSION);
+    if (!o.pref.load(&o.saved))
+      o.saved = {-1, 0, 0};
+  }
   this->set_profile(this->profile_);  // OBD response IDs; the profile select sets the real one later
 
   twai_onchip_node_config_t cfg{};
@@ -130,6 +170,7 @@ void Obd2Component::enable_node_() {
 
 void Obd2Component::disable_node_() {
   this->listening_ = false;
+  this->save_signals_();
   if (!this->node_enabled_)
     return;
   twai_node_disable(this->node_);
@@ -157,6 +198,7 @@ void Obd2Component::set_active(bool active) {
     ESP_LOGI(TAG, "Active: polling %u PIDs", static_cast<unsigned>(this->pids_.size()));
   } else {
     this->want_clear_ = false;
+    this->save_signals_();  // values at engine stop (odometer, fuel, tyres); again when listening ends
     if (this->profile_ >= 0 && this->listen_after_stop_ > 0) {
       // Keep receiving the profile's broadcast frames (doors, lock) for a while; nothing is sent
       this->listening_ = true;
@@ -365,20 +407,28 @@ void Obd2Component::decode_(const SignalDef &d, const RxFrame &f) {
     if (d.kind == SignalKind::ENUM && d.mask != 0)
       raw &= d.mask;  // other bits of the byte belong to other signals
   }
+  if (d.kind == SignalKind::NUMBER)
+    for (uint32_t v : d.invalid)
+      if (v == raw)
+        return;  // "not available" (tyre sensors not reported yet, engine just stopped): keep the last value
   SignalOut &o = this->outs_[d.signal];
   if (o.known && o.raw == raw)
     return;
+  this->apply_(d, o, raw);
+}
+
+void Obd2Component::apply_(const SignalDef &d, SignalOut &o, uint32_t raw) {
   o.known = true;
   o.raw = raw;
+  if (o.restore && (!o.saved.valid || o.saved.raw != raw || o.saved.profile != this->profile_)) {
+    o.saved = {static_cast<int8_t>(this->profile_), 1, raw};
+    o.save_dirty = true;  // written to flash at engine stop / end of listening, not on every change
+  }
   switch (d.kind) {
-    case SignalKind::NUMBER: {
-      bool invalid = false;
-      for (uint32_t v : d.invalid)
-        invalid |= v == raw;
-      o.value = invalid ? NAN : raw * d.scale + d.offset;
+    case SignalKind::NUMBER:
+      o.value = raw * d.scale + d.offset;
       o.dirty = true;  // numbers are rate limited in publish_signals_()
       break;
-    }
     case SignalKind::FLAG:
       if (o.binary != nullptr)
         o.binary->publish_state(raw != 0);

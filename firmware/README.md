@@ -197,7 +197,10 @@ profile.
 picks the active one (stored in flash, "None" = OBD requests only). The `obd2` component decodes those frames
 listen-only — nothing is sent for them — publishes flags and states on change and numbers at most every
 `signal_interval`, and keeps receiving for `listen_after_stop` after the engine stops, so doors and the lock state
-are still seen when you leave the car. Entities are declared per signal name under `signals:` of the obd2
+are still seen when you leave the car. "Not available" readings (`invalid` in the profile, e.g. tyre sensors that
+haven't reported yet) are skipped, so an entity keeps its last value; with `restore: true` the last value is also
+kept in flash (written at engine stop and when listening ends, i.e. a few times per drive) and shown again after a
+reboot or deep sleep — set for odometer, range, fuel level, tyre pressures and locked. Entities are declared per signal name under `signals:` of the obd2
 `sensor` / `binary_sensor` / `text_sensor` platforms; the build fails with a list of valid names if one is wrong.
 A new car: add a JSON file, rebuild, select it.
 

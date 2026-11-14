@@ -84,6 +84,8 @@ class Obd2Component : public Component {
   void set_signal_sensor(uint8_t signal, sensor::Sensor *s) { this->outs_[signal].sensor = s; }
   void set_signal_binary_sensor(uint8_t signal, binary_sensor::BinarySensor *s) { this->outs_[signal].binary = s; }
   void set_signal_text_sensor(uint8_t signal, text_sensor::TextSensor *s) { this->outs_[signal].text = s; }
+  /// Keep this signal's last value in flash (saved when the engine stops) and show it again after a reboot.
+  void set_signal_restore(uint8_t signal) { this->outs_[signal].restore = true; }
   /// Active profile: index into the compiled profiles, -1 = none (OBD requests only).
   void set_profile(int index);
   int get_profile() const { return this->profile_; }
@@ -122,6 +124,12 @@ class Obd2Component : public Component {
   static bool on_rx_(twai_node_handle_t node, const twai_rx_done_event_data_t *edata, void *ctx);
   static bool on_tx_done_(twai_node_handle_t node, const twai_tx_done_event_data_t *edata, void *ctx);
   static bool on_state_(twai_node_handle_t node, const twai_state_change_event_data_t *edata, void *ctx);
+  /// Last valid raw value as kept in flash (per signal, only for signals with restore)
+  struct SavedRaw {
+    int8_t profile;  // the profile it was decoded with: a raw value only means something in that profile
+    uint8_t valid;
+    uint32_t raw;
+  };
   struct SignalOut {
     sensor::Sensor *sensor{nullptr};
     binary_sensor::BinarySensor *binary{nullptr};
@@ -131,6 +139,10 @@ class Obd2Component : public Component {
     float value{NAN};
     bool dirty{false};
     uint32_t last_pub{0};
+    bool restore{false};
+    bool save_dirty{false};
+    SavedRaw saved{-1, 0, 0};
+    ESPPreferenceObject pref;
   };
 
   bool send_(uint32_t id, const uint8_t *data, uint8_t len);
@@ -140,7 +152,9 @@ class Obd2Component : public Component {
   void want_id_(uint32_t id) { this->want_ids_[id >> 5] |= 1u << (id & 31); }
   void decode_signals_(const RxFrame &f);
   void decode_(const SignalDef &def, const RxFrame &f);
+  void apply_(const SignalDef &def, SignalOut &o, uint32_t raw);
   void publish_signals_(uint32_t now);
+  void save_signals_();
   void handle_frame_(const RxFrame &frame);
   void handle_message_(uint8_t ecu, const uint8_t *d, uint16_t n);
   void handle_pid_(const uint8_t *d, uint16_t n);

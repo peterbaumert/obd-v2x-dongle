@@ -13,6 +13,7 @@ import esphome.config_validation as cv
 from esphome.core import CORE
 
 PROFILE_DIR = "vehicles"
+CONF_RESTORE = "restore"  # per signal entity: keep the last value in flash, show it again after a reboot
 KIND_NUMBER, KIND_FLAG, KIND_ENUM = "number", "flag", "enum"
 UNITS = {"celsius": "°C", "kilometers": "km", "liters": "L"}
 
@@ -125,7 +126,9 @@ def signals_validator(platform, allowed, make_schema):
                 raise cv.Invalid(f"unknown signal '{name}', the profiles have: {', '.join(catalog)}", [name])
             if not allowed(sig):
                 raise cv.Invalid(f"signal '{name}' is a {sig.kind} and can't be a {platform}", [name])
-            schema[cv.Optional(str(name))] = make_schema(str(name), sig)
+            schema[cv.Optional(str(name))] = make_schema(str(name), sig).extend(
+                {cv.Optional(CONF_RESTORE, default=False): cv.boolean}
+            )
         return cv.Schema(schema)({str(k): v or {} for k, v in value.items()})
 
     return validate

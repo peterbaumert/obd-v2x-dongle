@@ -12,7 +12,7 @@ from esphome.const import (
 )
 
 from . import CONF_OBD2_ID, Obd2Component
-from .profiles import KIND_NUMBER, UNITS, signal_index, signals_validator
+from .profiles import KIND_NUMBER, UNITS, CONF_RESTORE, signal_index, signals_validator
 
 CONF_SIGNALS = "signals"
 # defaults for well-known profile signals; anything else gets the unit from the profile
@@ -81,3 +81,5 @@ async def to_code(config):
         cg.add(hub.set_dtc_count_sensor(await sensor.new_sensor(config[CONF_DTC_COUNT])))
     for name, conf in config.get(CONF_SIGNALS, {}).items():
         cg.add(hub.set_signal_sensor(signal_index(name), await sensor.new_sensor(conf)))
+        if conf[CONF_RESTORE]:
+            cg.add(hub.set_signal_restore(signal_index(name)))

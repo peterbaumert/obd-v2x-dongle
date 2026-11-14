@@ -3,7 +3,7 @@ from esphome.components import binary_sensor
 import esphome.config_validation as cv
 
 from . import CONF_OBD2_ID, Obd2Component
-from .profiles import KIND_ENUM, KIND_FLAG, signal_index, signals_validator
+from .profiles import KIND_ENUM, KIND_FLAG, CONF_RESTORE, signal_index, signals_validator
 
 CONF_SIGNALS = "signals"
 SIGNAL_DEFAULTS = {
@@ -45,3 +45,5 @@ async def to_code(config):
     hub = await cg.get_variable(config[CONF_OBD2_ID])
     for name, conf in config.get(CONF_SIGNALS, {}).items():
         cg.add(hub.set_signal_binary_sensor(signal_index(name), await binary_sensor.new_binary_sensor(conf)))
+        if conf[CONF_RESTORE]:
+            cg.add(hub.set_signal_restore(signal_index(name)))

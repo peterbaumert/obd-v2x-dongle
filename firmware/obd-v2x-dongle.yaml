@@ -117,6 +117,7 @@ binary_sensor:
         name: "Boot"
       locked:
         name: "Locked"
+        restore: true
       driver_seatbelt:
         name: "Driver seatbelt"
       brake_pedal:
@@ -124,9 +125,9 @@ binary_sensor:
       parking_brake:
         name: "Parking brake"
       ac_on:
-        name: "A/C"
+        name: "Air conditioning"
       eco_start_stop:
-        name: "ECO start/stop"
+        name: "ECO start-stop"
         entity_category: diagnostic
 
 # ---------------------------------------------------------------- LTE modem (EC200U-EU)
@@ -643,22 +644,29 @@ sensor:
     signals:                  # vehicle profile broadcast values (listen only), see firmware/vehicles/
       odometer:
         name: "Odometer"
+        restore: true
       range:
         name: "Range"
+        restore: true
       fuel_level:
         name: "Fuel level"
+        restore: true
       outside_temperature:
         name: "Outside temperature"
       battery_voltage:
         name: "Vehicle voltage"
-      tyre_pressure_front_left:   # unknown until the tyre sensors report (they wake while driving)
+      tyre_pressure_front_left:   # restore: last known value until the tyre sensors report again
         name: "Tyre pressure front left"
+        restore: true
       tyre_pressure_front_right:
         name: "Tyre pressure front right"
+        restore: true
       tyre_pressure_rear_left:
         name: "Tyre pressure rear left"
+        restore: true
       tyre_pressure_rear_right:
         name: "Tyre pressure rear right"
+        restore: true
   - platform: modem
     rssi:
       name: "LTE signal"
