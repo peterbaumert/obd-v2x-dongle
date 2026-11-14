@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "vehicle": {
+    "make": "Mercedes-Benz",
+    "model": "C-Class",
+    "generation": "W205",
+    "model_years": [2015],
+    "variant": "C 220 BlueTEC (diesel), EU",
+    "notes": "Measured on one car with a WiCAN and firmware/tools/obd_probe.py. Other W205 variants / years likely share the broadcast signals but are unverified."
+  },
+  "bus": {
+    "obd_pins": [6, 14],
+    "bitrate": 500000,
+    "id_bits": 11,
+    "notes": "The OBD port carries a LIVE vehicle bus (100+ broadcast IDs), not an isolated diagnostic bus. Everything below under 'signals' is read by listening only. The bus goes quiet a few seconds (ignition position 1) to about a minute (position 2) after the engine stops; with the engine running it stays awake."
+  },
+  "signals": [
+    {
+      "name": "odometer",
+      "id": "0x309",
+      "start_byte": 0,
+      "length": 3,
+      "byte_order": "little",
+      "scale": 0.1,
+      "unit": "km",
+      "verified": "matched the instrument cluster and the Mercedes app at two different readings"
+    },
+    {
+      "name": "range",
+      "id": "0x147",
+      "start_byte": 4,
+      "length": 2,
+      "byte_order": "little",
+      "scale": 1,
+      "unit": "km",
+      "invalid": [2047],
+      "verified": "matched the instrument cluster and the Mercedes app at two different readings; falls by 1 km every few minutes while idling"
+    },
+    {
+      "name": "fuel_level",
+      "id": "0x21D",
+      "start_byte": 3,
+      "length": 1,
+      "scale": 1,
+      "unit": "%",
+      "verified": "matched the Mercedes app at 68 % and 66 %; still to check after a fill-up (should read about 100)"
+    },
+    {
+      "name": "door_driver_open",
+      "id": "0x33F",
+      "start_byte": 0,
+      "mask": "0x10",
+      "verified": "listen-only recording, opened/closed three times"
+    },
+    {
+      "name": "door_passenger_open",
+      "id": "0x33F",
+      "start_byte": 0,
+      "mask": "0x20",
+      "verified": "listen-only recording, twice"
+    },
+    {
+      "name": "door_rear_left_open",
+      "id": "0x33F",
+      "start_byte": 0,
+      "mask": "0x40",
+      "verified": "listen-only recording, twice"
+    },
+    {
+      "name": "door_rear_right_open",
+      "id": "0x33F",
+      "start_byte": 0,
+      "mask": "0x80",
+      "verified": "listen-only recording, once"
+    },
+    {
+      "name": "interior_light",
+      "id": "0x33F",
+      "start_byte": 0,
+      "mask": "0x01",
+      "verified": "on while any door is open, off about 2 s after closing"
+    },
+    {
+      "name": "boot_open",
+      "id": "0x33F",
+      "start_byte": 1,
+      "mask": "0x01",
+      "verified": "listen-only recording, once (byte 1 goes 0x02 -> 0x03)"
+    },
+    {
+      "name": "locked",
+      "id": "0x2FB",
+      "start_byte": 0,
+      "length": 2,
+      "byte_order": "big",
+      "values": {"0x5519": "locked", "0xAA0A": "unlocked"},
+      "verified": "listen-only recording, locked and unlocked with the key once"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "0x2B9",
+      "start_byte": 3,
+      "length": 1,
+      "guess": "on-board voltage x 0.2 V (68 with engine running, 62-63 with ignition on only)",
+      "status": "not fuel level; unconfirmed"
+    },
+    {
+      "id": "0x15A",
+      "guess": "door state again, 2-bit fields in two multiplexed frames; 0x33F is simpler",
+      "status": "seen, not decoded"
+    }
+  ],
+  "obd": {
+    "functional_only": true,
+    "notes": "The engine ECU answers mode 01 only on the functional address 0x7DF, not physically on 0x7E0 (UDS service 22 on 0x7E0 works).",
+    "ecus": {
+      "0x7E0/0x7E8": "engine",
+      "0x7E2/0x7EA": "chassis (ESP)",
+      "0x7E3/0x7EB": "unknown",
+      "0x7E4/0x7EC": "answers RPM, coolant, speed (transmission?)",
+      "0x7E5/0x7ED": "unknown"
+    },
+    "mode01_supported": {
+      "0x7E8": ["01", "04", "05", "0B", "0C", "0D", "0F", "10", "11", "13", "1C", "1F", "21", "23", "24", "30", "31", "33", "42", "45", "46", "49", "4A", "4C", "51", "5C", "66", "67", "68", "6C", "6D", "77", "85", "87", "88"],
+      "0x7EC": ["01", "04", "05", "0C", "0D", "21", "30", "31"]
+    },
+    "mode01_not_supported": ["2F", "5E", "A6"],
+    "uds_0x7E0": {
+      "answers": {
+        "0x2030": "raw 0x0298..0x0365 seen; NOT fuel level (another W205 shows the same range at about 53 %), meaning unknown",
+        "0x2017": "raw 200 with a cold engine, probably / 10 = degC (the OBDb formula gives 94 degC, wrong)"
+      },
+      "out_of_range": ["0x016B", "0x2095", "0x2071", "0x016F", "0x0163", "0x0168"]
+    }
+  },
+  "never_transmit": {
+    "notes": "Frames sent to normal message IDs on this bus are acted on. A tester-present / read-DID sweep over raw CAN started a Mercedes service call and unlocked the doors (unlock right after a frame on 0x245). Only listen, and only send OBD/UDS requests to the known diagnostic IDs above.",
+    "ids_seen_acting": ["0x245", "0x2C9", "0x355"]
+  }
+}

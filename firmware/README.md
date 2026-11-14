@@ -11,6 +11,7 @@ ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Que
 | `components/ec200u_gnss/` | GPS position from the EC200U's GNSS receiver (`AT+QGPSLOC`) |
 | `components/power_manager/` | parking mode / deep sleep (modes, wake timing in RTC memory) |
 | `tools/make_release.py` | packs a compiled firmware as an update for the dongle (manifest + image) |
+| `vehicles/` | vehicle profiles: broadcast CAN signals and OBD findings per car (JSON) |
 | `tools/obd_probe.py` | read-only OBD/UDS probe from a laptop via a WiCAN (ELM327 over TCP): supported PIDs, Mercedes DIDs, ECU/DID scan, live change watch (`--help`) |
 | `secrets.example.yaml` | keys the configuration needs (copy to `secrets.yaml`, which git ignores) |
 
@@ -164,7 +165,9 @@ Join the WiCAN's Wi-Fi (`192.168.80.1`, else `--host`), start the engine.
 
 **Passive recording (preferred on the W205):** the OBD port there carries a live vehicle bus (100+ broadcast IDs), so
 many values are readable without sending anything. Found on a 2015 W205 (diesel), each checked against the
-Mercedes app at two different times:
+Mercedes app at two different times (machine-readable, with the OBD findings:
+[`vehicles/mercedes-benz-c-class-w205.json`](vehicles/mercedes-benz-c-class-w205.json), format in
+[`vehicles/README.md`](vehicles/README.md)):
 
 | Value | CAN ID | Field |
 |---|---|---|
