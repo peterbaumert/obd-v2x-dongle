@@ -105,6 +105,45 @@
       "byte_order": "big",
       "values": {"0x5519": "locked", "0xAA0A": "unlocked"},
       "verified": "listen-only recording, locked and unlocked with the key once"
+    },
+    {
+      "name": "battery_voltage",
+      "id": "0x122",
+      "start_byte": 0,
+      "length": 1,
+      "scale": 0.1,
+      "unit": "V",
+      "verified": "12.0-12.1 V engine off, 12.8-12.9 V while starting, 14.8 V running (three recordings); dips by 0.1-0.2 V while window motors run or hazards blink"
+    },
+    {
+      "name": "reverse_gear",
+      "id": "0x020",
+      "start_byte": 4,
+      "mask": "0x02",
+      "verified": "listen-only recording, reverse engaged once (manual gearbox)"
+    },
+    {
+      "name": "parking_brake",
+      "id": "0x353",
+      "start_byte": 7,
+      "length": 1,
+      "values": {"0x33": "applied", "0x44": "released"},
+      "verified": "listen-only recording: applied at start, released and applied again once"
+    },
+    {
+      "name": "light_switch",
+      "id": "0x335",
+      "start_byte": 4,
+      "length": 1,
+      "values": {"0x10": "parking light (left/right position 1)", "0x20": "parking light (position 2)", "0x40": "sidelights", "0x01": "auto", "0x08": "low beam"},
+      "verified": "listen-only recording, switch turned through every position left to right; bit 0x04 is set while the front fog light button is pressed (0x05 seen twice)"
+    },
+    {
+      "name": "fog_light_button",
+      "id": "0x335",
+      "start_byte": 4,
+      "mask": "0x04",
+      "verified": "set briefly twice when the fog light button was pressed (momentary, not the lamp state)"
     }
   ],
   "candidates": [
@@ -112,8 +151,37 @@
       "id": "0x2B9",
       "start_byte": 3,
       "length": 1,
-      "guess": "on-board voltage x 0.2 V (68 with engine running, 62-63 with ignition on only)",
-      "status": "not fuel level; unconfirmed"
+      "guess": "unknown: 62-68 in early recordings, 81-82 later with the engine running; not fuel level, not voltage (voltage is 0x122)",
+      "status": "unconfirmed"
+    },
+    {
+      "name": "brake_pedal",
+      "id": "0x351",
+      "start_byte": 1,
+      "mask": "0x20",
+      "guess": "set while the brake pedal is pressed; 0x087 bytes 2-5 also ramp like brake pressure at the same time",
+      "status": "seen once"
+    },
+    {
+      "name": "driver_seatbelt",
+      "id": "0x2CF",
+      "start_byte": 5,
+      "mask": "0x01",
+      "guess": "set for ~2.4 s between two marks, probably belt buckled then unbuckled (marks had no notes)",
+      "status": "seen once, mapping uncertain"
+    },
+    {
+      "name": "start_stop_enabled",
+      "id": "0x141",
+      "start_byte": 0,
+      "mask": "0x20",
+      "guess": "cleared when the ECO Start/Stop button was pressed and set again on the second press (byte 3 goes 0x60 -> 0x20 at the same time)",
+      "status": "seen once, mapping uncertain"
+    },
+    {
+      "name": "not_on_this_bus",
+      "guess": "turn signals, hazard lights, power windows and the clutch pedal did not show up (no blinking or switching bits); they live on the comfort/body CAN",
+      "status": "checked, absent"
     },
     {
       "id": "0x15A",
