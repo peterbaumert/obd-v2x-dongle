@@ -92,7 +92,8 @@ bool PowerManager::usb_host_() {
 
 bool PowerManager::stay_awake_on_() {
   // A low backup cell overrides the "Stay awake" switch (only a computer on USB-C keeps it awake then)
-  return (this->stay_awake_ != nullptr && this->stay_awake_->state && !rtc_cell_low) || this->usb_host_();
+  const bool wanted = (this->stay_awake_ != nullptr && this->stay_awake_->state) || (this->keep_awake_ && this->keep_awake_());
+  return (wanted && !rtc_cell_low) || this->usb_host_();
 }
 
 bool PowerManager::unplugged_() const {

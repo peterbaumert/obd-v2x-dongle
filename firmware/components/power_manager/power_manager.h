@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include "esphome/components/adc/adc_sensor.h"
 #include "esphome/components/binary_sensor/binary_sensor.h"
 #include "esphome/components/deep_sleep/deep_sleep_component.h"
@@ -21,6 +23,8 @@ class PowerManager : public Component {
   void set_voltage_multiplier(float m) { this->multiplier_ = m; }
   void set_modem_status(binary_sensor::BinarySensor *s) { this->modem_status_ = s; }
   void set_stay_awake(switch_::Switch *s) { this->stay_awake_ = s; }
+  /// Extra reason to stay awake, asked like the "Stay awake" switch (e.g. a remote console session)
+  void set_keep_awake(std::function<bool()> &&f) { this->keep_awake_ = std::move(f); }
   void set_engine_on_voltage(number::Number *n) { this->engine_on_v_ = n; }
   void set_unplugged_voltage(number::Number *n) { this->unplugged_v_ = n; }
   void set_low_battery_voltage(number::Number *n) { this->low_batt_v_ = n; }
@@ -64,6 +68,7 @@ class PowerManager : public Component {
   float multiplier_{1.0f};
   binary_sensor::BinarySensor *modem_status_{nullptr};
   switch_::Switch *stay_awake_{nullptr};
+  std::function<bool()> keep_awake_;
   number::Number *engine_on_v_{nullptr};
   number::Number *unplugged_v_{nullptr};
   number::Number *low_batt_v_{nullptr};

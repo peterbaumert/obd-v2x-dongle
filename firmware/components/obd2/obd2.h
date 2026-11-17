@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <cmath>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -100,13 +101,19 @@ class Obd2Component : public Component {
   bool is_active() const { return this->active_; }
   /// Mode 04: clear stored fault codes (only while active), then read them again.
   void clear_dtcs();
+  /// Answers to a raw_request(): one call per ECU answer (complete message), then one with done = true.
+  using RawHandler = std::function<void(uint32_t can_id, const uint8_t *data, uint16_t len, bool done)>;
+  /// One diagnostic request typed by a person (remote console): a single frame of 1..7 bytes to 0x7DF or to one
+  /// ECU (0x7E0..0x7E7). Only services that read are accepted, and only while active (engine running).
+  /// Returns nullptr when it was queued, otherwise the reason it was refused.
+  const char *raw_request(uint32_t tx_id, const uint8_t *payload, uint8_t len, RawHandler &&handler);
 
  protected:
   static constexpr size_t MAX_MSG = 128;
   static constexpr uint8_t NUM_ECUS = 8;  // 0x7E8..0x7EF
   static constexpr uint8_t TX_SLOTS = 4;
 
-  enum class Pending : uint8_t { NONE, VIN, DTC, CLEAR };
+  enum class Pending : uint8_t { NONE, VIN, DTC, CLEAR, RAW };
 
   struct IsoTpRx {
     bool busy{false};
@@ -159,6 +166,7 @@ class Obd2Component : public Component {
   void handle_message_(uint8_t ecu, const uint8_t *d, uint16_t n);
   void handle_pid_(const uint8_t *d, uint16_t n);
   void finish_pending_();
+  void finish_raw_();
   void poll_pid_();
 
   std::vector<Pid> pids_;
@@ -176,6 +184,11 @@ class Obd2Component : public Component {
   std::vector<std::string> dtcs_;
   bool dtc_replied_{false};
   Pending pending_{Pending::NONE};
+  RawHandler raw_handler_;
+  bool want_raw_{false};
+  uint32_t raw_tx_id_{0};
+  uint8_t raw_req_[8]{};  // [PCI length, payload...]
+  uint32_t raw_since_{0};
   uint32_t pending_since_{0};
 
   int tx_pin_{-1};

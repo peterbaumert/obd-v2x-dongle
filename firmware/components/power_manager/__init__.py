@@ -29,6 +29,7 @@ CONF_BATTERY_ADC = "battery_adc"
 CONF_VOLTAGE_MULTIPLIER = "voltage_multiplier"
 CONF_MODEM_STATUS = "modem_status"
 CONF_STAY_AWAKE = "stay_awake"
+CONF_KEEP_AWAKE = "keep_awake"
 CONF_CELL_VOLTAGE = "cell_voltage"
 CONF_CELL_CUTOFF_VOLTAGE = "cell_cutoff_voltage"
 CONF_ON_NETWORK = "on_network"
@@ -58,6 +59,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_VOLTAGE_MULTIPLIER, default=1.0): cv.positive_float,
         cv.Optional(CONF_MODEM_STATUS): cv.use_id(binary_sensor.BinarySensor),
         cv.Optional(CONF_STAY_AWAKE): cv.use_id(switch.Switch),
+        cv.Optional(CONF_KEEP_AWAKE): cv.returning_lambda,
         cv.Optional(CONF_CELL_VOLTAGE): cv.use_id(sensor.Sensor),
         cv.Optional(CONF_CELL_CUTOFF_VOLTAGE): cv.use_id(number.Number),
         **{cv.Required(k): cv.use_id(number.Number) for k in SETTINGS},
@@ -82,6 +84,9 @@ async def to_code(config):
         cg.add(var.set_modem_status(await cg.get_variable(config[CONF_MODEM_STATUS])))
     if CONF_STAY_AWAKE in config:
         cg.add(var.set_stay_awake(await cg.get_variable(config[CONF_STAY_AWAKE])))
+    if CONF_KEEP_AWAKE in config:
+        keep = await cg.process_lambda(config[CONF_KEEP_AWAKE], [], return_type=cg.bool_)
+        cg.add(var.set_keep_awake(keep))
     if CONF_CELL_VOLTAGE in config:
         cg.add(var.set_cell_voltage(await cg.get_variable(config[CONF_CELL_VOLTAGE])))
     if CONF_CELL_CUTOFF_VOLTAGE in config:

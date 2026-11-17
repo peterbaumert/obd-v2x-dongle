@@ -1,7 +1,7 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.6, compiles (ESPHome 2026.11.0b4, ESP-IDF 5.5.6). No board has run it yet.**
+**Status: v0.7, compiles (ESPHome 2026.11.0b6). No board has run it yet.**
 
 | File | Purpose |
 |---|---|
@@ -10,6 +10,7 @@ ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Que
 | `components/obd2/` | OBD-II over CAN on ESP-IDF's TWAI node driver |
 | `components/ec200u_gnss/` | GPS position from the EC200U's GNSS receiver (`AT+QGPSLOC`) |
 | `components/power_manager/` | parking mode / deep sleep (modes, wake timing in RTC memory) |
+| `components/remote_console/` | text console through the tunnel (status, live log, read-only OBD requests, modem AT commands) |
 | `tools/make_release.py` | packs a compiled firmware as an update for the dongle (manifest + image) |
 | `vehicles/` | vehicle profiles: broadcast CAN signals and OBD findings per car (JSON) |
 | `tools/obd_probe.py` | read-only OBD/UDS probe from a laptop via a WiCAN (ELM327 over TCP): supported PIDs, Mercedes DIDs, ECU/DID scan, live change watch (`--help`) |
@@ -105,6 +106,36 @@ awake and the tunnel is up: driving, "Stay awake", or a computer on USB-C. Encry
 Safety: ESPHome `safe_mode` with ESP-IDF app rollback. If the new firmware crashes within 2 min of its first boot,
 the bootloader goes back to the previous one. USB-C stays the fallback.
 
+## Remote console
+
+A text prompt on the dongle's tunnel address for diagnostics from home. It is not SSH: there is no shell on an
+ESP32, and the WireGuard tunnel already encrypts the connection.
+
+1. Turn on **"Remote console"** in Home Assistant (*Configuration*). The port is closed while it is off. Like the
+   other settings the broker keeps the change until the dongle is awake; turn it off again when you are done.
+2. Connect from a computer in the home network: `nc <wireguard_address> 2323`, or PuTTY with connection type
+   *Raw*. Enter the `console_password` from your secrets.
+
+| Command | |
+|---|---|
+| `status` | uptime, reset reason, memory, modem, OBD, firmware version, power mode, car battery, MQTT, GPS |
+| `log on` / `log off` | live log in the session (`log error`, `log warn`, `log info`, `log debug` to limit it) |
+| `obd 01 0C` | one diagnostic request to all ECUs (0x7DF), answers as hex per ECU |
+| `obd 7E0 22 F1 90` | the same to one ECU (0x7E0..0x7E7) |
+| `AT+CSQ`, `AT+QENG="servingcell"` | modem command; the reply is shown |
+| `reboot`, `exit` | restart the dongle, close the session |
+
+Limits, on purpose:
+
+- **Only on the tunnel address.** A connection that arrives on the mobile network side is closed at once.
+- **OBD requests only read**: OBD modes 01, 02, 03, 06, 07, 09, 0A and UDS 0x19 / 0x22, single frame, and only while
+  the engine runs (like all OBD traffic). Nothing that writes, clears, resets or starts a routine.
+- **Modem commands** that would cut the link or cost money are refused (baud rate, power off, `AT+CFUN`, APN,
+  SIM PIN, SMS, dialling, factory reset).
+- One session at a time; a new one replaces the old. An open session keeps the dongle awake, and it closes after
+  10 min without input. A sleeping dongle cannot be reached: turn on "Stay awake" first (picked up at its next wake
+  with network).
+
 ## Entities (Home Assistant)
 
 Car battery, car battery low, unplugged, engine running, power mode · speed, engine RPM, coolant / intake / ambient temperature,
@@ -113,7 +144,7 @@ engine load, fuel level (OBD), ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/
 outside temperature, vehicle voltage, four tyre pressures, four doors, boot, locked, driver seatbelt, brake pedal,
 parking brake, A/C, ECO start/stop, light switch · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
-V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch · uptime.
+V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch, "Remote console" switch · uptime.
 
 Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flash = V2X frame.
 

@@ -12,6 +12,11 @@ static const uint32_t OBD_RESPONSE_ID = 0x7E8;  // ECU responses 0x7E8..0x7EF
 static const uint32_t ECU_REQUEST_OFFSET = 8;   // physical request address = response address - 8 (0x7E0..0x7E7)
 static const uint32_t REPLY_WINDOW_MS = 1000;   // collect answers of all ECUs to a VIN / DTC / clear request
 static const uint32_t VIN_RETRY_MS = 30000;
+static const uint32_t RAW_SEND_TIMEOUT_MS = 2000;  // raw request could not be sent (bus off, queue full)
+static const uint32_t RAW_MAX_WAIT_MS = 5000;      // longest wait when an ECU keeps answering "response pending"
+// Services a raw request may use: OBD modes 01/02/03/06/07/09/0A and UDS 0x19 (read fault memory),
+// 0x22 (read data by identifier). Nothing that writes, clears, resets, starts routines or changes the session.
+static const uint8_t RAW_SERVICES[] = {0x01, 0x02, 0x03, 0x06, 0x07, 0x09, 0x0A, 0x19, 0x22};
 static const uint8_t PAD = 0x55;
 static const uint32_t RESTORE_PREF_VERSION = 0x0B2D5160;  // keeps the signal store apart from other entity prefs
 
@@ -198,6 +203,7 @@ void Obd2Component::set_active(bool active) {
     ESP_LOGI(TAG, "Active: polling %u PIDs", static_cast<unsigned>(this->pids_.size()));
   } else {
     this->want_clear_ = false;
+    this->finish_raw_();
     this->save_signals_();  // values at engine stop (odometer, fuel, tyres); again when listening ends
     if (this->profile_ >= 0 && this->listen_after_stop_ > 0) {
       // Keep receiving the profile's broadcast frames (doors, lock) for a while; nothing is sent
@@ -208,6 +214,39 @@ void Obd2Component::set_active(bool active) {
       this->disable_node_();
     }
   }
+}
+
+const char *Obd2Component::raw_request(uint32_t tx_id, const uint8_t *payload, uint8_t len, RawHandler &&handler) {
+  if (!this->active_)
+    return "bus not active (requests are only sent while the engine runs)";
+  if (this->raw_handler_)
+    return "previous request still running";
+  if (len < 1 || len > 7)
+    return "1 to 7 bytes (single frame)";
+  if (tx_id != OBD_REQUEST_ID && (tx_id < OBD_RESPONSE_ID - ECU_REQUEST_OFFSET || tx_id >= OBD_RESPONSE_ID))
+    return "address must be 7DF or 7E0..7E7";
+  bool allowed = false;
+  for (uint8_t s : RAW_SERVICES)
+    allowed |= s == payload[0];
+  if (!allowed)
+    return "service not allowed (read-only: 01 02 03 06 07 09 0A 19 22)";
+  this->raw_tx_id_ = tx_id;
+  this->raw_req_[0] = len;
+  memcpy(this->raw_req_ + 1, payload, len);
+  this->raw_handler_ = std::move(handler);
+  this->raw_since_ = millis();
+  this->want_raw_ = true;
+  return nullptr;
+}
+
+void Obd2Component::finish_raw_() {
+  this->want_raw_ = false;
+  if (!this->raw_handler_)
+    return;
+  // Cleared before the call, so the handler may queue the next request
+  const RawHandler handler = std::move(this->raw_handler_);
+  this->raw_handler_ = nullptr;
+  handler(0, nullptr, 0, true);
 }
 
 void Obd2Component::clear_dtcs() {
@@ -311,7 +350,15 @@ void Obd2Component::loop() {
   this->last_poll_ = now;
 
   Pending next = Pending::NONE;
-  if (this->want_clear_) {
+  if (this->want_raw_) {
+    if (this->send_(this->raw_tx_id_, this->raw_req_, this->raw_req_[0] + 1)) {
+      this->want_raw_ = false;
+      this->raw_since_ = now;
+      next = Pending::RAW;
+    } else if (now - this->raw_since_ >= RAW_SEND_TIMEOUT_MS) {
+      this->finish_raw_();
+    }
+  } else if (this->want_clear_) {
     static const uint8_t req[] = {0x04};
     if (this->request_(req, sizeof(req))) {
       ESP_LOGI(TAG, "Clearing fault codes (mode 04)");
@@ -355,6 +402,9 @@ void Obd2Component::finish_pending_() {
   const Pending done = this->pending_;
   this->pending_ = Pending::NONE;
   switch (done) {
+    case Pending::RAW:
+      this->finish_raw_();
+      break;
     case Pending::DTC: {
       if (!this->dtc_replied_) {
         ESP_LOGW(TAG, "No ECU answered the fault code request");
@@ -518,6 +568,14 @@ void Obd2Component::handle_frame_(const RxFrame &f) {
 }
 
 void Obd2Component::handle_message_(uint8_t ecu, const uint8_t *d, uint16_t n) {
+  if (this->pending_ == Pending::RAW) {
+    // Answers to a raw request only go to whoever asked
+    if (n >= 3 && d[0] == 0x7F && d[2] == 0x78 && millis() - this->raw_since_ < RAW_MAX_WAIT_MS)
+      this->pending_since_ = millis();  // "response pending": the real answer follows, keep the window open
+    if (this->raw_handler_)
+      this->raw_handler_(OBD_RESPONSE_ID + ecu, d, n, false);
+    return;
+  }
   switch (d[0]) {
     case 0x41:  // mode 01 live data
       this->handle_pid_(d, n);

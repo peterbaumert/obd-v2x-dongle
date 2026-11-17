@@ -23,7 +23,7 @@ esphome:
   min_version: 2026.11.0
   project:
     name: obd-v2x-dongle.firmware
-    version: "0.6.0"
+    version: "0.7.0"
   on_boot:
     - priority: 800    # safe state before anything else runs
       then:
@@ -49,7 +49,7 @@ external_components:
   - source:
       type: local
       path: components
-    components: [otm_uplink, obd2, ec200u_gnss, power_manager]
+    components: [otm_uplink, obd2, ec200u_gnss, power_manager, remote_console]
 
 # ---------------------------------------------------------------- board control
 output:
@@ -205,6 +205,18 @@ switch:
     optimistic: true
     restore_mode: RESTORE_DEFAULT_OFF
     command_retain: true
+  - platform: template         # opens / closes the remote console's port (see remote_console below)
+    id: console_enabled
+    name: "Remote console"
+    icon: mdi:console
+    entity_category: config
+    optimistic: true
+    restore_mode: RESTORE_DEFAULT_OFF
+    command_retain: true
+    turn_on_action:
+      - lambda: id(console).set_enabled(true);
+    turn_off_action:
+      - lambda: id(console).set_enabled(false);
   - platform: template
     name: "Use eSIM"
     icon: mdi:sim
@@ -276,6 +288,29 @@ api:
   encryption:
     key: !secret api_encryption_key
   reboot_timeout: 0s               # it sleeps most of the time, no client is normal
+
+# ---------------------------------------------------------------- remote console (diagnostics through the tunnel)
+# A text prompt on the tunnel address: `nc <wireguard_address> 2323` or PuTTY, connection type "Raw". Not SSH: the
+# tunnel already encrypts. The port is only open while the "Remote console" switch is on, and it only answers on
+# the tunnel address (never on the mobile network side). Commands: help, status, log on|off, obd <hex bytes>
+# (read-only requests, engine running), AT... (modem), reboot, exit. An open session keeps the dongle awake.
+remote_console:
+  id: console
+  listen_address: !secret wireguard_address
+  port: 2323
+  password: !secret console_password
+  idle_timeout: 10min
+  obd2_id: obd
+  modem_id: lte
+  status: !lambda |-
+    char buf[200];
+    snprintf(buf, sizeof(buf),
+             "firmware    %s\npower mode  %s\ncar battery %.2f V\nengine      %s\nmqtt        %s\ngps         %s",
+             ESPHOME_PROJECT_VERSION, id(pm).get_mode_str(), id(car_battery).state,
+             id(engine_running).state ? "running" : "off",
+             id(mqtt_client).is_connected() ? "connected" : "not connected",
+             id(gnss).has_fix() ? "fix" : "no fix");
+    return std::string(buf);
 
 # ---------------------------------------------------------------- firmware updates
 # Two ways, both over LTE:
@@ -379,6 +414,7 @@ power_manager:
   voltage_multiplier: 11.0
   modem_status: lte_status
   stay_awake: stay_awake
+  keep_awake: !lambda return id(console).has_client();   # an open remote console session
   engine_on_voltage: set_engine_on_voltage
   unplugged_voltage: set_unplugged_voltage
   low_battery_voltage: set_low_battery_voltage
