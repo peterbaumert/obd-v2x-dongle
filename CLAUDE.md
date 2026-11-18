@@ -33,9 +33,11 @@
   DC block to the modem. All ESP32 GPIOs are in use.
 
 ## PCB
-- 52 x 65 mm, 4 layers: In1 = solid GND plane (no tracks), In2 = routing + GND pour; parts on both sides;
-  OBD plug at the front edge: the front edge is the plug's housing rear face, the whole housing (20 mm) sits
-  in front of the board so the case can grip its retention groove on all four sides.
+- 52 x 64.4 mm, 4 layers: In1 = solid GND plane (no tracks), In2 = routing + GND pour; parts on both sides;
+  OBD plug at the front edge: the whole housing (20 mm) sits in front of the board (front edge 0.35 mm behind
+  the housing rear face) so the case can grip its retention groove on all four sides. CR-PG001 drawing: the
+  "5.65" goes to the outer leg EDGE (leg centres 5.25 / 2.25 behind the rear face), and the leg tips end level
+  with the housing bottom, so the housing sits ~1 mm below the board's bottom face.
 - The board was bootstrapped by `hardware/tools/gen_pcb.py` (run with KiCad's bundled Python, `<KiCad>/bin/python`).
   `preroute.py` (RF lines, buck SW node) and `silk.py` (reference placement) also run with it.
   It refuses to overwrite an existing board; `--force` regenerates and **loses all routing/manual moves**.

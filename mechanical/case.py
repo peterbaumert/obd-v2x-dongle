@@ -8,28 +8,30 @@ Needs build123d (pip install build123d; pyvista for --render) and KiCad 10 (kica
 3D model to build/board.step, which sets where ledges and ribs may go).
 
 Coordinates are the board STEP's (kicad-cli pcb export step): x = KiCad x, y = -KiCad y (+y = front,
-towards the car), z = 0 at the board's bottom face. The board is 52 x 65 mm, x 100..152, KiCad y 59..124.
+towards the car), z = 0 at the board's bottom face. The board is 52 x 64.4 mm, x 100..152, KiCad y 59.6..124.
 
 Concept
 - Bottom shell + lid, split at the board's top face. The board rests on ledges in the bottom shell and the
   lid presses on its top edge; there are no mounting holes.
-- The OBD plug J201 sits entirely in front of the board edge. Its retention groove (behind the 1.5 mm rear
-  flange) takes a U-shaped rib of the lid (top + both sides) and a straight rib of the bottom shell, so
-  plugging and unplugging loads the case, not the solder joints.
+- The OBD plug J201 sits entirely in front of the board edge, its bottom 1 mm below the board's bottom face (the
+  leg tips end level with the housing bottom). Its retention groove (behind the 2.0 mm rear flange) takes a
+  U-shaped rib of the lid (top + both sides) and a straight rib of the bottom shell, so plugging and unplugging
+  loads the case, not the solder joints. Solder J201 with board and plug lying in the bottom shell.
 - Two M2.5 self-tapping screws from below at the front corners (next to the plug), two hooks at the rear
   (lid goes in at an angle, rear first, then folds down).
 - Openings: USB-C (rear), RESET/BOOT pin holes with guide tubes, LED light-pipe tube (3 mm rod), all in the
   bottom. The backup cell lies in a pocket on the floor of the bottom shell.
 - Antennas (LTE, GNSS, 5.9 GHz) are flex antennas stuck to the inside of the lid / floor.
 
-Plug dimensions marked MEASURE are from the Jiatel CR-PG001 drawing or estimated; set them from the real
-plug (calliper) before printing the final case.
+Plug dimensions are from the CR-PG001 drawing (Elecbee / Jiatel, read from the PDF's vector data). Check them
+on the real plug (calliper) with the fit test before printing the final case.
 """
 import argparse
 import sys
 from pathlib import Path
 
-from build123d import (Axis, Box, Compound, Cylinder, Pos, export_step, export_stl, fillet, import_step)
+from build123d import (Axis, Box, Compound, Cylinder, Face, Kind, Pos, Vector, Wire, export_step, export_stl,
+                       extrude, fillet, import_step, offset)
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / 'out'
@@ -37,19 +39,23 @@ BUILD = HERE / 'build'
 
 # ------------------------------------------------------------------ board (from the KiCad layout)
 BX0, BX1 = 100.0, 152.0          # board x
-BYF, BYR = -58.95, -124.05       # board front / rear edge (STEP y)
+BYF, BYR = -59.55, -124.05       # board front / rear edge (STEP y)
 BT = 1.6                         # board thickness (top face z)
 USB_OVERHANG = 0.3               # J301 sticks out of the rear edge
 
-# ------------------------------------------------------------------ OBD plug J201 (MEASURE)
+# ------------------------------------------------------------------ OBD plug J201 (CR-PG001 drawing)
 PLUG_CX = 126.0                  # centre between pin 1 (x 140) and pin 8 (x 112)
-PLUG_W, PLUG_H, PLUG_D = 37.6, 17.8, 20.0   # housing width, height, depth (drawing)
-PLUG_R = 1.5                     # housing corner radius (MEASURE: the real D shape has chamfers)
-PLUG_Z0 = BT                     # housing bottom (MEASURE: assumed flush with the board top)
-PLUG_REAR = -58.85               # housing rear face (footprint: 2.65 in front of pin 1)
-FLANGE = 1.5                     # rear flange thickness (drawing)
-GROOVE_W = 2.5                   # groove width along y (MEASURE)
-GROOVE_D = 1.0                   # groove depth (MEASURE)
+PLUG_REAR = -59.25               # housing rear face: pin 1-8 leg centres 2.25 behind it (KiCad y 61.5)
+PLUG_Z0 = -1.0                   # housing bottom = leg tips: 1.0 mm below the board's bottom face
+PLUG_D = 20.0                    # rear face to mating face
+FLANGE_T, FLANGE_W = 2.0, 37.6   # rear flange: thickness, width
+FLANGE_Z = (0.33, 17.51)         # flange bottom / top above PLUG_Z0
+GROOVE_W = 2.0                   # groove (neck) length along y
+NECK_W, NECK_Z = 33.6, (1.92, 15.91)
+BODY_W, BODY_W_TOP, PLUG_H = 40.26, 37.4, 17.8   # D-shaped body: width on the board side / key side, height
+BODY_R, BODY_R_TOP = 3.9, 2.65   # body corner radii
+KEY_W, KEY_W_TOP, KEY_H = 13.0, 10.0, 1.5        # key bump on top of the body
+KEY_Y = 6.8                      # key bump starts this far in front of the rear face, runs to the mating face
 
 # ------------------------------------------------------------------ case
 WALL = 2.0                       # side / rear wall
@@ -59,24 +65,24 @@ GAP = 0.3                        # board edge to wall
 FIT = 0.1                        # rib clearance in the groove (per side)
 PLUG_FIT = 0.2                   # opening around the plug shroud (per side)
 Z_IN_BOT = -11.0                 # inner floor: room for the JST-PH lead on J501 and the cell
-Z_IN_TOP = PLUG_Z0 + PLUG_H + 0.3
+Z_IN_TOP = PLUG_Z0 + PLUG_H + KEY_H + 0.3
 FRONT_OUT = -51.5                # front face of the case (around the plug shroud)
 EDGE_R = 3.0                     # vertical outer edge radius
 LEDGE = 1.0                      # board overlap of ledges / press ribs
 
 X_IN0, X_IN1 = BX0 - GAP, BX1 + GAP
 Y_IN_REAR = BYR - USB_OVERHANG - GAP
-Y_RIB0 = PLUG_REAR + FLANGE + FIT                 # rib rear face = front of the case interior
-Y_RIB1 = PLUG_REAR + FLANGE + GROOVE_W - FIT
+Y_RIB0 = PLUG_REAR + FLANGE_T + FIT               # rib rear face = front of the case interior
+Y_RIB1 = PLUG_REAR + FLANGE_T + GROOVE_W - FIT
 X_OUT0, X_OUT1 = X_IN0 - WALL, X_IN1 + WALL
 Y_OUT_REAR = Y_IN_REAR - WALL
 Z_OUT_BOT, Z_OUT_TOP = Z_IN_BOT - FLOOR, Z_IN_TOP + ROOF
 SPLIT = BT
 
 # screws: M2.5 self-tapping, from below, in the solid corners beside the plug
-SCREWS = [(103.3, -54.4), (148.7, -54.4)]
-SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 2.2, 2.8, 5.0
-SCREW_HEAD_TOP = -2.0            # counterbore from below up to here (3.6 mm clamp in the bottom shell)
+SCREWS = [(103.3, -54.8), (148.7, -54.8)]   # 0.55 mm wall in front of the head counterbore
+SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 2.2, 2.8, 5.5   # head counterbore fits a 2.5 mm PT pan head (~5 mm)
+SCREW_HEAD_TOP = -2.5            # counterbore from below up to here (4.1 mm clamp, 1.3 mm under the plug opening)
 
 # rear hooks (lid) into notches of the bottom shell's rear wall
 HOOKS = [112.0, 128.0]           # x centres, clear of the USB-C opening
@@ -90,7 +96,7 @@ BUTTON_FACE = -1.63
 PIN_HOLE, PIN_TUBE = 1.6, 4.0
 LED = (106.0, -120.0)            # D301 SK6812MINI-HS on the bottom, ~1.4 tall
 LED_FACE = -1.4
-LIGHTPIPE, LIGHTPIPE_TUBE = 3.2, 5.0
+LIGHTPIPE, LIGHTPIPE_TUBE = 3.0, 5.0   # Bivar PLP2-10MM press-fit (Bivar hole 2.92 mm; FDM holes print a little small)
 
 # backup cell: 1S LiPo, e.g. 402535 + PCM (MEASURE the cell you buy)
 CELL_L, CELL_W, CELL_T = 38.0, 26.0, 4.5
@@ -106,8 +112,10 @@ SUBSTITUTES = [
     ('D301', 104.15, 107.85, 118.25, 121.75, -1.4, 0.0),
     ('U501', 135.0, 137.0, 99.0, 101.0, -1.0, 0.0),
     ('U404', 115.1, 116.9, 81.7, 84.3, -0.6, 0.0),
-    ('J201', 110.0, 142.0, 58.85, 66.0, BT, PLUG_Z0 + PLUG_H),   # plug legs behind the housing (MEASURE)
-    ('J201', PLUG_CX - PLUG_W / 2, PLUG_CX + PLUG_W / 2, 38.85, 58.85, PLUG_Z0, PLUG_Z0 + PLUG_H),  # housing
+    ('J201', 110.0, 142.0, -PLUG_REAR, 66.0, BT, PLUG_Z0 + 13.5),             # plug legs behind the housing
+    # housing, split at the board top so it blocks ledges (bottom) and press ribs (lid)
+    ('J201', PLUG_CX - BODY_W / 2, PLUG_CX + BODY_W / 2, -PLUG_REAR - PLUG_D, -PLUG_REAR, PLUG_Z0, BT),
+    ('J201', PLUG_CX - BODY_W / 2, PLUG_CX + BODY_W / 2, -PLUG_REAR - PLUG_D, -PLUG_REAR, BT, PLUG_Z0 + PLUG_H + KEY_H),
 ]
 
 
@@ -115,24 +123,53 @@ def box(x0, x1, y0, y1, z0, z1):
     return Pos((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2) * Box(x1 - x0, y1 - y0, z1 - z0)
 
 
-def rounded_y(x0, x1, y0, y1, z0, z1, r):
-    """box with its edges along y rounded (plug cross-section)"""
-    b = box(x0, x1, y0, y1, z0, z1)
-    return fillet(b.edges().filter_by(Axis.Y), r) if r > 0 else b
+def prism(pts, y0, y1, radii=None, grow=0.0):
+    """polygon in the x-z plane (pts = [(x, z)]), corners rounded (radii per point), offset by grow, extruded y0..y1"""
+    f = Face(Wire.make_polygon([Vector(x, y0, z) for x, z in pts], close=True))
+    for (x, z), r in zip(pts, radii or []):
+        if r > 0:
+            f = fillet([min(f.vertices(), key=lambda v: (v.X - x) ** 2 + (v.Z - z) ** 2)], r)
+    if grow:
+        f = offset(f, grow, kind=Kind.ARC)
+    return extrude(f, amount=y1 - y0, dir=(0, 1, 0))
 
 
-def plug_section(y0, y1, inset=0.0, grow=0.0):
-    d = grow - inset
-    return rounded_y(PLUG_CX - PLUG_W / 2 - d, PLUG_CX + PLUG_W / 2 + d, y0, y1,
-                     PLUG_Z0 - d, PLUG_Z0 + PLUG_H + d, max(PLUG_R + d, 0.3))
+def rrect(w, z0, z1, y0, y1, r, grow=0.0):
+    x0, x1 = PLUG_CX - w / 2, PLUG_CX + w / 2
+    return prism([(x0, z0), (x1, z0), (x1, z1), (x0, z1)], y0, y1, [r] * 4, grow)
+
+
+BODY_FIX = 0.652                 # the rounded bottom corners pull the widest point in: widen the trapezoid
+
+
+def plug_body(y0, y1, grow=0.0):
+    """D-shaped body (wide side on the board) with the key bump on top"""
+    hb, ht = (BODY_W + BODY_FIX) / 2, (BODY_W_TOP + 0.3) / 2
+    z0, z1 = PLUG_Z0, PLUG_Z0 + PLUG_H
+    body = prism([(PLUG_CX - hb, z0), (PLUG_CX + hb, z0), (PLUG_CX + ht, z1), (PLUG_CX - ht, z1)], y0, y1,
+                 [BODY_R, BODY_R, BODY_R_TOP, BODY_R_TOP], grow)
+    ky0 = max(y0, PLUG_REAR + KEY_Y)
+    if ky0 < y1:
+        kb, kt = KEY_W / 2 + grow, KEY_W_TOP / 2 + grow
+        body += prism([(PLUG_CX - kb, z1 - 1.0), (PLUG_CX + kb, z1 - 1.0), (PLUG_CX + kb, z1),
+                       (PLUG_CX + kt, z1 + KEY_H + grow), (PLUG_CX - kt, z1 + KEY_H + grow), (PLUG_CX - kb, z1)],
+                      ky0, y1)
+    return body
+
+
+def plug_flange(y0, y1, grow=0.0):
+    return rrect(FLANGE_W, PLUG_Z0 + FLANGE_Z[0], PLUG_Z0 + FLANGE_Z[1], y0, y1, 1.5, grow)
+
+
+def plug_neck(y0, y1, grow=0.0):
+    return rrect(NECK_W, PLUG_Z0 + NECK_Z[0], PLUG_Z0 + NECK_Z[1], y0, y1, 1.0, grow)
 
 
 def plug_model():
-    """J201 housing: rear flange, groove, shroud (for the fit check)"""
-    rear = plug_section(PLUG_REAR, PLUG_REAR + FLANGE)
-    neck = plug_section(PLUG_REAR + FLANGE, PLUG_REAR + FLANGE + GROOVE_W, inset=GROOVE_D)
-    front = plug_section(PLUG_REAR + FLANGE + GROOVE_W, PLUG_REAR + PLUG_D)
-    return rear + neck + front
+    """J201 housing: rear flange, groove (neck), D-shaped body with key bump (fit check, render)"""
+    r = PLUG_REAR
+    return (plug_flange(r, r + FLANGE_T) + plug_neck(r + FLANGE_T, r + FLANGE_T + GROOVE_W) +
+            plug_body(r + FLANGE_T + GROOVE_W, r + PLUG_D))
 
 
 def ledge_segments(edge_parts, axis_lo, axis_hi, coord, band_lo, band_hi):
@@ -204,9 +241,9 @@ def build(parts):
     outer = box(X_OUT0, X_OUT1, Y_OUT_REAR, FRONT_OUT, Z_OUT_BOT, Z_OUT_TOP)
     outer = fillet(outer.edges().filter_by(Axis.Z), EDGE_R)
     body = outer - box(X_IN0, X_IN1, Y_IN_REAR, Y_RIB0, Z_IN_BOT, Z_IN_TOP)
-    # plug: groove core through the rib, full shroud outline in front of it
-    body -= plug_section(Y_RIB0 - 0.01, Y_RIB1, inset=GROOVE_D)
-    body -= plug_section(Y_RIB1, FRONT_OUT + 1, grow=PLUG_FIT)
+    # plug: neck through the rib, the D-shaped body (with key) in front of it
+    body -= plug_neck(Y_RIB0 - 0.01, Y_RIB1 + 0.01, grow=FIT)
+    body -= plug_body(Y_RIB1, FRONT_OUT + 1, grow=PLUG_FIT)
     # USB-C
     body -= box(USB_X - USB_OPEN_W / 2, USB_X + USB_OPEN_W / 2, Y_OUT_REAR - 1, Y_IN_REAR + 0.01,
                 USB_Z - USB_OPEN_H / 2, USB_Z + USB_OPEN_H / 2)
@@ -231,8 +268,10 @@ def build(parts):
 
     # split: everything above the board top goes to the lid, except the bottom rib under the plug
     bottom_keep = box(X_OUT0 - 1, X_OUT1 + 1, Y_OUT_REAR - 1, FRONT_OUT + 1, Z_OUT_BOT - 1, SPLIT)
-    bottom_keep += box(PLUG_CX - PLUG_W / 2, PLUG_CX + PLUG_W / 2, Y_RIB0 - 0.01, Y_RIB1 + 0.01,
-                       SPLIT - 0.01, PLUG_Z0 + GROOVE_D)
+    neck_bot = PLUG_Z0 + NECK_Z[0] - FIT       # bottom rib under the neck (only if the neck is above the split)
+    if neck_bot > SPLIT:
+        bottom_keep += box(PLUG_CX - NECK_W / 2, PLUG_CX + NECK_W / 2, Y_RIB0 - 0.01, Y_RIB1 + 0.01,
+                           SPLIT - 0.01, neck_bot)
     bottom = body & bottom_keep
     lid = body - bottom_keep
 
@@ -272,7 +311,7 @@ def check(bottom, lid, parts):
                 ok = False
                 print(f'  COLLISION {name} x {tname}: {v:.2f} mm3')
     # the ribs must actually sit in the groove
-    groove = plug_section(PLUG_REAR + FLANGE, PLUG_REAR + FLANGE + GROOVE_W) - plug_model()
+    groove = plug_flange(PLUG_REAR + FLANGE_T, PLUG_REAR + FLANGE_T + GROOVE_W) - plug_model()
     for name, shell in (('bottom', bottom), ('lid', lid)):
         print(f'  {name} rib in the groove: {(shell & groove).volume:.1f} mm3')
     # USB-C: opening in front of the receptacle

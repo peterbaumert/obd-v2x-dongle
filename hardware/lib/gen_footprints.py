@@ -150,10 +150,13 @@ def obd_plug():
     Origin = pin 1. Mating face points to -y (towards the board edge / car socket).
     Row y=0 (nearer the housing) = pins 1..8, row y=+3 = pins 9..16, pin n and n+8 aligned.
     Pin 1 at x=0, pin 8 at x=-28 (top view). From the drawing: top view numbers the outer tails 9..16,
-    section A-A shows the contact row nearer the board bending into the leg row nearer the housing,
-    and the outer leg row 5.65 behind the housing rear face.
-    The housing has a retention groove right behind its 1.5 mm rear flange: the board edge sits at the rear
-    face so the case can grip the groove on all four sides (housing fully off the board).
+    section A-A shows the contact row nearer the board bending into the leg row nearer the housing.
+    The drawing's 5.65 runs from the housing rear face to the OUTER edge of the 0.8 mm outer leg (checked in the
+    PDF's vector data, top view and section A-A agree): leg centres 5.25 / 2.25 behind the rear face.
+    The leg tips end level with the housing bottom (3.97 mm straight below the bend), so the housing sits lower
+    than the board top and must be fully in front of the board edge (board edge 0.35 behind the rear face).
+    Housing (drawing): rear flange 37.6 x 17.2 x 2.0, groove 2.0 (neck 33.6 x 14.0), D-shaped body 40.26 wide
+    (37.4 on the key side) x 17.8 x 16.0 with a 13 x 1.5 key bump.
     """
     P, ROW, DRILL, DIA = 4.0, 3.0, 1.45, 2.3
     body = ''
@@ -162,8 +165,8 @@ def obd_plug():
         body += tht(k + 1, x, 0, DRILL, DIA, 'rect' if k == 0 else 'circle')
         body += tht(k + 9, x, ROW, DRILL, DIA)
     cx = -P * 3.5                                   # centre between pin 1 and pin 8
-    hw = 37.6 / 2                                   # housing width
-    rear = -(5.65 - ROW)                            # housing rear face, 5.65 from the outer leg row
+    hw = 40.26 / 2                                  # housing (body) width
+    rear = -(5.25 - ROW)                            # housing rear face, 5.25 from the outer leg row centres
     front = rear - 20.0                             # housing / shroud front (20.0 deep)
     body += rect(cx - hw, front, cx + hw, rear, 'F.Fab', 0.1)
     body += rect(cx - hw - 0.5, front - 0.5, cx + hw + 0.5, ROW + DIA / 2 + 0.5, 'F.CrtYd', 0.05)
@@ -173,7 +176,7 @@ def obd_plug():
     assert body.count('(pad ') == 16
     return footprint('OBD2_J1962_Plug_PCB',
                      'OBD-II SAE J1962 male plug, 16 pin, 90 deg THT, 2x8 P4.00 rows 3.00. '
-                     'Jiatel CR-PG001 drawing. Mating face towards -y, housing rear face 2.65 in front of pin 1',
+                     'Jiatel CR-PG001 drawing. Mating face towards -y, housing rear face 2.25 in front of pin 1',
                      'OBD OBD2 J1962 plug connector', 26, body)
 
 

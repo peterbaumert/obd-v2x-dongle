@@ -22,18 +22,18 @@ overlap of the case with the PCB, the parts or the OBD plug. Re-run it after boa
 
 ## Concept
 
-- **Size** 56.6 × 75 × 34.7 mm, 87.8 mm long including the OBD plug that sticks out at the front.
+- **Size** 56.6 × 75 × 33.6 mm, 87.4 mm long including the OBD plug that sticks out at the front.
 - **Bottom shell + lid**, split at the board's top face. The board rests on ledges in the bottom shell, and the lid
   presses on its top edge. The board has no mounting holes.
 - **OBD plug J201** sits entirely in front of the board. A U-shaped rib in the lid (top and both sides) and a
-  straight rib in the bottom shell sit in the plug's retention groove behind its 1.5 mm rear flange. Plugging and
+  straight rib in the bottom shell sit in the plug's retention groove behind its 2.0 mm rear flange. Plugging and
   unplugging load the case, not the solder joints.
-- **Closing:** two M2.5 × 12 self-tapping screws from below, in the corners beside the plug, plus two hooks at the
+- **Closing:** two 2.5 × 12 self-tapping screws from below (Keystone 689 #4 × ½" or PT 2.5 × 12, head ≤ Ø 5.3 mm), in the corners beside the plug, plus two hooks at the
   rear. To close, put the lid on rear first and fold it down at the front.
 - **Openings:**
   - USB-C at the rear.
   - RESET and BOOT pin holes with guide tubes in the bottom (use a paper clip).
-  - A Ø 3 mm light pipe for the LED: clear acrylic or PMMA rod, 11 mm long.
+  - A Ø 3 mm light pipe for the LED: Bivar PLP2-10MM pressed into the Ø 3.0 mm hole (or a clear PMMA rod, 11 mm).
 - **Backup cell:** pocket on the floor for a 1S LiPo, e.g. 402535 + PCM, 38 × 26 × 4.5 mm. The JST-PH lead goes
   to J501. The NTC RT501 is on the board, so it measures the case air, not the cell surface.
 - **Antennas** (LTE, GNSS, 5.9 GHz): flex antennas stuck to the inside of the lid (LTE, GNSS) and the floor
@@ -43,15 +43,20 @@ overlap of the case with the PCB, the parts or the OBD plug. Re-run it after boa
 
 ## Before printing the final version
 
-Values marked `MEASURE` in `case.py` come from the Jiatel CR-PG001 drawing or are estimates. Measure them on
-the real plug and on your cell:
+The plug values in `case.py` come from the CR-PG001 drawing (Elecbee's PDF, same part as Jiatel's), read
+from the PDF's vector data. Check them on the real plug, and measure your cell:
 
-| Parameter | Now | What to measure |
+| Parameter | Now | What to check |
 |---|---|---|
-| `PLUG_W`, `PLUG_H` | 37.6 × 17.8 mm | housing outline (and its D-shape chamfers, `PLUG_R`) |
-| `PLUG_Z0` | flush with the board top | housing bottom relative to the board top |
-| `FLANGE`, `GROOVE_W`, `GROOVE_D` | 1.5 / 2.5 / 1.0 mm | rear flange thickness, groove width and depth |
+| `BODY_W`, `BODY_W_TOP`, `PLUG_H` | 40.26 / 37.4 × 17.8 mm | D-shaped body: width on the board side / key side, height |
+| `KEY_W`, `KEY_H` | 13 × 1.5 mm | key bump on top |
+| `FLANGE_T`, `FLANGE_W`, `FLANGE_Z` | 2.0 mm, 37.6 × 17.2 mm | rear flange |
+| `GROOVE_W`, `NECK_W`, `NECK_Z` | 2.0 mm, 33.6 × 14.0 mm | groove behind the flange |
+| `PLUG_REAR` | 2.25 mm in front of the pin 1–8 leg centres | rear face to the nearer leg row |
+| `PLUG_Z0` | 1.0 mm below the board bottom | how far the leg tips stick out (they end level with the housing bottom) |
 | `CELL_*` | 38 × 26 × 4.5 mm | the cell you buy |
 
+Solder J201 with the board and the plug lying in the bottom shell: the shell then sets the plug's height.
+
 Test-print just the plug end first: `python mechanical/case.py --fit-test` writes `out/fit_test_plug_end.stl`
-(front 12 mm of both shells behind the board edge, in print orientation, ~15 cm³).
+(front 12 mm of both shells behind the board edge, in print orientation, ~13 cm³).
