@@ -172,7 +172,13 @@ def obd_plug():
     rear = -(5.25 - ROW)                            # housing rear face, 5.25 from the outer leg row centres
     front = rear - 20.0                             # housing / shroud front (20.0 deep)
     body += rect(cx - hw, front, cx + hw, rear, 'F.Fab', 0.1)
-    body += rect(cx - hw - 0.5, front - 0.5, cx + hw + 0.5, ROW + DIA / 2 + 0.5, 'F.CrtYd', 0.05)
+    # courtyard: the housing (in front of the board edge), and behind it only the two leg rows, so parts and the
+    # spacer holes can sit in the board's front corners beside the legs
+    x0, x1, xa, xb = cx - hw - 0.5, cx + hw + 0.5, -P * 7 - DIA / 2 - 0.5, DIA / 2 + 0.5
+    y0, y1, y2 = front - 0.5, rear + 0.5, ROW + DIA / 2 + 0.5
+    pts = [(x0, y0), (x1, y0), (x1, y1), (xb, y1), (xb, y2), (xa, y2), (xa, y1), (x0, y1)]
+    for (ax, ay), (bx, by) in zip(pts, pts[1:] + pts[:1]):
+        body += line(ax, ay, bx, by, 'F.CrtYd', 0.05)
     # silk: pin-1 marker only (the housing sits off the board, in front of its edge)
     body += line(1.8, -1.8, 1.8, 1.8, 'F.SilkS', 0.15)
     body += line(cx - hw, front + 2, cx + hw, front + 2, 'F.Fab', 0.1)
@@ -241,7 +247,7 @@ def sky65943():
     """Skyworks SKY65943-11 GNSS front end (SAW + LNA + SAW), MCM-10, 2.5 x 2.5 x 0.65 mm.
     Data sheet 204404H, Figure 7 (PCB metallization, top view): pads 0.425 wide at x +-1.1875, rows at y 0, +-0.5
     (0.275 high) and +-1.1435 (0.515 high); pins 1-5 down the left side, 10-6 down the right. Drawing y is up:
-    negated here. Centre ground copper 1.45 wide (0.25 to the pads) over the package height = pad 11.
+    negated here. Centre ground copper 1.4 wide (data sheet: 1.45, 0.25 to the pads; 0.275 here) over the package height = pad 11.
     Paste on the centre pad as three apertures. The data sheet shows 8 filled thermal vias (0.3 mm, 0.6 pitch)
     in the centre pad: optional, add them in the layout."""
     px = 1.1875
@@ -249,7 +255,7 @@ def sky65943():
             (5, -px, -1.1435, 0.515), (6, px, -1.1435, 0.515), (7, px, -0.5, 0.275), (8, px, 0.0, 0.275),
             (9, px, 0.5, 0.275), (10, px, 1.1435, 0.515))
     body = ''.join(pad(n, 'rect', x, -y, 0.425, h) for n, x, y, h in rows)
-    body += (f'\t(pad "11" smd rect (at 0 0) (size 1.45 2.4) (layers "F.Cu" "F.Mask") (uuid "{uid("sky/ep")}"))\n')
+    body += (f'\t(pad "11" smd rect (at 0 0) (size 1.4 2.4) (layers "F.Cu" "F.Mask") (uuid "{uid("sky/ep")}"))\n')
     for i, (y, h) in enumerate(((-0.8775, 0.66), (0, 0.6), (0.8775, 0.66))):
         body += (f'\t(pad "" smd rect (at 0 {f(y)}) (size 1.3 {f(h)}) (layers "F.Paste") (uuid "{uid(f"sky/paste{i}")}"))\n')
     b = 1.25

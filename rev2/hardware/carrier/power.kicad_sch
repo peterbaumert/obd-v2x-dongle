@@ -6659,7 +6659,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:TI_SO-PowerPAD-8_ThermalVias"
+		(property "Footprint" "Package_SO:TI_SO-PowerPAD-8"
 			(at 193.04 40.64 0)
 			(hide yes)
 			(show_name no)

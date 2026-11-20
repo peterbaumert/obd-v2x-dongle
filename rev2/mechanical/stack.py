@@ -46,7 +46,8 @@ def part(name, x0, y0, w, l, z0, h, group, note=''):
     return dict(name=name, x=(x0, x0 + w), y=(y0, y0 + l), z=(z0, z0 + h), group=group, note=note)
 
 
-HDR_L, HDR_W = 20.3, 5.0         # 2 x 8, 2.54 mm
+HDR_L, HDR_W = 20.3, 5.0         # 2 x 8, 2.54 mm (body)
+HDR_X = 2.2                      # body this far inside the board edge: the SMD pads need 8.2 mm, 0.6 mm from the edge
 HDR_Y = BYF - 8.0 - HDR_L        # headers start 8 mm behind the front edge (behind the plug legs)
 CELL = (30.0, 20.0, 5.2)         # x, y, z: the larger common format, lying across
 CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + 2.1   # on parts up to 2.0 mm tall
@@ -56,13 +57,14 @@ PARTS = [
     part('carrier PCB', BX0, BYR, BW, BL, 0, BT, 'pcb'),
     part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, PLUG_Z0 + 13.5 - BT, 'plug', 'rev 1 box: legs and bends'),
     part('plug leg tips (below)', 110.0, -66.0, 32.0, 6.75, PLUG_Z0, -PLUG_Z0, 'plug'),
-    part('EC200U', BX0 + 1.0, BYR + 1.5, 29.0, 32.0, -2.4, 2.4, 'carrier-bottom'),
-    part('socket L', BX0 + 0.5, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
-    part('socket R', BX1 - 0.5 - HDR_W, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
-    part('buck inductor', BX1 - 7.5 - 7.0, -66.0 - 8.0, 7.0, 6.6, BT, 4.8, 'carrier-top'),
-    part('tantalum 220u', BX1 - 7.5 - 7.3, -66.0 - 13.5, 7.3, 4.3, BT, 3.1, 'carrier-top'),
-    part('TVS SMC', 121.0, -66.0 - 7.0, 8.0, 5.9, BT, 2.3, 'carrier-top'),
-    part('JST-PH side entry', 109.5, -66.5 - 7.6, 8.0, 7.6, BT, 5.5, 'carrier-top',
+    part('EC200U', BX0 + 3.0, BYR + 3.0, 28.0, 31.0, -2.4, 2.4, 'carrier-bottom', 'body; pads reach 1.65 mm further'),
+    part('socket L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
+    part('socket R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
+    part('buck inductor', BX0 + 20.3, BYF - 14.3, 7.0, 6.6, BT, 4.8, 'carrier-top'),
+    part('tantalum 220u A', BX0 + 28.85, BYF - 15.65, 4.3, 7.3, BT, 3.1, 'carrier-top'),
+    part('tantalum 220u B', BX0 + 10.65, BYF - 22.45, 7.3, 4.3, BT, 3.1, 'carrier-top'),
+    part('TVS SMC', BX0 + 36.05, BYF - 18.0, 5.9, 8.0, -2.3, 2.3, 'carrier-bottom', 'beside the modem'),
+    part('JST-PH side entry', BX0 + 10.3, BYF - 16.3, 8.0, 7.6, BT, 5.5, 'carrier-top',
          'S2B-PH-SM4-TB, 5.5 mm, under the ESP32 module; outline CHECK'),
     # --- between the boards
     part('spacer L', BX0 + 1.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header', 'M2.5 x 11 mm, front corner'),
@@ -71,16 +73,17 @@ PARTS = [
          '5.2 x 20 x 30 mm, on carrier parts up to 2.0 mm tall'),
     # --- upper board
     part('upper PCB', BX0, BYR, BW, BL, UZ0, BT, 'pcb'),
-    part('header L', BX0 + 0.5, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
-    part('header R', BX1 - 0.5 - HDR_W, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
+    part('header L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
+    part('header R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
     part('ESP32-C5 module', PLUG_CX - 9.0, -66.5 - 21.2, 18.0, 21.2, UZ0 - 3.4, 3.4, 'upper-bottom',
          'antenna end / U.FL towards the front'),
     part('ESP32 U.FL plug', PLUG_CX - 9.0 + 1.0, -66.5 - 5.0, 4.0, 4.0, UZ0 - 3.4 - 2.0, 2.0, 'upper-bottom',
          'mated U.FL on the module; height CHECK'),
-    part('USB-C', BX1 - 6.0 - 9.0, BYR - 0.5, 9.0, 7.5, UZ0 - 3.3, 3.3, 'upper-bottom', 'overhangs the rear edge 0.5 mm'),
+    part('USB-C', BX0 + 35.0, BYR - 0.5, 9.0, 7.5, UZ0 - 3.3, 3.3, 'upper-bottom', 'overhangs the rear edge 0.5 mm'),
     part('micro-SIM holder', BX0, BYR + 0.5, 16.0, 15.0, UZ0 - 1.45, 1.45, 'upper-bottom',
          'Molex 78646-3001, card enters from the left edge; outline CHECK'),
-    part('GNSS patch', PLUG_CX - 12.5, BYR + 3.0, 25.0, 25.0, UZ1, 4.0, 'upper-top', 'Taoglas CGGBP.25.4.A.02'),
+    part('GNSS patch', BX0 + 21.0 - 12.5, BYR + 3.0, 25.0, 25.0, UZ1, 4.0, 'upper-top',
+         'Taoglas CGGBP.25.4.A.02; 1.5 mm left of centre, clear of the USB-C legs'),
 ]
 
 # pairs that touch or overlap by design

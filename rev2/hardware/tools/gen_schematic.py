@@ -209,7 +209,8 @@ def power():
     # ---------------- buck TPS54360 -> 3.8 V
     sh.text('Buck 3.8 V / 3.5 A (TPS54360, 600 kHz)', g(56), g(6), 1.5, True)
     XB = g(76)
-    B = sh.part('Regulator_Switching:TPS54360DDA', 'U102', 'TPS54360DDA', 'Package_SO:TI_SO-PowerPAD-8_ThermalVias',
+    B = sh.part('Regulator_Switching:TPS54360DDA', 'U102', 'TPS54360DDA', 'Package_SO:TI_SO-PowerPAD-8',   # no thermal vias: the modem's pads are on the other side
+                
                 XB, y0 + 5.08, 0)
     B.fields = {'ref': (XB - g(4), y0 - g(2.5), 'left'), 'val': (XB - g(4), y0 - g(1.5), 'left')}
     assert B['VIN'][1] == y0

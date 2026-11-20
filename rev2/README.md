@@ -1,6 +1,7 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **design brief, 3D stack model and first schematics for both boards; no layout yet.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **schematics for both boards, a 3D stack model and both boards with a first-pass placement. Nothing is
+routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -119,8 +120,8 @@ Molex 78646-3001 micro-SIM holder, Skyworks SKY65943-11, Taoglas CGGBP.25.4.A.02
 
 Not done yet:
 
-- **Layout of both boards**, including the copper clearances around the patch's feed pin and ground vias under
-  the front end.
+- **Placement review and routing of both boards** (see "Boards"), including the copper clearances around the
+  patch's feed pin and ground vias under the front end.
 - **Footprint review against real parts:** the three new footprints come from the drawings and have not been
   checked on paper prints or parts. The SKY65943-11's ground pad sizes and the patch's single 1.8 mm pad (the data
   sheet asks for 1.2 mm on top, 2.2 mm on the bottom) are my choices.
@@ -128,6 +129,37 @@ Not done yet:
   block sits on its output for that reason), and ESD protection at the patch (the part is rated only 250 V HBM).
 - **The case:** it needs the SIM slot with a card stop 0.5 mm outside the holder's edge (the holder has no latch),
   the USB-C opening, and the ribs for the plug, which now sits 1 mm lower than in rev 1.
+
+## Boards
+
+`<KiCad>/bin/python rev2/hardware/tools/gen_pcb.py carrier|upper` builds each board from its schematic: 45 × 45 mm
+outline, rules, all footprints with their nets, ground pours. `--force` regenerates a board and loses any routing.
+
+| Board | Layers | Why |
+|---|---|---|
+| carrier | 4 | The modem has pads under its body and the LTE antenna line needs a ground layer right below it |
+| upper | 2 | The ESP32's radio is inside its module; the only RF runs are a few millimetres at the GNSS front end. Go to 4 layers only if it does not route cleanly |
+
+No paid impedance control: the antenna lines are designed to the fab's standard stack-up. ENIG on the carrier (flat
+pads for the modem); decide the upper board's finish from a quote.
+
+Placement so far:
+
+- **The parts that define the stack are placed as in the stack model:** plug, connectors, spacer holes, modem,
+  ESP32 module, USB-C, micro-SIM holder, GNSS patch and front end, and the carrier's tall parts (battery connector,
+  inductor, tantalums) in its front half.
+- **Every other part is placed automatically** next to a part it shares a net with. That is a starting point,
+  not a layout: on the carrier, some 2.3–2.5 mm parts (D103, the 1210 capacitors) still sit in the rear half, where
+  the cell needs parts of 2.0 mm or less.
+- **The lid side of the upper board carries what must be reached or seen:** the two buttons and the LED.
+  The case lid needs pin holes and a light pipe there.
+- **Changes the placement forced:** the connectors sit 0.6 mm inside the board edges (their SMD pads need 8.2 mm);
+  the buck regulator uses the footprint without thermal vias, because the modem's pads are on the other side; the
+  input TVS is on the carrier's underside beside the modem; the patch sits 1.5 mm left of centre so the USB-C
+  socket's legs are not under it.
+
+State: schematic parity 0 on both boards and no courtyard overlaps or clearance errors. All nets are unrouted
+(138 connections on the carrier, 91 on the upper board).
 
 ## Decisions (2026-11-20)
 
