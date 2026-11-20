@@ -66,6 +66,8 @@ PARTS = [
     part('TVS SMC', BX0 + 36.05, BYF - 18.0, 5.9, 8.0, -2.3, 2.3, 'carrier-bottom', 'beside the modem'),
     part('JST-PH side entry', BX0 + 10.3, BYF - 16.3, 8.0, 7.6, BT, 5.5, 'carrier-top',
          'S2B-PH-SM4-TB, 5.5 mm, under the ESP32 module; outline CHECK'),
+    part('LTE U.FL', BX0 + 40.0, BYF - 42.5, 3.0, 3.0, BT, 2.6, 'carrier-top', 'mated, beside the cell'),
+    part('GNSS U.FL', BX0 + 40.0, BYF - 36.0, 3.0, 3.0, BT, 2.6, 'carrier-top', 'jumper to the upper board'),
     # --- between the boards
     part('spacer L', BX0 + 1.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header', 'M2.5 x 11 mm, front corner'),
     part('spacer R', BX1 - 6.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header'),

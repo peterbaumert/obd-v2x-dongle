@@ -148,9 +148,11 @@ Placement so far:
 - **The parts that define the stack are placed as in the stack model:** plug, connectors, spacer holes, modem,
   ESP32 module, USB-C, micro-SIM holder, GNSS patch and front end, and the carrier's tall parts (battery connector,
   inductor, tantalums) in its front half.
-- **Every other part is placed automatically** next to a part it shares a net with. That is a starting point,
-  not a layout: on the carrier, some 2.3–2.5 mm parts (D103, the 1210 capacitors) still sit in the rear half, where
-  the cell needs parts of 2.0 mm or less.
+- **Every other part is placed automatically** next to a part it shares a net with, and only where it fits by
+  height: at most 2.0 mm under the cell, 2.4 mm on the carrier's underside, 0.8 mm on the upper board's underside
+  over the plug legs. The heights are a table in `gen_pcb.py` (by footprint), not measured. A starting point, not
+  a layout.
+- **Antenna sockets:** LTE and GNSS U.FL in the carrier's rear right corner, beside the cell.
 - **The lid side of the upper board carries what must be reached or seen:** the two buttons and the LED.
   The case lid needs pin holes and a light pipe there.
 - **Changes the placement forced:** the connectors sit 0.6 mm inside the board edges (their SMD pads need 8.2 mm);

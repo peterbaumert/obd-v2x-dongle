@@ -62,8 +62,9 @@ PLACE = {
         'U102': (24.0, 17.7, 0, T),            # buck right next to its inductor
         'C401': (31.0, 12.0, 90, T),
         'D101': (39.0, 14.0, 90, B),           # input TVS (2.3 mm) on the underside strip beside the modem
-        'J402': (12.0, 42.0, 0, T),            # LTE antenna
-        'J403': (24.0, 42.0, 0, T),            # GNSS: jumper to J801 on the upper board
+        # antenna sockets in the rear right corner, beside the cell (a mated U.FL is 2.6 mm tall)
+        'J402': (41.5, 41.0, 0, T),            # LTE antenna
+        'J403': (41.5, 34.5, 0, T),            # GNSS: jumper to J801 on the upper board
         'U402': (38.5, 34.0, 90, B),           # level shifter beside the modem
     },
     'upper': {
@@ -83,6 +84,35 @@ PLACE = {
 }[BOARD]
 ANCHOR = {}                   # ref: (anchor ref, anchor pad, side or None): overrides the automatic choice
 RAILS = ('GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VBAT_LTE', 'VBUCK_3V8', 'LTE_1V8', 'VCELL')
+
+# Part heights (mm) by footprint name, for the automatic placement. A mated U.FL counts with its plug.
+HEIGHT = {'C_0402': 0.55, 'C_0603': 0.9, 'C_0805': 1.35, 'C_1210': 2.6, 'CP_EIA-7343': 3.1, 'D_SMA': 2.3, 'D_SMC': 2.4,
+          'D_SOD-123F': 1.1, 'D_SOD-323': 1.1, 'Fuse_1206': 0.8, 'LFPAK56': 1.1, 'L_0402': 0.6, 'R_0402': 0.4,
+          'R_0603': 0.5, 'R_1206': 0.65, 'SOIC-8': 1.75, 'SOT-23': 1.45, 'TI_SO-PowerPAD-8': 1.7, 'TSSOP-20': 1.2,
+          'TestPoint': 0.0, 'Texas_DRC': 1.0, 'Texas_VQFN': 1.0, 'U.FL': 2.6, 'LED_SK6812': 1.5,
+          'Skyworks_SKY65943': 0.7}
+HEIGHT_UNKNOWN = 2.0
+# Room above each side (mm) and the zones with less: (side, x0, y0, x1, y1, room). See rev2/mechanical/stack.py.
+ROOM = {
+    'carrier': ({T: 7.0, B: 2.4},                       # top: under the ESP32 module; bottom: the modem's 2.4 mm
+                [(T, 7.5, 24.0, 37.5, 44.0, 2.0)]),     # the cell lies on these parts
+    'upper': ({T: 4.0, B: 3.4},                         # top: the patch's height; bottom: down to the cell
+              [(B, 6.0, 0.0, 39.0, 6.6, 0.8)]),         # over the plug's leg bends
+}[BOARD]
+
+
+def height(fp):
+    name = fp.GetFPID().GetLibItemName().wx_str()
+    return next((h for k, h in HEIGHT.items() if name.startswith(k)), HEIGHT_UNKNOWN)
+
+
+def room(bx, side):
+    r = ROOM[0][side]
+    for sd, x0, y0, x1, y1, lim in ROOM[1]:
+        if sd == side and not (bx[2] <= x0 or x1 <= bx[0] or bx[3] <= y0 or y1 <= bx[1]):
+            r = min(r, lim)
+    return r
+
 
 GAP = 0.3          # min gap between courtyards when auto-placing
 SOLID_GND = {'U102', 'U401', 'U301', 'U801'}   # thermal / RF ground pads: solid zone connection
@@ -319,14 +349,15 @@ def build():
         claim(fp, side)
 
     # anchored small parts: spiral search around the anchor pad
-    def free(bx, side):
-        if not inside(bx):
+    def free(bx, side, h=0.0):
+        if not inside(bx) or h > room(bx, side):
             return False
         return all(not overlaps(bx, o) for _, o in placed[side])
 
     def spiral(fp, ax, ay, side):
         """nearest free spot around (ax, ay) on one side: (distance, x, y, rot) or None"""
         best = None
+        h = height(fp)
         for rot in (0, 90):
             place(fp, ax, ay, rot, side)
             hit = None
@@ -338,7 +369,7 @@ def build():
                     x, y = ax + rr * math.cos(a), ay + rr * math.sin(a)
                     x, y = round(x * 4) / 4, round(y * 4) / 4
                     fp.SetPosition(pt(x, y))
-                    if free(crt_box(fp), side):
+                    if free(crt_box(fp), side, h):
                         hit = (rr, x, y, rot)
                         break
                 if hit:
