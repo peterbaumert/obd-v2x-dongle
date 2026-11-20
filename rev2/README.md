@@ -89,5 +89,59 @@ signals: two 2 × 8 headers, one at each side, which also hold the boards parall
 ## Before any layout
 
 - Bring up the rev 1 boards (expected mid-December 2026) and carry every fix into rev 2.
-- Find buyable parts first: the board-to-board headers at the stack height, the smaller cell, the GNSS patch.
+- Confirm the parts under "Parts found" against their drawings and current stock.
 - Two boards mean two PCB orders and two assembly jobs. Get a quote before committing.
+
+## Parts found (web research, 2026-11-20)
+
+Digi-Key stock and prices were read from live pages. LCSC stock could not be read reliably, so check it before
+ordering. Nothing here is in a schematic yet.
+
+### Board-to-board connectors (11 mm stack)
+
+| Option | Parts | Stack | Notes |
+|---|---|---|---|
+| **Pick: 2.54 mm SMD header + SMD socket, 2 × 8** | Hanxia HX PZ2.54-2x8P TP (LCSC C32713288) + HX PM2.54-2x8P TP (C41427537). Second source: Hong Cheng HC-PZ254-11L-2x8PS (C42163086) + HC-PM254-8.5H-2x8PS (C22436156) | 11.0 mm = 8.5 mm socket + 2.5 mm header base (sum of the listed heights, check the drawings) | 3 A per pin, about $0.60 per pair. Friction only: hold the boards with 11 mm spacers or the case, not with the connectors |
+| Harwin Archer Kontrol 1.27 mm, 16 pins | M55-6001642R + M55-7021642R | 11.1 mm (Digi-Key listing) | Shrouded and polarised, 1.2 A per pin, about $4 per pair, thin stock (187 of the male half) |
+
+Plain 2.0 mm and 1.27 mm header pairs only reach about 6–8 mm. Samtec SFM / TFM has a 9.91 mm height that is not
+stocked.
+
+### GNSS
+
+From Quectel's EC200U Hardware Design V1.0 (2021) and QuecOpen Hardware Design V1.0 (2023); the newest revision
+was not checked:
+
+- Passive and active antennas are both supported. The module has its own SAW and LNA behind ANT_GNSS.
+- An external LNA should have less than 17 dB gain and the active antenna a noise figure under 1.5 dB.
+- Quectel asks for more than 40 dB isolation between the GNSS and main antennas. A dongle this small will not
+  reach that, which is the reason for a filter right at the patch.
+- GPS, GLONASS, Galileo, BeiDou and QZSS, L1 band only (1559–1609 MHz).
+- Reference circuit: pi network and 100 pF DC block at the pin, bias through 10 Ω and 47 nH (rev 1 uses 27 nH).
+
+| Part | Pick | Notes |
+|---|---|---|
+| Patch | **Taoglas CGGBP.25.4.A.02**, 25 × 25 × 4 mm, GPS / Galileo / BeiDou / GLONASS, about $6.70, 6,400 at Digi-Key | Tuned on a 70 × 70 mm ground plane; on 45 × 45 mm expect a small frequency shift and roughly 1–2 dB less gain (rule of thumb). Pin-fed: hand-soldered after reflow, with adhesive tape. CGGBP.18.4.A.02 (18 mm) only if space forces it |
+| Front end | **Skyworks SKY65943-11**: SAW + LNA + SAW in 2.5 × 2.5 mm, 16 dB gain, noise figure 1.7 dB, about $3.20, 42,000 at Digi-Key | Supply 1.62–3.3 V, so drop the 3.3 V bias a little. Check the current datasheet revision |
+| Cheaper front end | Murata SAFFB1G56AC0F0A or SAFFB1G56KB0F0A (SAW, LCSC only), then Infineon BGA725L6 (20 dB, 0.65 dB, $0.41) | Gain is slightly over Quectel's 17 dB limit: add a 2–3 dB pad at the module. SAW passband for BeiDou not confirmed |
+
+SAW first, then LNA, because the LTE transmitter is centimetres away and would overload an unfiltered LNA. Make
+the front end bypassable (0 Ω link, bias off) so a bare patch can be compared on the real board.
+
+### Backup cell and its connector
+
+| Cell | Size (T × W × L) | Capacity | Connector | Notes |
+|---|---|---|---|---|
+| **Pick: PKCELL LP402025** (BerryBase, Tinytronics; Adafruit 1317 is the same format) | 4.05 × 20 × 25.5 mm | 150 mAh | JST-PH fitted | PCM with a named protection IC, about €3.30. Out of stock at both shops when checked |
+| Eckstein LP521630 (ZB07003) | 5.2 × 16 × 30 mm | 250 mAh | JST-PH fitted | In stock, from €4.95. 0.2 mm over the 5.0 mm target; PCM only stated in the seller's eBay listing |
+| ampul.eu 502025 (AM5932) | 5.0 × 20 × 25 mm | 200 mAh | not stated | Protection chip, €6.70 |
+| Jauch LP402025JU + PCM (Digi-Key Marketplace) | 4.4 × 22 × 27 mm | 140 mAh | bare wires | About €10, ships separately |
+
+- **PCB connector: JST S2B-PH-SM4-TB** (side entry, 5.5 mm above the board, LCSC C295747) instead of rev 1's vertical
+  header (about 10 mm mated). The cell lies beside it, not over it.
+- JST-PH polarity is not standardised: measure every cell before plugging it in (pin 1 = + on our board).
+- Every cell found is a standard LiPo: charge 0–45 °C, discharge about −20 to 60 °C. No small cell rated for a hot
+  cabin is buyable off the shelf. Keep rev 1's NTC charge window and 4.10 V float.
+- These cells and their protection circuits are rated for roughly 150–450 mA. Check that against the modem's peak
+  current on battery (rev 1 already limits battery operation to LTE and relies on the 220 µF bulk capacitor).
+
