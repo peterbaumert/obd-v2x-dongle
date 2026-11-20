@@ -16,8 +16,9 @@ Concept
 - The OBD plug J201 sits entirely in front of the board edge, its bottom 1 mm below the board's bottom face (the
   leg tips end level with the housing bottom). Its retention groove (behind the 2.0 mm rear flange) takes a
   U-shaped rib of the lid (top + both sides) and a straight rib of the bottom shell, so plugging and unplugging
-  loads the case, not the solder joints. Solder J201 with board and plug lying in the bottom shell.
-- Two M2.5 self-tapping screws from below at the front corners (next to the plug), two hooks at the rear
+  loads the case, not the solder joints. The case front ends at the groove, so the whole plug body sticks out.
+  Solder J201 with board and plug lying in the bottom shell.
+- Two ST2.2 self-tapping screws from below at the front corners (beside the plug flange), two hooks at the rear
   (lid goes in at an angle, rear first, then folds down).
 - Finger grip: a band of grooves all around the case (sides, top, bottom), across the plug direction.
 - Openings: USB-C (rear), RESET/BOOT pin holes with guide tubes, LED light-pipe tube (3 mm rod), all in the
@@ -64,10 +65,8 @@ FLOOR = 2.0
 ROOF = 2.5                       # 2.0 + 0.5 so the rounded top edge leaves a lip above the plug key slot
 GAP = 0.3                        # board edge to wall
 FIT = 0.1                        # rib clearance in the groove (per side)
-PLUG_FIT = 0.2                   # opening around the plug shroud (per side)
 Z_IN_BOT = -11.0                 # inner floor: room for the JST-PH lead on J501 and the cell
 Z_IN_TOP = PLUG_Z0 + PLUG_H + KEY_H + 0.3
-FRONT_OUT = -51.5                # front face of the case (around the plug shroud)
 EDGE_R = 3.0                     # vertical outer edge radius
 EDGE_R_H = 2.0                   # top / bottom outer edge radius (prints without supports from the bed)
 # finger grip: a band of grooves all around the case (sides, top, bottom), across the plug direction
@@ -83,12 +82,15 @@ Y_RIB1 = PLUG_REAR + FLANGE_T + GROOVE_W - FIT
 X_OUT0, X_OUT1 = X_IN0 - WALL, X_IN1 + WALL
 Y_OUT_REAR = Y_IN_REAR - WALL
 Z_OUT_BOT, Z_OUT_TOP = Z_IN_BOT - FLOOR, Z_IN_TOP + ROOF
+FRONT_OUT = Y_RIB1                # front face of the case = front of the groove: the whole plug body sticks out
 SPLIT = BT
 
-# screws: M2.5 self-tapping, from below, in the solid corners beside the plug
-SCREWS = [(103.3, -54.8), (148.7, -54.8)]   # 0.55 mm wall in front of the head counterbore
-SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 2.2, 2.8, 5.5   # head counterbore fits a 2.5 mm PT pan head (~5 mm)
-SCREW_HEAD_TOP = -2.5            # counterbore from below up to here (4.1 mm clamp, 1.3 mm under the plug opening)
+# screws: ST2.2 x 9.5 DIN 7981 pan head (head 4.2 mm), from below, beside the plug flange, just in front of
+# the board edge; bosses in both shells (the bottom one reaches under the board corner)
+SCREWS = [(103.3, -58.05), (148.7, -58.05)]  # shank 0.2 mm clear of the board edge, 0.4 mm wall in front of the head
+SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 1.8, 2.5, 4.6
+SCREW_HEAD_TOP = -2.5            # counterbore from below up to here
+SCREW_BOSS_BOT, SCREW_BOSS_LID = 3.1, 2.4   # boss radius in the bottom shell / lid
 
 # rear hooks (lid) into notches of the bottom shell's rear wall
 HOOKS = [112.0, 128.0]           # x centres, clear of the USB-C opening
@@ -257,7 +259,16 @@ def build(parts):
     body = outer - box(X_IN0, X_IN1, Y_IN_REAR, Y_RIB0, Z_IN_BOT, Z_IN_TOP)
     # plug: neck through the rib, the D-shaped body (with key) in front of it
     body -= plug_neck(Y_RIB0 - 0.01, Y_RIB1 + 0.01, grow=FIT)
-    body -= plug_body(Y_RIB1, FRONT_OUT + 1, grow=PLUG_FIT)
+    # screw bosses (clipped to the case interior; the lid one sits on the board's top face)
+    for (x, y) in SCREWS:
+        clip = box(X_IN0 - 0.01, X_IN1 + 0.01, Y_IN_REAR, Y_RIB0 + 0.01, Z_IN_BOT - 0.01, Z_IN_TOP + 0.01)
+        zt = -0.8                                     # full boss below the parts hanging under the board corner
+        body += (Pos(x, y, (Z_IN_BOT + zt) / 2) * Cylinder(SCREW_BOSS_BOT, zt - Z_IN_BOT)) & clip
+        body += (Pos(x, y, zt / 2) * Cylinder(SCREW_BOSS_BOT, -zt)) & clip & box(
+            X_IN0, X_IN1, BYF - 0.75, Y_RIB0 + 0.01, zt - 0.01, 0.01)
+        body += (Pos(x, y, BT / 2) * Cylinder(SCREW_BOSS_BOT, BT)) & clip & box(
+            X_IN0, X_IN1, BYF + GAP, Y_RIB0 + 0.01, -0.01, BT + 0.01)
+        body += (Pos(x, y, (BT + Z_IN_TOP) / 2) * Cylinder(SCREW_BOSS_LID, Z_IN_TOP - BT)) & clip
     # USB-C
     body -= box(USB_X - USB_OPEN_W / 2, USB_X + USB_OPEN_W / 2, Y_OUT_REAR - 1, Y_IN_REAR + 0.01,
                 USB_Z - USB_OPEN_H / 2, USB_Z + USB_OPEN_H / 2)
