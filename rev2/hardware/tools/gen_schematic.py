@@ -71,9 +71,10 @@ SOURCING = {
     'Q401': ('MMBT3904', 'onsemi', 'C20526'),
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('0786463001', 'Molex', ''),                  # micro-SIM, push in / pull out (Digi-Key)
-    'U801': ('SKY65943-11', 'Skyworks', 'C2654442'),       # GNSS front end (Digi-Key stock; LCSC unverified)
+    'U801': ('SKY65943-11', 'Skyworks', 'C2654442'),       # GNSS front end (Digi-Key 42,000; LCSC 338 on 2026-11-20)
     'AE801': ('CGGBP.25.4.A.02', 'Taoglas', ''),          # GNSS patch, pin soldered by hand (Digi-Key)
-    'L801': ('LQW15AN9N1J00D', 'Murata', ''),             # 9.1 nH, the value on the SKY65943-11 evaluation board
+    'L801': ('LQW15AN9N1J00D', 'Murata', 'C437364'),      # 9.1 nH, the value on the SKY65943-11 evaluation board
+                                                          # (fallback LQW15AN9N1G80D, C7216818)
     'L802': ('LQG15HS27NJ02D', 'Murata', 'C12669'),       # 27 nH bias choke (as L401)
     'C801': ('0402CG330J500NT', 'FH', 'C1562'),           # 33 pF C0G DC block
     'C803': ('0402CG330J500NT', 'FH', 'C1562'),
@@ -458,6 +459,15 @@ def _vehicle(side):
         Dt = dv(sh, 'Device:D_TVS', 'D203', 'PESD1LIN', 'Diode_SMD:D_SOD-323', xt, ylin + g(1), 'A1')
         sh.w((xt, ylin), Dt['A1'])
         sh.gnd(Dt['A2'])
+        # ISO 15765-4 (2005) 8.4.2.3.3: external test equipment has an a.c. termination, 100R + 560 pF from each CAN
+        # line to ground, and no resistor between the lines. Footprints only (not fitted) until tested on a car.
+        sh.text('A.c. termination per ISO 15765-4 (100R + 560 pF per line), not fitted', g(64), g(14), 1.27, True)
+        for i, (net, rr, cc) in enumerate((('CANH', 'R205', 'C204'), ('CANL', 'R206', 'C205'))):
+            x = g(70 + 12 * i)
+            Ra = rv(sh, 'Device:R', rr, '100R', R0603, x, g(20), dnp=True)
+            sh.glabel(net, Ra[1], 'U')
+            Ca = rv(sh, 'Device:C', cc, '560pF 50V', C0603, x, Ra[2][1], dnp=True)
+            sh.gnd(Ca[2])
         return sh
 
     sh.parts.remove(J)                                   # only used for the coordinates

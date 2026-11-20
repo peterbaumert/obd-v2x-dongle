@@ -187,6 +187,31 @@ plug and the model's parts: **49.6 × 68.1 × 24.8 mm including the plug, check 
 Not checked: the case is built against the stack model's boxes, not against routed boards, and nothing has been
 printed. The button height in `case.py` is an estimate.
 
+## Checked against sources (2026-11-20)
+
+| What | Result | Source |
+|---|---|---|
+| OBD cable to an external tester | Up to 5 m; shielded if longer than 1 m | ISO 15765-4:2005, 8.4.3, Table 15 (newer editions not read) |
+| Tester's CAN interface | No resistor between CAN_H and CAN_L. An a.c. termination is required: 100 Ω + 560 pF from each line to ground | ISO 15765-4:2005, 8.4.2.3 |
+| EC200U GNSS input | Passive and active antennas; external LNA gain < 17 dB; noise figure < 1.5 dB; > 40 dB isolation from the main antenna; 1559–1609 MHz | Quectel hardware design, Chinese V1.3 (2023-05-19). The English V1.4 is behind a login and was not read |
+| EC200U supply | 3.3–4.3 V; at least 3 A for a module with GSM; 100 µF low-ESR bulk capacitor (the design has 220 µF) | same |
+| EC200U thickness | 2.4 ± 0.2 mm | same |
+| EC200U power-on | PWRKEY low for at least 2 s, 1.8 V I/O: unchanged. New note: if USB VBUS is present before VBAT, wait 2 s after VBAT is stable before PWRKEY | same |
+| Plug leg height | Upper leg row 13.2 mm above the housing bottom, legs 0.8 mm thick: 1.0 mm under the upper board | CR-PG001 drawing |
+| Connector orientation | Flipped header lands pin 1 on the socket's pin 1 | KiCad's two SMD footprints |
+
+LCSC stock on 2026-11-20: header C32713288 37,645; socket C41427537 5,064; second-source socket C22436156 2,494 and
+header C42163086 290; SKY65943-11 C2654442 338; S2B-PH-SM4-TB C295747 13,090; U.FL C88373 35,470; ESP32-C5 module
+C54951857 496; BQ25171 C2861221 346; 9.1 nH LQW15AN9N1J00D C437364 4,060. The modem (C2942341) is not listed at
+LCSC, only at JLCPCB (50). Digi-Key: Molex 0786463001 113,150 and Taoglas CGGBP.25.4.A.02 6,403, both active.
+
+Two things this turned up:
+
+- **A.c. termination:** the standard asks a tester for 100 Ω + 560 pF from each CAN line to ground. Rev 1 has none.
+  Rev 2 has the four footprints at the plug (R205, R206, C204, C205), not fitted, to try on a car.
+- **Power-on sequencing with USB:** the firmware should wait 2 s after VBAT is stable before PWRKEY when USB VBUS
+  is already present.
+
 ## Decisions (2026-11-20)
 
 - **Backup battery: kept**, with a smaller cell (about 200 mAh, 5 mm thick) lying between the boards.
@@ -245,8 +270,8 @@ What the placement shows:
 
 ## Parts found (web research, 2026-11-20)
 
-Digi-Key stock and prices were read from live pages. LCSC stock could not be read reliably, so check it before
-ordering. Nothing here is in a schematic yet.
+Digi-Key stock and prices were read from live pages. LCSC stock was read from LCSC's product data on 2026-11-20
+(see "Checked against sources").
 
 Sourcing rule: only parts that should still be buyable when the boards are built: distributor stock (Digi-Key,
 Mouser, LCSC) or a regular shop, and standard formats with more than one maker. No eBay or marketplace-only items.
