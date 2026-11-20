@@ -22,7 +22,12 @@ overlap of the case with the PCB, the parts or the OBD plug. Re-run it after boa
 
 ## Concept
 
-- **Size** 56.6 × 75 × 33.6 mm, 87.4 mm long including the OBD plug that sticks out at the front.
+- **Size** 56.6 × 75 × 34.1 mm, 87.4 mm long including the OBD plug that sticks out at the front. All outer edges
+  are rounded: R3 on the vertical edges, R2 on the top and bottom edges (these face the bed when printing and
+  print without supports).
+- **Grip:** a band of nine grooves (1.2 mm wide, 0.6 mm deep, 3 mm apart) all around the case (sides, top and
+  bottom), in the rear half, across the plugging direction, so the case doesn't slip in the fingers when plugging
+  in or out. They print without supports in both shells' print orientation.
 - **Bottom shell + lid**, split at the board's top face. The board rests on ledges in the bottom shell, and the lid
   presses on its top edge. The board has no mounting holes.
 - **OBD plug J201** sits entirely in front of the board. A U-shaped rib in the lid (top and both sides) and a
@@ -59,4 +64,4 @@ from the PDF's vector data. Check them on the real plug, and measure your cell:
 Solder J201 with the board and the plug lying in the bottom shell: the shell then sets the plug's height.
 
 Test-print just the plug end first: `python mechanical/case.py --fit-test` writes `out/fit_test_plug_end.stl`
-(front 12 mm of both shells behind the board edge, in print orientation, ~13 cm³).
+(front 12 mm of both shells behind the board edge, in print orientation, ~14 cm³).

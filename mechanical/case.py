@@ -19,6 +19,7 @@ Concept
   loads the case, not the solder joints. Solder J201 with board and plug lying in the bottom shell.
 - Two M2.5 self-tapping screws from below at the front corners (next to the plug), two hooks at the rear
   (lid goes in at an angle, rear first, then folds down).
+- Finger grip: a band of grooves all around the case (sides, top, bottom), across the plug direction.
 - Openings: USB-C (rear), RESET/BOOT pin holes with guide tubes, LED light-pipe tube (3 mm rod), all in the
   bottom. The backup cell lies in a pocket on the floor of the bottom shell.
 - Antennas (LTE, GNSS, 5.9 GHz) are flex antennas stuck to the inside of the lid / floor.
@@ -60,7 +61,7 @@ KEY_Y = 6.8                      # key bump starts this far in front of the rear
 # ------------------------------------------------------------------ case
 WALL = 2.0                       # side / rear wall
 FLOOR = 2.0
-ROOF = 2.0
+ROOF = 2.5                       # 2.0 + 0.5 so the rounded top edge leaves a lip above the plug key slot
 GAP = 0.3                        # board edge to wall
 FIT = 0.1                        # rib clearance in the groove (per side)
 PLUG_FIT = 0.2                   # opening around the plug shroud (per side)
@@ -68,6 +69,11 @@ Z_IN_BOT = -11.0                 # inner floor: room for the JST-PH lead on J501
 Z_IN_TOP = PLUG_Z0 + PLUG_H + KEY_H + 0.3
 FRONT_OUT = -51.5                # front face of the case (around the plug shroud)
 EDGE_R = 3.0                     # vertical outer edge radius
+EDGE_R_H = 2.0                   # top / bottom outer edge radius (prints without supports from the bed)
+# finger grip: a band of grooves all around the case (sides, top, bottom), across the plug direction
+GRIP_N, GRIP_PITCH = 9, 3.0      # groove count, spacing
+GRIP_W, GRIP_D = 1.2, 0.6        # groove width, depth (walls / floor / roof keep 1.4 mm)
+GRIP_REAR = 11.5                 # first groove this far in front of the rear face (clear of the pin / LED holes)
 LEDGE = 1.0                      # board overlap of ledges / press ribs
 
 X_IN0, X_IN1 = BX0 - GAP, BX1 + GAP
@@ -240,6 +246,14 @@ def supports(parts, top):
 def build(parts):
     outer = box(X_OUT0, X_OUT1, Y_OUT_REAR, FRONT_OUT, Z_OUT_BOT, Z_OUT_TOP)
     outer = fillet(outer.edges().filter_by(Axis.Z), EDGE_R)
+    fz = outer.faces().sort_by(Axis.Z)
+    outer = fillet(fz[0].edges() + fz[-1].edges(), EDGE_R_H)
+    # grip grooves: constant depth, also around the rounded top / bottom edges
+    for i in range(GRIP_N):
+        y = Y_OUT_REAR + GRIP_REAR + i * GRIP_PITCH
+        x0, x1, z0, z1 = X_OUT0 + GRIP_D, X_OUT1 - GRIP_D, Z_OUT_BOT + GRIP_D, Z_OUT_TOP - GRIP_D
+        core = prism([(x0, z0), (x1, z0), (x1, z1), (x0, z1)], y - 1, y + 1, [EDGE_R_H - GRIP_D] * 4)
+        outer -= box(X_OUT0 - 1, X_OUT1 + 1, y - GRIP_W / 2, y + GRIP_W / 2, Z_OUT_BOT - 1, Z_OUT_TOP + 1) - core
     body = outer - box(X_IN0, X_IN1, Y_IN_REAR, Y_RIB0, Z_IN_BOT, Z_IN_TOP)
     # plug: neck through the rib, the D-shaped body (with key) in front of it
     body -= plug_neck(Y_RIB0 - 0.01, Y_RIB1 + 0.01, grow=FIT)
