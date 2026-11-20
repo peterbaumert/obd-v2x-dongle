@@ -1,11 +1,11 @@
-"""Generate rev1/hardware/lib/obd-v2x.kicad_sym (project symbol library).
+"""Generate rev2/hardware/lib/obd-v2x.kicad_sym (project symbol library).
 
 Pin data sources:
   ESP32-C5-WROOM-1U : Espressif ESP32-C5-WROOM-1/1U datasheet v1.3, Table 3-2
   EC200U-EU         : Quectel EC200U Series QuecOpen Hardware Design V1.0, Figure 2 / Table 5
   OBD2 J1962        : SAE J1962 / ISO 15031-3 pinout
 
-Run:  python rev1/hardware/lib/gen_symbols.py
+Run:  python rev2/hardware/lib/gen_symbols.py
 """
 from pathlib import Path
 
@@ -210,6 +210,21 @@ led = symbol(
 )
 
 
+# ---------------- Skyworks SKY65943-11 GNSS front end (pre-filter + LNA + post-filter), MCM-10 2.5 x 2.5 mm ----------------
+# Pin numbers per Skyworks data sheet 204404H, Figure 2 / Table 1. Pad 11 = centre ground.
+sky = symbol(
+    'SKY65943-11', 'U',
+    'obd-v2x:Skyworks_SKY65943-11_MCM-10_2.5x2.5mm',
+    'https://www.skyworksinc.com/-/media/SkyWorks/Documents/Products/2801-2900/SKY65943-11_204404H.pdf',
+    'GNSS front-end module 1559-1606 MHz: pre-filter, LNA, post-filter; 16 dB gain, NF 1.7 dB, 1.62-3.3 V, 3 mA',
+    'GNSS GPS LNA SAW filter front end',
+    left=[(P, 'RF_IN', 5), None, None, (PI, 'VCC', 3), (I, 'VEN', 2), None],
+    right=[(P, 'FILT_OUT', 7), None, None, (P, 'AMP_IN', 8), None, (P, 'RF_OUT', 10)],
+    bottom=[(PI, 'GND', 1, 0), (PI, 'GND', 4, 0), (PI, 'GND', 6, 0), (PI, 'GND', 9, 0), (PI, 'GND', 11, 0)],
+    width=14 * G,
+)
+
+
 # ---------------- rail power symbols (cloned from KiCad's power:+3V3) ----------------
 def rail_symbols(names):
     import sys
@@ -230,7 +245,7 @@ def rail_symbols(names):
 RAILS = ['VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'LTE_1V8', 'VBUCK_3V8', 'VCELL']
 
 lib = ('(kicad_symbol_lib\n\t(version 20241209)\n\t(generator "obd-v2x-gen_symbols")\n'
-       '\t(generator_version "1.0")\n' + esp + eg25 + obd + esim + bq + mux + simsw + led + pwsw + rail_symbols(RAILS) + ')\n')
+       '\t(generator_version "1.0")\n' + esp + eg25 + obd + bq + mux + led + pwsw + sky + rail_symbols(RAILS) + ')\n')
 out = Path(__file__).with_name('obd-v2x.kicad_sym')
 out.write_text(lib, encoding='utf-8')
 print('wrote', out)

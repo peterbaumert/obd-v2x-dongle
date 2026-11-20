@@ -93,7 +93,7 @@ Two KiCad 10 projects, generated like rev 1's (edit `hardware/tools/gen_schemati
 | Project | Sheets |
 |---|---|
 | `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery, stack_carrier |
-| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, stack_upper |
+| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, gnss, stack_upper |
 
 ```bash
 python rev2/hardware/tools/gen_schematic.py     # writes both projects
@@ -107,15 +107,27 @@ State: ERC 0 violations on both boards, `check_stack.py` passes (21 nets cross),
 that the two boards joined through the connectors are connected exactly like rev 1's reviewed netlist, apart from
 the intended changes. The circuits are rev 1's with
 these changes: eSIM and SIM switch removed (IO12 is a spare test pad), micro-SIM holder, side-entry battery
-connector, the two board-to-board connectors with spacer holes.
+connector, the two board-to-board connectors with spacer holes, and the GNSS patch with its front end.
+
+GNSS on the upper board (sheet `gnss`): patch → SKY65943-11 → 33 pF DC block → U.FL J801, joined by a jumper
+cable to the carrier's GNSS socket J403. J403 still carries rev 1's current-limited 3.3 V antenna bias; a 27 nH
+choke and 100 Ω take the front end's supply from it (about 3.0 V at 3 mA, under the part's 3.3 V limit), and its
+enable pin is tied to that supply. R802 (not fitted) is a bypass link for trying the bare patch.
+
+New footprints, each drawn from the manufacturer's drawing (sources in `hardware/lib/gen_footprints.py`):
+Molex 78646-3001 micro-SIM holder, Skyworks SKY65943-11, Taoglas CGGBP.25.4.A.02 patch.
 
 Not done yet:
 
-- **GNSS front end and patch** on the upper board (needs symbols and footprints for the SKY65943-11 and the patch).
-  The carrier still has rev 1's GNSS U.FL with antenna bias.
-- **Micro-SIM footprint:** the schematic uses KiCad's JAE footprint as a placeholder. Draw the Molex 78646-3001
-  footprint from its drawing before layout.
-- Layout of either board.
+- **Layout of both boards**, including the copper clearances around the patch's feed pin and ground vias under
+  the front end.
+- **Footprint review against real parts:** the three new footprints come from the drawings and have not been
+  checked on paper prints or parts. The SKY65943-11's ground pad sizes and the patch's single 1.8 mm pad (the data
+  sheet asks for 1.2 mm on top, 2.2 mm on the bottom) are my choices.
+- **GNSS details to confirm:** whether the SKY65943-11's RF pins carry DC (the data sheet does not say; a DC
+  block sits on its output for that reason), and ESD protection at the patch (the part is rated only 250 V HBM).
+- **The case:** it needs the SIM slot with a card stop 0.5 mm outside the holder's edge (the holder has no latch),
+  the USB-C opening, and the ribs for the plug, which now sits 1 mm lower than in rev 1.
 
 ## Decisions (2026-11-20)
 
@@ -161,11 +173,9 @@ What the placement shows:
 
 ## Still open
 
-- **GNSS front end:** the commercial tracker this layout follows has its own GNSS receiver chip directly under
-  the patch, so its antenna path is a few millimetres. Ours is longer: patch on the upper board, receiver inside the
-  modem on the carrier, a jumper cable between them. Plan: SAW filter + LNA right at the patch, powered through the
-  jumper by rev 1's 3.3 V bias switch (the patch then behaves like rev 1's active antenna). Check the EC200U
-  hardware design guide and rev 1's GNSS results before fixing the parts.
+- **GNSS on the real board:** the front end is in the schematic (see "Schematics"). Whether the patch needs
+  retuning on the 45 mm ground plane, and how much the front end helps over the bare patch, can only be measured
+  on a built board.
 - **5.9 GHz and LTE antennas:** flex antennas on the case walls as in rev 1. The space is tighter, so check that
   they fit and stay away from the modem shield.
 
@@ -216,8 +226,8 @@ the front end bypassable (0 Ω link, bias off) so a bare patch can be compared o
 
 ### Micro-SIM holder
 
-**Molex 78646-3001**: micro-SIM, push in / pull out, 1.45 mm above the board, €1.09, 113,000 in stock at Digi-Key
-(2026-11-20). JAE SF53S006VCBR2000 (KiCad has its footprint) is the same style but out of stock until January 2027;
+**Molex 78646-3001**: micro-SIM, push in / pull out, 15.45 × 12.65 × 1.45 mm, €1.09, 113,000 in stock at Digi-Key
+(2026-11-20). No latch or ejector: the card is pulled out, and the case must stop it from sliding out. JAE SF53S006VCBR2000 (KiCad has its footprint) is the same style but out of stock until January 2027;
 GCT SIM7050-6-0-00-A is in stock but 2.45 mm tall.
 
 ### Backup cell and its connector

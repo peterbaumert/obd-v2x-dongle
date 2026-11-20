@@ -3,7 +3,8 @@
     python rev2/hardware/tools/gen_schematic.py [sheet ...]
 
 carrier/  power, vehicle, lte, battery, stack_carrier   (OBD plug + bus protection, supplies, modem, cell)
-upper/    mcu, xcvr, sim, stack_upper                   (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM)
+upper/    mcu, xcvr, sim, gnss, stack_upper             (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM,
+                                                         GNSS patch + front end)
 
 The sheets started as a copy of rev 1's. Nets with the same name on both boards are joined through the
 board-to-board connectors (sheets "stack_*"); check with
@@ -18,11 +19,11 @@ from schgen import g  # noqa: E402
 from schgen import Sheet as _Sheet, uid  # noqa: E402
 
 BOARD = {'power': 'carrier', 'vehicle': 'carrier', 'lte': 'carrier', 'battery': 'carrier', 'stack_carrier': 'carrier',
-         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'stack_upper': 'upper'}
+         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'gnss': 'upper', 'stack_upper': 'upper'}
 ROOTS = {b: uid('rev2/root/' + b) for b in ('carrier', 'upper')}
 SHEETS = {n: uid('rev2/sheet/' + n) for n in BOARD}
 TITLES = {'power': 'Power', 'vehicle': 'Vehicle (OBD plug, protection)', 'xcvr': 'CAN + K-Line transceivers',
-          'sim': 'Micro-SIM', 'lte': 'LTE + GNSS (EC200U)',
+          'sim': 'Micro-SIM', 'gnss': 'GNSS patch + front end', 'lte': 'LTE + GNSS (EC200U)',
           'battery': 'Backup battery', 'stack_carrier': 'Board-to-board (sockets)',
           'mcu': 'MCU (ESP32-C5, USB)', 'stack_upper': 'Board-to-board (headers)'}
 ROOT = None
@@ -38,9 +39,7 @@ R0402, R0603, R1206 = 'Resistor_SMD:R_0402_1005Metric', 'Resistor_SMD:R_0603_160
 C0402, C0603, C0805, C1210 = ('Capacitor_SMD:C_0402_1005Metric', 'Capacitor_SMD:C_0603_1608Metric',
                               'Capacitor_SMD:C_0805_2012Metric', 'Capacitor_SMD:C_1210_3225Metric')
 SOT23 = 'Package_TO_SOT_SMD:SOT-23'
-# Placeholder: KiCad's JAE micro-SIM footprint. The part to fit is Molex 78646-3001; draw its footprint from the
-# Molex drawing before layout (see ../README.md).
-MICROSIM_FP = 'Connector_Card:microSIM_JAE_SF53S006VCBR2000'
+MICROSIM_FP = 'obd-v2x:microSIM_Molex_78646-3001'
 
 # Sourcing (checked 2026-11-11 with tools/check_stock.py; LCSC = one of PCBWay's suppliers).
 # ref: (MPN, Manufacturer, LCSC#)
@@ -72,6 +71,13 @@ SOURCING = {
     'Q401': ('MMBT3904', 'onsemi', 'C20526'),
     'Q402': ('MMBT3904', 'onsemi', 'C20526'),
     'J401': ('0786463001', 'Molex', ''),                  # micro-SIM, push in / pull out (Digi-Key)
+    'U801': ('SKY65943-11', 'Skyworks', 'C2654442'),       # GNSS front end (Digi-Key stock; LCSC unverified)
+    'AE801': ('CGGBP.25.4.A.02', 'Taoglas', ''),          # GNSS patch, pin soldered by hand (Digi-Key)
+    'L801': ('LQW15AN9N1J00D', 'Murata', ''),             # 9.1 nH, the value on the SKY65943-11 evaluation board
+    'L802': ('LQG15HS27NJ02D', 'Murata', 'C12669'),       # 27 nH bias choke (as L401)
+    'C801': ('0402CG330J500NT', 'FH', 'C1562'),           # 33 pF C0G DC block
+    'C803': ('0402CG330J500NT', 'FH', 'C1562'),
+    'J801': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J601': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),  # 2 x 8 socket, 8.5 mm, SMD
     'J602': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),
     'J701': ('HX PZ2.54-2x8P TP', 'Hanxia', 'C32713288'),  # 2 x 8 header, SMD
@@ -793,11 +799,13 @@ def sim():
     sh = Sheet('SIM', 'sim.kicad_sch', SHEETS['sim'], ROOT, 'Micro-SIM holder (lines from the modem on the carrier)')
     sh.text('Micro-SIM J401 (push in / pull out, at the board edge)', g(80), g(38), 1.27, True)
     XJ, YJ = g(104), g(44)
-    S = sh.part('Connector:SIM_Card', 'J401', 'Micro-SIM', MICROSIM_FP, XJ, YJ, 0)
+    S = sh.part('Connector:SIM_Card_Shielded', 'J401', 'Micro-SIM', MICROSIM_FP, XJ, YJ, 0)
     S.fields = {'ref': (XJ - g(4), YJ - g(5), 'left'), 'val': (XJ - g(4), YJ + g(4), 'left')}
     sh.nc(S, 'VPP')
     sh.w(S['GND'], S.out('GND', 1))
     sh.gnd(S.out('GND', 1), rot=270)
+    sh.w(S['SH'], S.out('SH', 1))
+    sh.gnd(S.out('SH', 1), rot=270)
     xj = S['VCC'][0]
     sh.w(S['VCC'], (xj - g(2), S['VCC'][1]))
     sh.glabel('SIM_VDD', (xj - g(2), S['VCC'][1]), 'L')
@@ -829,6 +837,70 @@ def sim():
     sh.power('power:PWR_FLAG', (g(114), g(52)))
     sh.w((g(114), g(52)), (g(114), g(54)))
     sh.glabel('SIM_VDD', (g(114), g(54)), 'D')
+    return sh
+
+
+# =====================================================================================
+def gnss():
+    """GNSS patch with its front end on the upper board. The receiver is in the modem on the carrier: a short
+    U.FL jumper joins J801 here to J403 there. J403 carries the 3.3 V antenna bias (carrier: U405, L401), which
+    powers the front end through the coax, as in an active antenna."""
+    sh = Sheet('GNSS', 'gnss.kicad_sch', SHEETS['gnss'], ROOT, 'GNSS patch antenna + front end (SAW, LNA, SAW)')
+    sh.text('GNSS: ceramic patch -> SKY65943-11 (pre-filter, LNA, post-filter, 16 dB) -> U.FL jumper to the carrier (J403)',
+            g(14), g(8), 1.5, True)
+    XU, YU = g(50), g(30)
+    U = sh.part('obd-v2x:SKY65943-11', 'U801', 'SKY65943-11', 'obd-v2x:Skyworks_SKY65943-11_MCM-10_2.5x2.5mm', XU, YU, 0)
+    U.fields = {'ref': (XU - g(5), U['5'][1] - g(3), 'left'), 'val': (XU - g(5), U['5'][1] - g(2), 'left')}
+    yin = U['5'][1]                                       # RF_IN row = FILT_OUT row
+    yo = U['10'][1]                                       # RF_OUT row
+    # patch
+    xa = g(22)
+    A = sh.part('Device:Antenna', 'AE801', 'CGGBP.25.4.A.02', 'obd-v2x:Antenna_Taoglas_CGGBP.25.4.A.02',
+                xa, yin - 5.08, 0, fields={'ref': (xa - g(2), yin - g(5), 'right'), 'val': (xa - g(2), yin - g(4), 'right')})
+    assert A['1'] == (round(xa, 4), round(yin, 4))
+    sh.w(A['1'], U['5'])
+    sh.text('pin-fed, hand-soldered\nclear the ground copper around the pin\n(3.0 mm top / inner, 3.5 mm bottom)',
+            g(12), yin + g(2), 1.27)
+    # pre-filter -> 9.1 nH -> LNA (the only part the data sheet requires)
+    xr = U['7'][0] + g(4)
+    sh.w(U['7'], (xr, yin))
+    L1 = rv(sh, 'Device:L', 'L801', '9.1nH', 'Inductor_SMD:L_0402_1005Metric', xr, yin)
+    assert abs(L1[2][1] - U['8'][1]) < 1e-6
+    sh.w(L1[2], U['8'])
+    # supply and enable from the coax bias
+    for pin in ('3', '2'):
+        sh.w(U[pin], U.out(pin, 2))
+        sh.label('GNSS_VCC', U.out(pin, 2), 'L')
+    sh.gnd(U['1'])
+    # output: DC block, then the coax node with the bias tee
+    Cb = rh(sh, 'Device:C', 'C801', '33pF', C0402, U['10'][0] + g(8), yo)
+    sh.w(U['10'], Cb[1])
+    xn = Cb[2][0] + g(4)
+    xj = xn + g(22)
+    J = sh.part('Connector:Conn_Coaxial', 'J801', 'U.FL to carrier J403',
+                'Connector_Coaxial:U.FL_Hirose_U.FL-R-SMT-1_Vertical', xj, yo, 0,
+                fields={'ref': (xj - g(1), yo - g(3), None), 'val': (xj - g(1), yo - g(2), None)})
+    sh.w(Cb[2], (xn, yo), J['1'])
+    sh.gnd(J['2'])
+    Lb = rv(sh, 'Device:L', 'L802', '27nH', 'Inductor_SMD:L_0402_1005Metric', xn, yo)
+    yv = Lb[2][1] + g(1)
+    sh.w(Lb[2], (xn, yv), (xn + g(7), yv))
+    cap_to_gnd(sh, 'C803', '33pF', C0402, xn + g(4), yv, 1)
+    Rd = rh(sh, 'Device:R', 'R801', '100R', R0402, xn + g(7), yv)
+    sh.w(Rd[2], (xn + g(18), yv))
+    cap_to_gnd(sh, 'C802', '100nF', C0402, xn + g(13), yv, 1)
+    sh.power('power:PWR_FLAG', (xn + g(16), yv))
+    sh.label('GNSS_VCC', (xn + g(18), yv), 'R')
+    sh.text('Bias from the carrier (3.3 V on the coax, U405 limits it): 27 nH choke, 100R drops it to about 3.0 V\n'
+            '(SKY65943-11: 1.62-3.3 V, 3 mA; VEN needs VCC - 0.3 V, so it is tied to VCC).',
+            xn - g(6), yv + g(7), 1.27)
+    # bypass: fit R802 (and remove C801) to try the bare patch
+    yb = yin - g(8)
+    xb = xa + g(6)
+    Rb = rh(sh, 'Device:R', 'R802', '0R', R0402, xb + g(10), yb, dnp=True)
+    sh.w((xb, yin), (xb, yb), Rb[1])
+    sh.w(Rb[2], (xn + g(3), yb), (xn + g(3), yo))
+    sh.text('R802 (not fitted): bypass link to compare the bare patch', xb + g(8), yb - g(3), 1.27)
     return sh
 
 

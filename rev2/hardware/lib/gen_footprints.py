@@ -1,6 +1,6 @@
-"""Generate project footprints in rev1/hardware/lib/obd-v2x.pretty.
+"""Generate project footprints in rev2/hardware/lib/obd-v2x.pretty.
 
-  python rev1/hardware/lib/gen_footprints.py
+  python rev2/hardware/lib/gen_footprints.py
 
 Quectel_EC200U: from Quectel EC200U Series QuecOpen Hardware Design V1.0,
   Figure 2 (Pin Assignment, top view) and Figure 39 (Recommended Footprint, top view).
@@ -10,6 +10,9 @@ Quectel_EC200U: from Quectel EC200U Series QuecOpen Hardware Design V1.0,
 OBD2_J1962_Plug_PCB: Jiatel CR-PG001 90 deg plug drawing (see obd_plug()).
 
 LED_SK6812MINI-HS_3.7x3.5mm: OPSCO SK6812MINI-HS datasheet Rev. B/0, section 6 (recommended pads, top view).
+
+microSIM_Molex_78646-3001, Skyworks_SKY65943-11_MCM-10_2.5x2.5mm, Antenna_Taoglas_CGGBP.25.4.A.02: rev 2 parts,
+  sources in their functions' docstrings.
 
 ESP32-C5-WROOM-1U.kicad_mod is vendored from espressif/kicad-libraries (CC-BY-SA 4.0 with
 the KiCad design exception), not generated here.
@@ -202,9 +205,98 @@ def sk6812mini_hs():
                      'LED RGB SK6812 SK6812MINI-HS', 3.0, body)
 
 
+def microsim_molex():
+    """Molex 78646-3001 micro-SIM connector, push in / pull out, 1.45 mm high.
+    Molex sales drawing SD-78646-001 rev C1, sheet 2 (recommended PCB layout), read from the Farnell copy.
+    Origin = centre of the connector boundary (15.45 x 12.65). The card enters from +x (the side with the two
+    large shell pads) and slides towards the contact tails at -x. Drawing y is up: negated here.
+    Pads carry the ISO contact numbers (1 VCC, 2 RST, 3 CLK, 5 GND, 6 VPP, 7 I/O) as KiCad's SIM_Card symbols use.
+    The two hold-down pads X1 / X2 are NOT ground: the drawing links X1 to C1 (VCC) and X2 to C3 (CLK), so they
+    are numbered 1 and 3. The case needs a card stop 0.5 mm outside the +x edge (no latch in the connector)."""
+    sx, w, h = -7.295, 1.15, 0.65
+    body = ''
+    for num, y in ((5, 4.025), (1, 2.755), (6, 1.485), (2, 0.215), (7, -1.055), (3, -2.325)):
+        body += pad(num, 'rect', sx, -y, w, h)
+    for y in (6.105, -6.105):
+        body += pad('SH', 'rect', 6.435, -y, 1.70, 1.40)
+    for x in (-3.125, -5.125):
+        for y in (6.27, -6.27):
+            body += pad('SH', 'rect', x, -y, 1.30, 0.45)
+    body += pad(1, 'rect', 5.855, -2.54, 0.80, 0.54)          # X1, linked to C1 inside the connector
+    body += pad(3, 'rect', 5.855, 2.54, 0.80, 0.54)           # X2, linked to C3
+    bx, by = 7.725, 6.325
+    body += rect(-bx, -by, bx, by, 'F.Fab', 0.1)
+    body += line(bx, -by, bx + 3.0, -by, 'F.Fab', 0.1) + line(bx, by, bx + 3.0, by, 'F.Fab', 0.1)   # card side
+    body += line(-bx, -5.3, -bx, -by - 0.15, 'F.SilkS', 0.15) + line(-bx, -by - 0.15, -6.0, -by - 0.15, 'F.SilkS', 0.15)
+    body += line(-2.2, -by - 0.15, 5.3, -by - 0.15, 'F.SilkS', 0.15) + line(-2.2, by + 0.15, 5.3, by + 0.15, 'F.SilkS', 0.15)
+    body += rect(-8.4, -7.3, 8.25, 7.3, 'F.CrtYd', 0.05)
+    assert body.count('(pad ') == 14
+    return footprint('microSIM_Molex_78646-3001',
+                     'Molex 78646-3001 micro-SIM connector, push in / pull out, 6 contacts, 1.45 mm high; card enters '
+                     'from +x. Pads 1 and 3 near +x are the hold-downs the drawing links to VCC and CLK '
+                     '(SD-78646-001 rev C1)', 'SIM micro-SIM 3FF card connector Molex 78646', 8.4, body)
+
+
+def sky65943():
+    """Skyworks SKY65943-11 GNSS front end (SAW + LNA + SAW), MCM-10, 2.5 x 2.5 x 0.65 mm.
+    Data sheet 204404H, Figure 7 (PCB metallization, top view): pads 0.425 wide at x +-1.1875, rows at y 0, +-0.5
+    (0.275 high) and +-1.1435 (0.515 high); pins 1-5 down the left side, 10-6 down the right. Drawing y is up:
+    negated here. Centre ground copper 1.45 wide (0.25 to the pads) over the package height = pad 11.
+    Paste on the centre pad as three apertures. The data sheet shows 8 filled thermal vias (0.3 mm, 0.6 pitch)
+    in the centre pad: optional, add them in the layout."""
+    px = 1.1875
+    rows = ((1, -px, 1.1435, 0.515), (2, -px, 0.5, 0.275), (3, -px, 0.0, 0.275), (4, -px, -0.5, 0.275),
+            (5, -px, -1.1435, 0.515), (6, px, -1.1435, 0.515), (7, px, -0.5, 0.275), (8, px, 0.0, 0.275),
+            (9, px, 0.5, 0.275), (10, px, 1.1435, 0.515))
+    body = ''.join(pad(n, 'rect', x, -y, 0.425, h) for n, x, y, h in rows)
+    body += (f'\t(pad "11" smd rect (at 0 0) (size 1.45 2.4) (layers "F.Cu" "F.Mask") (uuid "{uid("sky/ep")}"))\n')
+    for i, (y, h) in enumerate(((-0.8775, 0.66), (0, 0.6), (0.8775, 0.66))):
+        body += (f'\t(pad "" smd rect (at 0 {f(y)}) (size 1.3 {f(h)}) (layers "F.Paste") (uuid "{uid(f"sky/paste{i}")}"))\n')
+    b = 1.25
+    body += rect(-b, -b, b, b, 'F.Fab', 0.1)
+    body += line(-b, -b + 0.5, -b + 0.5, -b, 'F.Fab', 0.1)                       # pin 1 corner
+    body += line(-1.75, -1.75, -1.0, -1.75, 'F.SilkS', 0.15)                     # pin 1 mark, clear of the pads
+    body += rect(-1.7, -1.7, 1.7, 1.7, 'F.CrtYd', 0.05)
+    assert body.count('(pad ') == 14
+    return footprint('Skyworks_SKY65943-11_MCM-10_2.5x2.5mm',
+                     'Skyworks SKY65943-11 GNSS front-end module (pre-filter, LNA, post-filter), MCM-10 2.5 x 2.5 mm, '
+                     'centre ground pad 11 (data sheet 204404H Figure 7)', 'GNSS LNA SAW front end Skyworks SKY65943',
+                     2.8, body)
+
+
+def gnss_patch():
+    """Taoglas CGGBP.25.4.A.02 ceramic GNSS patch, 25.1 x 25.1 x 4 mm, pin-fed, stuck down with its adhesive.
+    Data sheet SPE-14-8-071-G p.6 / p.9-10: feed pin 0.9 mm (max 1.05), 2.5 mm off centre towards the edge with the
+    part marking (+y here); recommended hole 1.0, pads 1.2 top / 2.2 bottom; ground copper cleared 3.0 mm around the
+    pin on the top and inner layers and 3.5 mm on the bottom layer. Here: hole 1.1 (the pin tolerance exceeds 1.0)
+    and one 1.8 mm pad on all layers. Draw the copper clearances as rule areas in the layout: the circles on
+    Cmts.User show them. The patch is tuned on a 70 x 70 mm ground plane; keep ground under the whole patch.
+    The pin is soldered by hand on the bottom side after reflow."""
+    body = (f'\t(pad "1" thru_hole circle (at 0 2.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") '
+            f'(uuid "{uid("patch/1")}"))\n')
+    for d, layer in ((3.0, 'Cmts.User'), (3.5, 'Dwgs.User')):
+        body += (f'\t(fp_circle (center 0 2.5) (end {f(d / 2)} 2.5) (stroke (width 0.1) (type solid)) '
+                 f'(layer "{layer}") (uuid "{uid(f"patch/c{d}")}"))\n')
+    b = 12.55
+    body += rect(-b, -b, b, b, 'F.Fab', 0.1)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            body += line(sx * (b + 0.15), sy * (b + 0.15), sx * (b - 3), sy * (b + 0.15), 'F.SilkS', 0.15)
+            body += line(sx * (b + 0.15), sy * (b + 0.15), sx * (b + 0.15), sy * (b - 3), 'F.SilkS', 0.15)
+    body += rect(-b - 0.4, -b - 0.4, b + 0.4, b + 0.4, 'F.CrtYd', 0.05)
+    fp = footprint('Antenna_Taoglas_CGGBP.25.4.A.02',
+                   'Taoglas CGGBP.25.4.A.02 GNSS ceramic patch 25 x 25 x 4 mm, pin-fed (feed 2.5 mm off centre, +y), '
+                   'adhesive mount; clear ground copper 3.0 mm (top, inner) / 3.5 mm (bottom) around the pin',
+                   'GNSS GPS GLONASS Galileo BeiDou patch antenna Taoglas', 13.8, body)
+    return fp.replace('\t(attr smd)\n', '\t(attr through_hole)\n')
+
+
 if __name__ == '__main__':
     for name, fn in (('Quectel_EC200U', ec200u), ('OBD2_J1962_Plug_PCB', obd_plug),
-                     ('LED_SK6812MINI-HS_3.7x3.5mm', sk6812mini_hs)):
+                     ('LED_SK6812MINI-HS_3.7x3.5mm', sk6812mini_hs),
+                     ('microSIM_Molex_78646-3001', microsim_molex),
+                     ('Skyworks_SKY65943-11_MCM-10_2.5x2.5mm', sky65943),
+                     ('Antenna_Taoglas_CGGBP.25.4.A.02', gnss_patch)):
         p = OUT / f'{name}.kicad_mod'
         p.write_text(fn(), encoding='utf-8')
         print('wrote', p)

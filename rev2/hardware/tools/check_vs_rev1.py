@@ -18,12 +18,14 @@ from schgen import BOARDS  # noqa: E402
 HW = Path(__file__).resolve().parents[1]
 REV1_REF = HW.parents[1] / 'rev1' / 'hardware' / 'tools' / 'reference.net'
 ONLY_REV1 = {'U403', 'U404', 'R411', 'R412', 'R413', 'R414', 'C415', 'C416'}      # eSIM, SIM switch
-ONLY_REV2 = {'J601', 'J602', 'J701', 'J702', 'H601', 'H602', 'H701', 'H702'}      # stack connectors, spacers
+ONLY_REV2 = {'J601', 'J602', 'J701', 'J702', 'H601', 'H602', 'H701', 'H702',     # stack connectors, spacers
+             'U801', 'AE801', 'L801', 'L802', 'C801', 'C802', 'C803', 'R801', 'R802', 'J801'}   # GNSS front end
 # rev 1 nets that the removed SIM switch used to join (SIM 1 path): now one net each
 REV1_JOIN = [('SIM_VDD', 'SIM1_VDD'), ('LTE_USIM_RST', 'SIM1_RST'), ('LTE_USIM_CLK', 'SIM1_CLK'),
              ('LTE_USIM_DATA', 'SIM1_DAT')]
 # intended differences: (ref, pin) nodes whose net changed on purpose
-CHANGED = {('U301', '24'), ('TP302', '1')}                                        # IO12: was SIM_SEL, now a spare pad
+CHANGED = {('U301', '24'), ('TP302', '1'),      # IO12: was SIM_SEL, now a spare pad
+           ('J401', 'SH')}                      # the micro-SIM holder has shell pads (to GND); rev 1's had none
 
 
 def read(path):
