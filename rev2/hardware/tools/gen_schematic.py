@@ -2,8 +2,8 @@
 
     python rev2/hardware/tools/gen_schematic.py [sheet ...]
 
-carrier/  power, vehicle, lte, battery, stack_carrier   (OBD plug, supplies, modem, cell)
-upper/    mcu, stack_upper                              (ESP32-C5, USB-C, LED, buttons)
+carrier/  power, vehicle, lte, battery, stack_carrier   (OBD plug + bus protection, supplies, modem, cell)
+upper/    mcu, xcvr, sim, stack_upper                   (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM)
 
 The sheets started as a copy of rev 1's. Nets with the same name on both boards are joined through the
 board-to-board connectors (sheets "stack_*"); check with
@@ -18,10 +18,11 @@ from schgen import g  # noqa: E402
 from schgen import Sheet as _Sheet, uid  # noqa: E402
 
 BOARD = {'power': 'carrier', 'vehicle': 'carrier', 'lte': 'carrier', 'battery': 'carrier', 'stack_carrier': 'carrier',
-         'mcu': 'upper', 'stack_upper': 'upper'}
+         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'stack_upper': 'upper'}
 ROOTS = {b: uid('rev2/root/' + b) for b in ('carrier', 'upper')}
 SHEETS = {n: uid('rev2/sheet/' + n) for n in BOARD}
-TITLES = {'power': 'Power', 'vehicle': 'Vehicle (OBD, CAN, K-Line)', 'lte': 'LTE + GNSS (EC200U)',
+TITLES = {'power': 'Power', 'vehicle': 'Vehicle (OBD plug, protection)', 'xcvr': 'CAN + K-Line transceivers',
+          'sim': 'Micro-SIM', 'lte': 'LTE + GNSS (EC200U)',
           'battery': 'Backup battery', 'stack_carrier': 'Board-to-board (sockets)',
           'mcu': 'MCU (ESP32-C5, USB)', 'stack_upper': 'Board-to-board (headers)'}
 ROOT = None
@@ -397,41 +398,74 @@ def lab_row(sh, part, pins, side, stub, glob, shape='bidirectional'):
 
 
 # =====================================================================================
-def vehicle():
-    sh = Sheet('Vehicle', 'vehicle.kicad_sch', SHEETS['vehicle'], ROOT, 'Vehicle interface: OBD-II, CAN, K-Line')
+def _vehicle(side):
+    """side 'carrier': the OBD plug with the bus protection right at its pins.
+    side 'upper': the CAN and K-Line transceivers. The buses cross the stack as CANH / CANL / K_LINE."""
+    carrier = side == 'carrier'
+    if carrier:
+        sh = Sheet('Vehicle', 'vehicle.kicad_sch', SHEETS['vehicle'], ROOT, 'Vehicle interface: OBD-II plug, bus protection')
+    else:
+        sh = Sheet('Transceivers', 'xcvr.kicad_sch', SHEETS['xcvr'], ROOT, 'Vehicle interface: CAN and K-Line transceivers')
     J = sh.part('obd-v2x:OBD2_J1962_Plug', 'J201', 'OBD2_J1962_Plug', 'obd-v2x:OBD2_J1962_Plug_PCB', g(16), g(30), 0)
     J.fields = IC(g(16), g(30) - g(7), g(30) + g(7))
-    for pin in ('1', '3', '8', '9', '11', '12', '13', '2', '10', '15'):
-        sh.nc(J, pin)
-    sh.text('OBD-II plug (vehicle side)', g(6), g(18), 1.5, True)
-    # battery
-    sh.w(J['16'], (g(30), J['16'][1]))
-    sh.glabel('OBD_VBAT', (g(30), J['16'][1]), 'R', 'output')
-    # grounds
-    xg = J['5'][0] + g(2)
-    sh.w(J['5'], (xg, J['5'][1]))
-    sh.w(J['4'], (xg, J['4'][1]))
-    sh.w((xg, J['5'][1]), (xg, J['4'][1]))
-    sh.gnd((xg, J['4'][1]))
+    ych, ycl = J['6'][1], J['14'][1]
+    ylin = J['7'][1] + g(16)
+    xj = g(44)
+    xk1, xk2 = g(36) - 2.54, g(36) + 2.54
+    xkl = g(26)
+    xc, xt, xp = g(30), g(35), g(41)
+    if carrier:
+        for pin in ('1', '3', '8', '9', '11', '12', '13', '2', '10', '15'):
+            sh.nc(J, pin)
+        sh.text('OBD-II plug (vehicle side)', g(6), g(18), 1.5, True)
+        # battery
+        sh.w(J['16'], (g(30), J['16'][1]))
+        sh.glabel('OBD_VBAT', (g(30), J['16'][1]), 'R', 'output')
+        # grounds
+        xg = J['5'][0] + g(2)
+        sh.w(J['5'], (xg, J['5'][1]))
+        sh.w(J['4'], (xg, J['4'][1]))
+        sh.w((xg, J['5'][1]), (xg, J['4'][1]))
+        sh.gnd((xg, J['4'][1]))
+        # CAN: TVS at the plug, then up to the transceiver
+        sh.text('High-speed CAN: TVS here, transceiver on the upper board. No termination in the dongle',
+                g(30), g(10), 1.5, True)
+        sh.w(J['6'], (xk1, ych), (xj, ych))
+        sh.glabel('CANH', (xj, ych), 'R')
+        sh.w(J['14'], (xk2, ycl), (xj, ycl))
+        sh.glabel('CANL', (xj, ycl), 'R')
+        D = sh.part('Power_Protection:NUP2105L', 'D201', 'NUP2105L', SOT23, g(36), ycl + g(4) + 5.08, 0)
+        D.fields = {'ref': (g(36) + g(2), D.y - 1.27, 'left'), 'val': (g(36) + g(2), D.y + 1.27, 'left')}
+        sh.w(D['1'], (xk1, ych))
+        sh.w(D['2'], (xk2, ycl))
+        sh.gnd(D['3'])
+        # K-Line: capacitor and TVS at the plug
+        sh.text('K-Line: capacitor and TVS here, transceiver and pull-up on the upper board', g(30), J['7'][1] + g(25),
+                1.5, True)
+        sh.w(J['7'], (xkl, J['7'][1]), (xkl, ylin), (xc, ylin), (xt, ylin), (xp, ylin))
+        sh.glabel('K_LINE', (xp, ylin), 'R')
+        Ck = rv(sh, 'Device:C', 'C203', '220pF 50V', C0603, xc, ylin + g(1))
+        sh.w((xc, ylin), Ck[1])
+        sh.gnd(Ck[2])
+        Ck.fields = VL(Ck.x, Ck.y)
+        Dt = dv(sh, 'Device:D_TVS', 'D203', 'PESD1LIN', 'Diode_SMD:D_SOD-323', xt, ylin + g(1), 'A1')
+        sh.w((xt, ylin), Dt['A1'])
+        sh.gnd(Dt['A2'])
+        return sh
+
+    sh.parts.remove(J)                                   # only used for the coordinates
 
     # ---------------- CAN
     sh.text('High-speed CAN (ISO 15765), no termination in the dongle', g(30), g(10), 1.5, True)
-    ych, ycl = J['6'][1], J['14'][1]
     XU = g(56)
     U = sh.part('Interface_CAN_LIN:TCAN334', 'U201', 'TCAN334', 'Package_SO:SOIC-8_3.9x4.9mm_P1.27mm',
                 XU, ych + 2.54, 0, 'y')
-    U.fields = IC(XU, U['VCC'][1] - g(1), U['GND'][1] + g(1), left=XU - g(3))
     U.fields = {'ref': (XU + g(1), U['VCC'][1] - 1.27, 'left'), 'val': (XU - g(2), U['GND'][1] + g(1), 'right')}
     assert abs(U['CANH'][1] - ych) < 1e-6
-    xj = g(44)
-    xk1, xk2 = g(36) - 2.54, g(36) + 2.54
-    sh.w(J['6'], (xk1, ych), U['CANH'])
-    sh.w(J['14'], (xk2, ycl), (xj, ycl), (xj, U['CANL'][1]), U['CANL'])
-    D = sh.part('Power_Protection:NUP2105L', 'D201', 'NUP2105L', SOT23, g(36), ycl + g(4) + 5.08, 0)
-    D.fields = {'ref': (g(36) + g(2), D.y - 1.27, 'left'), 'val': (g(36) + g(2), D.y + 1.27, 'left')}
-    sh.w(D['1'], (xk1, ych))
-    sh.w(D['2'], (xk2, ycl))
-    sh.gnd(D['3'])
+    sh.glabel('CANH', (xk2, ych), 'L')
+    sh.w((xk2, ych), U['CANH'])
+    sh.glabel('CANL', (xk2, ycl), 'L')
+    sh.w((xk2, ycl), (xj, ycl), (xj, U['CANL'][1]), U['CANL'])
     sh.rail('+3V3', U['VCC'], stub=1)
     sh.gnd(U['GND'])
     xr = U['TXD'][0]
@@ -449,22 +483,13 @@ def vehicle():
 
     # ---------------- K-Line
     sh.text('K-Line (ISO 9141 / KWP2000) via LIN transceiver + 510R tester pull-up', g(30), J['7'][1] + g(25), 1.5, True)
-    ylin = J['7'][1] + g(16)
     XK = g(56)
     K = sh.part('Interface_CAN_LIN:TJA1021xT', 'U202', 'TJA1021T/20', 'Package_SO:SOIC-8_3.9x4.9mm_P1.27mm',
                 XK, ylin - 2.54, 0, 'y')
     K.fields = {'ref': (XK + g(1), K['VBAT'][1] - 1.27, 'left'), 'val': (XK - g(2), K['GND'][1] + g(1), 'right')}
     assert abs(K['LIN'][1] - ylin) < 1e-6
-    xkl = g(26)
-    xc, xt, xp = g(30), g(35), g(41)
-    sh.w(J['7'], (xkl, J['7'][1]), (xkl, ylin), (xc, ylin), (xt, ylin), (xp, ylin), K['LIN'])
-    Ck = rv(sh, 'Device:C', 'C203', '220pF 50V', C0603, xc, ylin + g(1))
-    sh.w((xc, ylin), Ck[1])
-    sh.gnd(Ck[2])
-    Ck.fields = VL(Ck.x, Ck.y)
-    Dt = dv(sh, 'Device:D_TVS', 'D203', 'PESD1LIN', 'Diode_SMD:D_SOD-323', xt, ylin + g(1), 'A1')
-    sh.w((xt, ylin), Dt['A1'])
-    sh.gnd(Dt['A2'])
+    sh.glabel('K_LINE', (xt, ylin), 'L')
+    sh.w((xt, ylin), (xp, ylin), K['LIN'])
     Rp = rv(sh, 'Device:R', 'R204', '510 0.5W', R1206, xp, ylin - g(1) - 7.62)
     sh.w(Rp[2], (xp, ylin))
     Dp = dv(sh, 'Device:D_Schottky', 'D202', 'B0540WS', 'Diode_SMD:D_SOD-323', xp, Rp[1][1] - g(1) - 7.62, 'A')
@@ -491,6 +516,14 @@ def vehicle():
     sh.rail('VIN_PROT', (xr + g(2), K['~{WAKE}'][1] + g(3)), rot=180)
     decap(sh, 'C202', '100nF 50V', C0603, XK + g(8), K['VBAT'][1] - g(6), 'VIN_PROT')
     return sh
+
+
+def vehicle():
+    return _vehicle('carrier')
+
+
+def xcvr():
+    return _vehicle('upper')
 
 
 # =====================================================================================
@@ -607,7 +640,8 @@ def mcu():
 
 
 # =====================================================================================
-LTE_GLOBAL = {'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL'}
+LTE_GLOBAL = {'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL',
+              'SIM_VDD', 'LTE_USIM_RST', 'LTE_USIM_CLK', 'LTE_USIM_DATA'}   # the SIM holder is on the upper board
 
 
 def lte():
@@ -684,42 +718,6 @@ def lte():
     decap(sh, 'C405', '100nF', C0603, g(104), g(10), 'LTE_1V8')
     decap(sh, 'C406', '100nF', C0603, g(109), g(10), '+3V3')
 
-    # micro-SIM holder, straight to the modem (rev 1's eSIM footprint and SIM switch are gone)
-    sh.text('Micro-SIM J401 (push in / pull out, at the board edge)', g(80), g(38), 1.27, True)
-    XJ, YJ = g(104), g(44)
-    S = sh.part('Connector:SIM_Card', 'J401', 'Micro-SIM', MICROSIM_FP, XJ, YJ, 0)
-    S.fields = {'ref': (XJ - g(4), YJ - g(5), 'left'), 'val': (XJ - g(4), YJ + g(4), 'left')}
-    sh.nc(S, 'VPP')
-    sh.w(S['GND'], S.out('GND', 1))
-    sh.gnd(S.out('GND', 1), rot=270)
-    xj = S['VCC'][0]
-    sh.w(S['VCC'], (xj - g(2), S['VCC'][1]))
-    sh.label('SIM_VDD', (xj - g(2), S['VCC'][1]), 'L')
-    xR = xj - g(12)
-    for pin, net, rref, src, dy in (('RST', 'SIM_RST', 'R407', 'LTE_USIM_RST', -2), ('CLK', 'SIM_CLK', 'R406', 'LTE_USIM_CLK', 0),
-                                    ('I/O', 'SIM_IO', 'R405', 'LTE_USIM_DATA', 0)):
-        y = S[pin][1]
-        yr = y + g(dy)
-        Rs = rh(sh, 'Device:R', rref, '22R', R0402, xR, yr)
-        sh.w(Rs[2], (xj - g(7), yr), (xj - g(7), y), S[pin])
-        sh.label(net, (xj - g(6), y), 'R')
-        sh.w(Rs[1], (xR - g(1), yr))
-        sh.label(src, (xR - g(1), yr), 'L')
-    # SIM caps + data pull-up
-    for i, (ref, val, net, fp) in enumerate((('C407', '33pF', 'SIM_IO', C0402), ('C408', '33pF', 'SIM_CLK', C0402),
-                                             ('C409', '33pF', 'SIM_RST', C0402), ('C410', '100nF', 'SIM_VDD', C0402))):
-        x = g(80 + 6 * i)
-        c = rv(sh, 'Device:C', ref, val, fp, x, g(56))
-        sh.w(c[1], (x, g(54)))
-        sh.label(net, (x, g(54)), 'U')
-        sh.gnd(c[2])
-    Rpu = rv(sh, 'Device:R', 'R408', '15k', R0402, g(106), g(55))
-    Rpu.fields = {'ref': (g(106) + g(1), Rpu.y - 1.27, 'left'), 'val': (g(106) + g(1), Rpu.y + 1.27, 'left')}
-    sh.w(Rpu[1], (g(106), g(54)))
-    sh.label('SIM_VDD', (g(106), g(54)), 'U')
-    sh.w(Rpu[2], (g(106), Rpu[2][1] + g(1)), (g(108), Rpu[2][1] + g(1)))
-    sh.label('LTE_USIM_DATA', (g(108), Rpu[2][1] + g(1)), 'R')
-
     # antennas
     sh.text('Antennas (pi-match, shunt caps DNP until tuned)', g(22), g(64), 1.27, True)
     for i, (r, c1, c2, j, src, rf, val) in enumerate((('R409', 'C411', 'C412', 'J402', 'LTE_ANT_MAIN', 'ANT_MAIN_RF', 'U.FL LTE main'),
@@ -786,6 +784,51 @@ def lte():
                                     ('TP404', 'LTE_USB_BOOT'), ('TP405', 'LTE_DBG_TXD'), ('TP406', 'LTE_DBG_RXD'),
                                     ('TP407', 'LTE_1V8'))):
         testpad(sh, ref, net, g(10), g(33) + g(3) * i, rail=(net == 'LTE_1V8'))
+    return sh
+
+
+# =====================================================================================
+def sim():
+    """micro-SIM holder with its series resistors, capacitors and pull-up; the four lines come up from the modem"""
+    sh = Sheet('SIM', 'sim.kicad_sch', SHEETS['sim'], ROOT, 'Micro-SIM holder (lines from the modem on the carrier)')
+    sh.text('Micro-SIM J401 (push in / pull out, at the board edge)', g(80), g(38), 1.27, True)
+    XJ, YJ = g(104), g(44)
+    S = sh.part('Connector:SIM_Card', 'J401', 'Micro-SIM', MICROSIM_FP, XJ, YJ, 0)
+    S.fields = {'ref': (XJ - g(4), YJ - g(5), 'left'), 'val': (XJ - g(4), YJ + g(4), 'left')}
+    sh.nc(S, 'VPP')
+    sh.w(S['GND'], S.out('GND', 1))
+    sh.gnd(S.out('GND', 1), rot=270)
+    xj = S['VCC'][0]
+    sh.w(S['VCC'], (xj - g(2), S['VCC'][1]))
+    sh.glabel('SIM_VDD', (xj - g(2), S['VCC'][1]), 'L')
+    xR = xj - g(12)
+    for pin, net, rref, src, dy in (('RST', 'SIM_RST', 'R407', 'LTE_USIM_RST', -2), ('CLK', 'SIM_CLK', 'R406', 'LTE_USIM_CLK', 0),
+                                    ('I/O', 'SIM_IO', 'R405', 'LTE_USIM_DATA', 0)):
+        y = S[pin][1]
+        yr = y + g(dy)
+        Rs = rh(sh, 'Device:R', rref, '22R', R0402, xR, yr)
+        sh.w(Rs[2], (xj - g(7), yr), (xj - g(7), y), S[pin])
+        sh.label(net, (xj - g(6), y), 'R')
+        sh.w(Rs[1], (xR - g(1), yr))
+        sh.glabel(src, (xR - g(1), yr), 'L')
+    # SIM caps + data pull-up
+    for i, (ref, val, net, fp) in enumerate((('C407', '33pF', 'SIM_IO', C0402), ('C408', '33pF', 'SIM_CLK', C0402),
+                                             ('C409', '33pF', 'SIM_RST', C0402), ('C410', '100nF', 'SIM_VDD', C0402))):
+        x = g(80 + 6 * i)
+        c = rv(sh, 'Device:C', ref, val, fp, x, g(56))
+        sh.w(c[1], (x, g(54)))
+        (sh.glabel if net == 'SIM_VDD' else sh.label)(net, (x, g(54)), 'U')
+        sh.gnd(c[2])
+    Rpu = rv(sh, 'Device:R', 'R408', '15k', R0402, g(106), g(55))
+    Rpu.fields = {'ref': (g(106) + g(1), Rpu.y - 1.27, 'left'), 'val': (g(106) + g(1), Rpu.y + 1.27, 'left')}
+    sh.w(Rpu[1], (g(106), g(54)))
+    sh.glabel('SIM_VDD', (g(106), g(54)), 'U')
+    sh.w(Rpu[2], (g(106), Rpu[2][1] + g(1)), (g(108), Rpu[2][1] + g(1)))
+    sh.glabel('LTE_USIM_DATA', (g(108), Rpu[2][1] + g(1)), 'R')
+    # SIM_VDD comes from the modem on the carrier: tell ERC it is driven
+    sh.power('power:PWR_FLAG', (g(114), g(52)))
+    sh.w((g(114), g(52)), (g(114), g(54)))
+    sh.glabel('SIM_VDD', (g(114), g(54)), 'D')
     return sh
 
 
@@ -901,12 +944,13 @@ def battery():
 
 # =====================================================================================
 # Board-to-board: two 2 x 8 connectors, 2.54 mm. Pin n of J601 mates with pin n of J701, J602 with J702.
-# Power and ground are spread over both; every signal has a ground pin next to it or one pin away.
-STACK_A = ['GND', 'GND', '+3V3', '+3V3', 'CAN_TX', 'CAN_RX', 'CAN_STB', 'GND',
-           'KL_TX', 'KL_RX', 'KL_SLP_N', 'GND', 'VSENSE', 'VBUS_USB', 'GND', 'GND']
+# Power and ground are spread over both. CANH / CANL are a facing pair; K_LINE and VIN_PROT (vehicle voltage) sit
+# next to ground pins; the SIM clock has ground on three sides.
+STACK_A = ['GND', 'GND', '+3V3', '+3V3', 'CANH', 'CANL', 'GND', 'K_LINE',
+           'VIN_PROT', 'GND', 'VSENSE', 'VBUS_USB', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN']
 STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE',
-           'GND', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN', 'GND', 'GND', 'GND']
-STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8'}
+           'GND', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'GND']
+STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT'}
 
 
 def _stack(key, refs, value, fp, flags):
@@ -954,7 +998,8 @@ def stack_carrier():
 
 def stack_upper():
     return _stack('stack_upper', ('J701', 'J702'), 'Header 2x8',
-                  'Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical_SMD', ('+3V3', 'VSYS_3V8', 'GND'))
+                  'Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical_SMD',
+                  ('+3V3', 'VSYS_3V8', 'VIN_PROT', 'GND'))
 
 
 SHEET_BLOCK = '''\t(sheet

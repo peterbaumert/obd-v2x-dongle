@@ -33,7 +33,7 @@
 		(stroke (width 0.0006) (type solid))
 		(fill (color 0 0 0 0))
 		(uuid "67944000-67ce-559c-869f-87b3712767a5")
-		(property "Sheetname" "Vehicle (OBD, CAN, K-Line)" (at 92.54 38.73 0)
+		(property "Sheetname" "Vehicle (OBD plug, protection)" (at 92.54 38.73 0)
 			(effects (font (size 1.27 1.27)) (justify left bottom)))
 		(property "Sheetfile" "vehicle.kicad_sch" (at 92.54 66.27 0)
 			(effects (font (size 1.27 1.27)) (justify left top)))

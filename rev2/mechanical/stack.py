@@ -59,8 +59,6 @@ PARTS = [
     part('EC200U', BX0 + 1.0, BYR + 1.5, 29.0, 32.0, -2.4, 2.4, 'carrier-bottom'),
     part('socket L', BX0 + 0.5, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
     part('socket R', BX1 - 0.5 - HDR_W, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
-    part('micro-SIM holder', BX0, BYR + 0.5, 16.0, 15.0, BT, 1.45, 'carrier-top',
-         'Molex 78646-3001, card enters from the left edge; outline CHECK'),
     part('buck inductor', BX1 - 7.5 - 7.0, -66.0 - 8.0, 7.0, 6.6, BT, 4.8, 'carrier-top'),
     part('tantalum 220u', BX1 - 7.5 - 7.3, -66.0 - 13.5, 7.3, 4.3, BT, 3.1, 'carrier-top'),
     part('TVS SMC', 121.0, -66.0 - 7.0, 8.0, 5.9, BT, 2.3, 'carrier-top'),
@@ -80,6 +78,8 @@ PARTS = [
     part('ESP32 U.FL plug', PLUG_CX - 9.0 + 1.0, -66.5 - 5.0, 4.0, 4.0, UZ0 - 3.4 - 2.0, 2.0, 'upper-bottom',
          'mated U.FL on the module; height CHECK'),
     part('USB-C', BX1 - 6.0 - 9.0, BYR - 0.5, 9.0, 7.5, UZ0 - 3.3, 3.3, 'upper-bottom', 'overhangs the rear edge 0.5 mm'),
+    part('micro-SIM holder', BX0, BYR + 0.5, 16.0, 15.0, UZ0 - 1.45, 1.45, 'upper-bottom',
+         'Molex 78646-3001, card enters from the left edge; outline CHECK'),
     part('GNSS patch', PLUG_CX - 12.5, BYR + 3.0, 25.0, 25.0, UZ1, 4.0, 'upper-top', 'Taoglas CGGBP.25.4.A.02'),
 ]
 

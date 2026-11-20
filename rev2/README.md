@@ -54,25 +54,37 @@ One side of a 45 × 45 mm board is 2025 mm². Rev 1 uses 1272 mm² of parts on t
 |---|---|---|---|
 | EC200U-EU | 29 × 32 mm | 2.4 mm | carrier, underside |
 | ESP32-C5-WROOM-1U | 18 × 21 mm | 3.4 mm | upper board, underside |
-| Micro-SIM holder | about 16 × 15 mm | 1.45 mm | carrier, top side, at the left edge (slot in the case) |
+| Micro-SIM holder | about 16 × 15 mm | 1.45 mm | upper board, underside, at the left edge (slot in the case) |
 | Buck inductor | 7 × 7 mm | 4.8 mm | carrier, top side |
 | 220 µF tantalums | 7 × 4 mm | 3.1 mm | carrier, top side |
 | USB-C | 9 × 8 mm | 3.3 mm | upper board, rear edge |
 | Plug legs | 32 × 7 mm | through-hole | carrier, front edge, blocks both sides |
 
-## Board split (proposal)
+## Board split
 
-**Carrier:** J201, input protection, buck, 3.3 V regulator, EC200U with its supply caps, micro-SIM holder, level
-shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), CAN and K-line / LIN transceivers (short stubs to the
-plug), and the whole battery circuit: charger, power mux, cell connector, NTC. The battery circuit sits here
-because the modem's supply current then never has to cross the connectors.
+Decided by area: with everything except the ESP32 on the carrier, its free area would be about 65 % full and the
+upper board's about 9 %. With the split below it is about 45 % and 26 % (courtyard areas from the rev 1 board).
 
-**Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, ceramic GNSS patch soldered on the top side
-with its front end and a U.FL for the jumper.
+**Carrier:** J201 with the bus protection at its pins (CAN TVS, K-line capacitor and TVS), input protection, buck,
+3.3 V regulator, EC200U with its supply caps, level shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), and
+the whole battery circuit: charger, power mux, cell connector, NTC. The battery circuit sits here because the
+modem's supply current then never has to cross the connectors.
 
-**Across the connectors** (two 2 × 8, 32 pins): 16 signals (CAN TX / RX / standby, K-line TX / RX / sleep, modem
-UART TX / RX / RTS / CTS, PWRKEY, RESET, STATUS, LTE power enable, VIN sense, USB VBUS), 3 × 3.3 V, 1 × VSYS 3.8 V
-and 12 × GND. The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
+**Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, the CAN and K-line transceivers, the micro-SIM
+holder with its resistors and capacitors, and the ceramic GNSS patch on the top side with its front end and a
+U.FL for the jumper.
+
+**Across the connectors** (two 2 × 8, 32 pins): 18 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 10 × GND.
+
+| Lines | Count |
+|---|---|
+| CANH, CANL (a facing pin pair), K_LINE, VIN_PROT (vehicle voltage for the K-line pull-up) | 4 |
+| Modem UART TX / RX / RTS / CTS | 4 |
+| PWRKEY, RESET, STATUS, LTE power enable | 4 |
+| SIM VDD / RST / CLK / DATA | 4 |
+| VIN sense, USB VBUS | 2 |
+
+The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
 
 ## Schematics
 
@@ -81,18 +93,21 @@ Two KiCad 10 projects, generated like rev 1's (edit `hardware/tools/gen_schemati
 | Project | Sheets |
 |---|---|
 | `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery, stack_carrier |
-| `hardware/upper/obd-v2x-upper` | mcu, stack_upper |
+| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, stack_upper |
 
 ```bash
 python rev2/hardware/tools/gen_schematic.py     # writes both projects
 python rev2/hardware/tools/check_stack.py       # same net on mating connector pins, nothing shared left uncrossed
+python rev2/hardware/tools/check_vs_rev1.py     # both boards joined = rev 1's circuit, apart from the listed changes
 kicad-cli sch erc rev2/hardware/carrier/obd-v2x-carrier.kicad_sch
 kicad-cli sch erc rev2/hardware/upper/obd-v2x-upper.kicad_sch
 ```
 
-State: ERC 0 violations on both boards, `check_stack.py` passes (19 nets cross). The circuits are rev 1's with
+State: ERC 0 violations on both boards, `check_stack.py` passes (21 nets cross), and `check_vs_rev1.py` confirms
+that the two boards joined through the connectors are connected exactly like rev 1's reviewed netlist, apart from
+the intended changes. The circuits are rev 1's with
 these changes: eSIM and SIM switch removed (IO12 is a spare test pad), micro-SIM holder, side-entry battery
-connector, the two board-to-board connectors.
+connector, the two board-to-board connectors with spacer holes.
 
 Not done yet:
 
@@ -132,10 +147,11 @@ clearances and prints the case envelope: **49.6 × 68.1 × 24.8 mm including the
 What the placement shows:
 
 - Carrier underside: only the EC200U (and the plug's leg tips at the front).
-- Carrier top: micro-SIM holder at the left rear edge, the two header sockets along the sides, buck inductor,
-  tantalum, TVS and the battery connector in the front half.
-- The cell lies across the rear half, on carrier parts up to 2.0 mm tall (the SIM holder is 1.45 mm).
-- Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge.
+- Carrier top: the two header sockets along the sides, buck inductor, tantalum, TVS and the battery connector in
+  the front half.
+- The cell lies across the rear half, on carrier parts up to 2.0 mm tall.
+- Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge, the
+  micro-SIM holder at the left rear edge (the card slot is then 11 mm above the carrier).
 - Upper top: the 25 mm GNSS patch.
 - No clearance is below 0.3 mm. The outlines marked CHECK in the script are estimates; confirm them from the
   drawings.
