@@ -1,6 +1,6 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **design brief and a 3D stack model; no schematic or layout yet.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **design brief, 3D stack model and first schematics for both boards; no layout yet.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -58,15 +58,48 @@ One side of a 45 × 45 mm board is 2025 mm². Rev 1 uses 1272 mm² of parts on t
 
 ## Board split (proposal)
 
-**Carrier:** J201, input protection, buck, EC200U with its supply caps, micro-SIM holder, level shifter, LTE U.FL,
-GNSS U.FL (jumper to the upper board), CAN and K-line / LIN transceivers (short stubs to the plug).
+**Carrier:** J201, input protection, buck, 3.3 V regulator, EC200U with its supply caps, micro-SIM holder, level
+shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), CAN and K-line / LIN transceivers (short stubs to the
+plug), and the whole battery circuit: charger, power mux, cell connector, NTC. The battery circuit sits here
+because the modem's supply current then never has to cross the connectors.
 
-**Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, charger, power mux, cell connector, NTC,
-ceramic GNSS patch soldered on the top side, with its U.FL for the jumper.
+**Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, ceramic GNSS patch soldered on the top side
+with its front end and a U.FL for the jumper.
 
-**Across the headers:** VSYS 3.8 V, 3.3 V, VIN sense, GND (several pins), CAN TX / RX, LIN TX / RX / wake,
-modem UART (TX, RX, RTS, CTS), PWRKEY, RESET_N, STATUS, LTE_PWR_EN, cell and charger lines. About 22
-signals: two 2 × 8 headers, one at each side, which also hold the boards parallel.
+**Across the connectors** (two 2 × 8, 32 pins): 16 signals (CAN TX / RX / standby, K-line TX / RX / sleep, modem
+UART TX / RX / RTS / CTS, PWRKEY, RESET, STATUS, LTE power enable, VIN sense, USB VBUS), 3 × 3.3 V, 1 × VSYS 3.8 V
+and 12 × GND. The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
+
+## Schematics
+
+Two KiCad 10 projects, generated like rev 1's (edit `hardware/tools/gen_schematic.py`, then run it):
+
+| Project | Sheets |
+|---|---|
+| `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery, stack_carrier |
+| `hardware/upper/obd-v2x-upper` | mcu, stack_upper |
+
+```bash
+python rev2/hardware/tools/gen_schematic.py     # writes both projects
+python rev2/hardware/tools/check_stack.py       # same net on mating connector pins, nothing shared left uncrossed
+kicad-cli sch erc rev2/hardware/carrier/obd-v2x-carrier.kicad_sch
+kicad-cli sch erc rev2/hardware/upper/obd-v2x-upper.kicad_sch
+```
+
+State: ERC 0 violations on both boards, `check_stack.py` passes (19 nets cross). The circuits are rev 1's with
+these changes: eSIM and SIM switch removed (IO12 is a spare test pad), micro-SIM holder, side-entry battery
+connector, the two board-to-board connectors.
+
+Not done yet:
+
+- **GNSS front end and patch** on the upper board (needs symbols and footprints for the SKY65943-11 and the patch).
+  The carrier still has rev 1's GNSS U.FL with antenna bias.
+- **Micro-SIM footprint:** the schematic uses KiCad's JAE footprint as a placeholder. Draw the Molex 78646-3001
+  footprint from its drawing before layout.
+- **Connector pin-1 corners:** pin n mates with pin n in the schematic. Check the socket and header footprints
+  against each other (one is seen from below) before layout.
+- **Mounting holes** for the two spacer screws, on both boards.
+- Layout of either board.
 
 ## Decisions (2026-11-20)
 
