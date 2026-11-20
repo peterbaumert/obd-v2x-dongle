@@ -63,7 +63,7 @@ PLACE = {
         'Q101': (6.0, 22.4, 0, B),
         'U101': (6.0, 27.6, 0, B),
         'U402': (6.0, 34.0, 90, B),
-        'U502': (6.0, 40.8, 0, B),
+        'U502': (6.0, 39.6, 180, B),           # ILIM / soft-start pins towards the rear edge, where there is room
         # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.9 mm)
         'L101': (14.0, 11.0, 0, T),
         'U102': (13.6, 19.3, 0, T),            # buck right next to its inductor
@@ -108,6 +108,7 @@ ANCHOR = {
         'C109': ('U103', '1', None), 'C110': ('U103', '5', None),
         'C402': ('U401', '59', T), 'C403': ('U401', '58', T), 'C404': ('U401', '57', T), 'C405': ('U401', '7', T),
         'C406': ('U402', '1', None),
+        'C504': ('U502', '11', None), 'R507': ('U502', '10', None),
         'Q401': ('U401', '21', T), 'Q402': ('U401', '20', T),
         'R401': ('U401', '21', T), 'R402': ('U401', '21', T), 'R403': ('U401', '20', T), 'R404': ('U401', '20', T),
     },
@@ -161,7 +162,9 @@ RULES = dict(track=0.15, clearance=0.15, via_d=0.6, via_drill=0.3, min_drill=0.3
 RF_GAP = 0.25 if BOARD == 'carrier' else 0.2
 NETCLASSES = [
     # name, track, clearance, via_d, via_drill, net-name patterns
-    ('Power', 0.6, 0.2, 0.8, 0.4, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
+    # 0.4 mm on the carrier: 0.6 mm supply tracks do not fit between its parts. Short runs; widen by hand or with
+    # pours where there is room.
+    ('Power', 0.4 if BOARD == 'carrier' else 0.6, 0.2, 0.6, 0.3, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
                                   'Net-(D202-K)', 'VBUCK_3V8', 'VCELL']),   # USB VBUS (<0.5 A) stays default class
     # 50 ohm grounded coplanar (0.32 mm, 0.25 mm gap) over In1 on PCBWay's standard 1.6 mm 4-layer stack-up
     # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): designed to the stack-up, no paid impedance control.

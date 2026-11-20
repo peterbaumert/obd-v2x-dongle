@@ -175,11 +175,15 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
   on top. DRC: 0 unconnected, parity 0, two thermal-relief notes. It is an autorouter result on an automatic
   placement: review it before ordering (the GNSS front end's short RF runs in particular), and expect to redo it
   after the placement review.
-- **Carrier: placed, not routed.** Three autorouting attempts, each after regrouping the parts, got from 18 open
-  signal connections down to 4 open connections, 5 unconnected pour islands and a handful of clearance and edge
-  errors (wide power tracks around the buck regulator, tracks hugging the left edge). That is not a board to
-  commit, so the repository holds the unrouted placement. Finishing it needs manual work in KiCad on the power
-  nets, or pre-routes for them as rev 1 has for its buck node.
+- **Carrier: placed, not routed.** Six scripted attempts (Freerouting, then `route_unconnected.py`, `repair.py`,
+  `finish.py`, `stitch.py`), each after regrouping parts, end the same way: no rule errors, but about eight real
+  connections open (ground pads boxed in by tracks, the buck's compensation parts placed far from the regulator
+  because no closer spot was free, a test pad) plus unconnected pour islands. The board is too dense at 45 × 45 mm
+  for automatic placement and routing, so the repository holds the unrouted placement. Ways forward: lay it out by
+  hand in KiCad; make both boards a few millimetres longer; or a 6-layer carrier.
+- `repair.py` rips up and re-routes every signal net involved in a rule error; `finish.py` routes what is still
+  open, GND pads included, with narrower tracks.
+- The carrier's supply class is 0.4 mm wide (rev 1: 0.6 mm): the wider tracks did not fit.
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
