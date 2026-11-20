@@ -1030,10 +1030,12 @@ def battery():
 # Board-to-board: two 2 x 8 connectors, 2.54 mm. Pin n of J601 mates with pin n of J701, J602 with J702.
 # Power and ground are spread over both. CANH / CANL are a facing pair; K_LINE and VIN_PROT (vehicle voltage) sit
 # next to ground pins; the SIM clock has ground on three sides.
+# J601 / J701 are on the left (the plug's bus pins and the modem's UART side), J602 / J702 on the right (the
+# modem's SIM and power-key side).
 STACK_A = ['GND', 'GND', '+3V3', '+3V3', 'CANH', 'CANL', 'GND', 'K_LINE',
-           'VIN_PROT', 'GND', 'VSENSE', 'VBUS_USB', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN']
-STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE',
-           'GND', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'GND']
+           'VIN_PROT', 'GND', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'GND']
+STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN', 'VSENSE',
+           'VBUS_USB', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'GND']
 STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT'}
 
 

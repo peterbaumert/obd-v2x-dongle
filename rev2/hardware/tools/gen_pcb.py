@@ -53,19 +53,20 @@ PLACE = {
         'J201': (36.5, 1.9, 0, T),
         'H601': (*SPACER[0], 0, T), 'H602': (*SPACER[1], 0, T),
         'J601': (STACK_X[0], STACK_Y, 0, T), 'J602': (STACK_X[1], STACK_Y, 0, T),
-        # modem flat on the underside, long side along y; the strip at the right stays free for low parts
-        'U401': (17.0, 26.5, 90, B),
-        # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2 mm)
-        'J501': (14.6, 11.7, 90, T),           # battery, side entry: the plug goes in from the right (+x)
-        'C506': (23.0, 19.0, 0, T),
-        'L101': (29.0, 11.0, 0, T),
-        'U102': (31.6, 19.3, 0, T),            # buck right next to its inductor
-        'C401': (13.9, 19.0, 0, T),
-        'D101': (39.0, 14.0, 90, B),           # input TVS (2.3 mm) on the underside strip beside the modem
-        # antenna sockets in the rear right corner, beside the cell (a mated U.FL is 2.6 mm tall)
-        'J402': (41.5, 41.0, 0, T),            # LTE antenna
-        'J403': (41.5, 34.5, 0, T),            # GNSS: jumper to J801 on the upper board
-        'U402': (38.5, 34.0, 90, B),           # level shifter beside the modem
+        # Modem flat on the underside, long side along y, antenna pins at the rear, UART / status / supply pins on
+        # its left side, SIM and power-key pins at the front and right. A strip on its left stays free for parts.
+        'U401': (28.0, 26.5, 270, B),
+        'U402': (6.0, 22.0, 90, B),            # level shifter beside the modem's UART pins
+        'D101': (6.0, 12.5, 90, B),            # input TVS (2.6 mm) beside the modem, near the plug's +12 V pin
+        # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.8 mm)
+        'L101': (14.0, 11.0, 0, T),
+        'U102': (13.6, 19.3, 0, T),            # buck right next to its inductor
+        'J501': (30.55, 11.7, 270, T),         # battery, side entry: the plug goes in from the left (-x)
+        'C401': (22.2, 19.0, 0, T),
+        'C506': (31.25, 19.0, 0, T),
+        # antenna sockets in the rear corners, beside the cell (a mated U.FL is 2.5 mm tall), each near its modem pin
+        'J402': (4.0, 40.5, 0, T),             # LTE antenna
+        'J403': (41.0, 40.5, 0, T),            # GNSS: jumper to J801 on the upper board
     },
     'upper': {
         'H701': (*SPACER[0], 0, T), 'H702': (*SPACER[1], 0, T),
@@ -85,7 +86,7 @@ PLACE = {
 }[BOARD]
 ANCHOR = {}                   # ref: (anchor ref, anchor pad, side or None): overrides the automatic choice
 # areas the automatic placement must leave free: (side, (x0, y0, x1, y1))
-KEEP = {'carrier': [(T, (19.8, 8.0, 24.2, 15.5))],     # the battery plug in front of J501, and its wires
+KEEP = {'carrier': [(T, (21.0, 8.0, 25.4, 15.5))],     # the battery plug in front of J501, and its wires
         'upper': []}[BOARD]
 RAILS = ('GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VBAT_LTE', 'VBUCK_3V8', 'LTE_1V8', 'VCELL')
 

@@ -8,6 +8,8 @@
   change run `check_stack.py` and `check_vs_rev1.py` (both in `rev2/hardware/tools`) and ERC on both (expect 0 / 0).
   Boards: `<KiCad>/bin/python rev2/hardware/tools/gen_pcb.py carrier|upper` (first-pass placement, unrouted;
   `--force` loses routing). Keep `rev2/mechanical/stack.py` in step with the big parts' positions.
+  Routing: `autoroute.py` (Freerouting jar via `FREEROUTING_JAR`), then `stitch.py`; the upper board is a routed
+  draft, the carrier is placed only. `gen_pcb.py --force` on the upper board loses that routing.
 - `firmware/` is shared by both revisions.
 
 ## Part sourcing (applies to every part choice)

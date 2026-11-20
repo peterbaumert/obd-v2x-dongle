@@ -1,7 +1,7 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **schematics for both boards, a 3D stack model, both boards with a first-pass placement, and a first
-case. Nothing is routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **schematics for both boards, a 3D stack model, a first case, the upper board routed as a draft, the
+carrier placed but not routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -79,13 +79,10 @@ U.FL for the jumper.
 
 **Across the connectors** (two 2 × 8, 32 pins): 18 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 10 × GND.
 
-| Lines | Count |
+| Connector | Lines |
 |---|---|
-| CANH, CANL (a facing pin pair), K_LINE, VIN_PROT (vehicle voltage for the K-line pull-up) | 4 |
-| Modem UART TX / RX / RTS / CTS | 4 |
-| PWRKEY, RESET, STATUS, LTE power enable | 4 |
-| SIM VDD / RST / CLK / DATA | 4 |
-| VIN sense, USB VBUS | 2 |
+| left (J601 / J701): the plug's bus pins and the modem's UART side | CANH, CANL (a facing pin pair), K_LINE, VIN_PROT (vehicle voltage for the K-line pull-up), modem UART TX / RX / RTS / CTS, STATUS |
+| right (J602 / J702): the modem's SIM and power-key side | PWRKEY, RESET, LTE power enable, VIN sense, USB VBUS, SIM VDD / RST / CLK / DATA, VSYS 3.8 V |
 
 The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
 
@@ -161,8 +158,28 @@ Placement so far:
   input TVS is on the carrier's underside beside the modem; the patch sits 1.5 mm left of centre so the USB-C
   socket's legs are not under it.
 
-State: schematic parity 0 on both boards and no courtyard overlaps or clearance errors. All nets are unrouted
-(138 connections on the carrier, 91 on the upper board).
+- **Modem orientation:** antenna pins at the rear, next to the LTE and GNSS sockets in the rear corners; UART,
+  status and supply pins on its left side, where a strip of the underside stays free (level shifter, input TVS);
+  SIM and power-key pins at the front and right. The connector pins are assigned to match.
+
+### Routing
+
+```bash
+FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/autoroute.py upper   # Freerouting, Java 25
+<KiCad>/bin/python rev2/hardware/tools/stitch.py upper        # GND vias where the two pours overlap
+<KiCad>/bin/python rev2/hardware/tools/route_unconnected.py carrier|upper   # single connections with maze.py
+```
+
+- **Upper board: routed as a draft.** Freerouting routes every net including GND; pours and 92 stitching vias come
+  on top. DRC: 0 unconnected, parity 0, two thermal-relief notes. It is an autorouter result on an automatic
+  placement: review it before ordering (the GNSS front end's short RF runs in particular), and expect to redo it
+  after the placement review.
+- **Carrier: placed, not routed.** An autorouting attempt on this placement left 13 connections open and 16
+  clearance errors around the buck regulator and the left edge, so the board in the repository is the unrouted
+  placement. The small parts need to be grouped by hand around their ICs (as rev 1's generator does with its
+  anchor list) before routing it again.
+
+State: schematic parity 0 on both boards and no courtyard overlaps.
 
 ## Case
 
