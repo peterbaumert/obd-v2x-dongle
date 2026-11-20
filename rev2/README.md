@@ -1,6 +1,6 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **design brief, nothing drawn yet.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **design brief and a 3D stack model; no schematic or layout yet.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -32,7 +32,8 @@ Rev 1 is one 52 × 64.4 mm board. The 18 mm above it (the height of the OBD plug
 | 14.4 | 18.6 | GNSS patch (4 mm) + clearance; the plug's key ends at 18.3 |
 | 18.6 | 20.6 | roof, 2.0 mm |
 
-Total **24.9 mm**. The plug legs reach 10.9 mm above the carrier's bottom face, so the upper board clears them.
+Total **24.9 mm**. The plug legs reach 12.5 mm above the carrier's bottom face (rev 1's model), 0.3 mm under the
+upper board.
 A standard 2.54 mm header in a standard socket stacks at 11.0 mm, which fits the 11.2 mm gap.
 
 ### Footprint
@@ -49,7 +50,7 @@ One side of a 45 × 45 mm board is 2025 mm². Rev 1 uses 1272 mm² of parts on t
 |---|---|---|---|
 | EC200U-EU | 29 × 32 mm | 2.4 mm | carrier, underside |
 | ESP32-C5-WROOM-1U | 18 × 21 mm | 3.4 mm | upper board, underside |
-| Nano-SIM holder | 14 × 15 mm | 1.5 mm | carrier, top side, at an edge (slot in the case) |
+| Micro-SIM holder | about 16 × 15 mm | 1.45 mm | carrier, top side, at the left edge (slot in the case) |
 | Buck inductor | 7 × 7 mm | 4.8 mm | carrier, top side |
 | 220 µF tantalums | 7 × 4 mm | 3.1 mm | carrier, top side |
 | USB-C | 9 × 8 mm | 3.3 mm | upper board, rear edge |
@@ -57,7 +58,7 @@ One side of a 45 × 45 mm board is 2025 mm². Rev 1 uses 1272 mm² of parts on t
 
 ## Board split (proposal)
 
-**Carrier:** J201, input protection, buck, EC200U with its supply caps, nano-SIM holder, level shifter, LTE U.FL,
+**Carrier:** J201, input protection, buck, EC200U with its supply caps, micro-SIM holder, level shifter, LTE U.FL,
 GNSS U.FL (jumper to the upper board), CAN and K-line / LIN transceivers (short stubs to the plug).
 
 **Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, charger, power mux, cell connector, NTC,
@@ -73,8 +74,37 @@ signals: two 2 × 8 headers, one at each side, which also hold the boards parall
 - **K-line / LIN: kept.** The dongle stays a general OBD device, not CAN-only.
 - **eSIM: dropped.** No MFF2 footprint and no SIM switch (rev 1's U403, U404, SIM_SEL); the nano-SIM holder goes
   straight to the modem.
+- **SIM: micro-SIM (3FF), push-in holder at the board edge**, reachable through a slot in the case without
+  opening it. Rev 1 has a nano-SIM holder.
 - **GNSS antenna: a ceramic patch soldered on the upper board**, replacing rev 1's cabled active antenna. The modem
   is on the carrier, so a short U.FL jumper carries the signal between the boards.
+
+## Assumed unless changed
+
+- Both boards 4 layers, 1.6 mm, 45 × 45 mm.
+- The stack is held by two screws with 11 mm spacers (or by the case), not by the header friction.
+- USB-C, LED and the two buttons as in rev 1, on the upper board.
+- Battery space sized for a 5.2 × 20 × 30 mm cell, so more than one product fits.
+- Same ESP32-C5 module and, where possible, the same GPIO assignment, so the firmware stays shared.
+
+## Stack model
+
+`python rev2/mechanical/stack.py --render` places the plug, both boards and their big parts as boxes, checks the
+clearances and prints the case envelope: **49.6 × 68.1 × 24.9 mm including the plug, check passed.**
+
+![stack](mechanical/out/stack_iso.png)
+![stack from the side](mechanical/out/stack_side.png)
+
+What the placement shows:
+
+- Carrier underside: only the EC200U (and the plug's leg tips at the front).
+- Carrier top: micro-SIM holder at the left rear edge, the two header sockets along the sides, buck inductor,
+  tantalum, TVS and the battery connector in the front half.
+- The cell lies across the rear half, on carrier parts up to 2.3 mm tall (the SIM holder is 1.45 mm).
+- Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge.
+- Upper top: the 25 mm GNSS patch.
+- Three clearances are at the 0.3 mm minimum: plug legs to upper board, cell to ESP32 module, battery connector
+  to the ESP32's U.FL plug. The outlines marked CHECK in the script are estimates; confirm them from the drawings.
 
 ## Still open
 
@@ -96,6 +126,9 @@ signals: two 2 × 8 headers, one at each side, which also hold the boards parall
 
 Digi-Key stock and prices were read from live pages. LCSC stock could not be read reliably, so check it before
 ordering. Nothing here is in a schematic yet.
+
+Sourcing rule: only parts that should still be buyable when the boards are built: distributor stock (Digi-Key,
+Mouser, LCSC) or a regular shop, and standard formats with more than one maker. No eBay or marketplace-only items.
 
 ### Board-to-board connectors (11 mm stack)
 
@@ -128,12 +161,18 @@ was not checked:
 SAW first, then LNA, because the LTE transmitter is centimetres away and would overload an unfiltered LNA. Make
 the front end bypassable (0 Ω link, bias off) so a bare patch can be compared on the real board.
 
+### Micro-SIM holder
+
+**Molex 78646-3001**: micro-SIM, push in / pull out, 1.45 mm above the board, €1.09, 113,000 in stock at Digi-Key
+(2026-11-20). JAE SF53S006VCBR2000 (KiCad has its footprint) is the same style but out of stock until January 2027;
+GCT SIM7050-6-0-00-A is in stock but 2.45 mm tall.
+
 ### Backup cell and its connector
 
 | Cell | Size (T × W × L) | Capacity | Connector | Notes |
 |---|---|---|---|---|
 | **Pick: PKCELL LP402025** (BerryBase, Tinytronics; Adafruit 1317 is the same format) | 4.05 × 20 × 25.5 mm | 150 mAh | JST-PH fitted | PCM with a named protection IC, about €3.30. Out of stock at both shops when checked |
-| Eckstein LP521630 (ZB07003) | 5.2 × 16 × 30 mm | 250 mAh | JST-PH fitted | In stock, from €4.95. 0.2 mm over the 5.0 mm target; PCM only stated in the seller's eBay listing |
+| Eckstein LP521630 (ZB07003) | 5.2 × 16 × 30 mm | 250 mAh | JST-PH fitted | In stock at the shop, from €4.95. 0.2 mm over the 5.0 mm target; the shop page does not state the PCM, so check on arrival |
 | ampul.eu 502025 (AM5932) | 5.0 × 20 × 25 mm | 200 mAh | not stated | Protection chip, €6.70 |
 | Jauch LP402025JU + PCM (Digi-Key Marketplace) | 4.4 × 22 × 27 mm | 140 mAh | bare wires | About €10, ships separately |
 
