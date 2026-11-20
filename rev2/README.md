@@ -1,7 +1,7 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **schematics for both boards, a 3D stack model and both boards with a first-pass placement. Nothing is
-routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **schematics for both boards, a 3D stack model, both boards with a first-pass placement, and a first
+case. Nothing is routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -37,8 +37,9 @@ Total **24.8 mm**.
 
 - **11.0 mm is the Raspberry Pi HAT spacing:** a 2.54 mm header (2.5 mm base) in an 8.5 mm socket, held by
   M2.5 × 11 mm spacers. Two spacers sit in the front corners.
-- **The plug sits 2.0 mm below the carrier's bottom face** (rev 1: 1.0 mm). Its leg bends then end 1.1 mm under
-  the upper board instead of touching it. The leg tips stick out 2.0 mm below the carrier, inside the space the
+- **The plug sits 2.0 mm below the carrier's bottom face** (rev 1: 1.0 mm). Its legs then end 1.0 mm under
+  the upper board instead of touching it (drawing: upper leg row 13.2 mm above the housing bottom, legs 0.8 mm
+  thick). The leg tips stick out 2.0 mm below the carrier, inside the space the
   modem needs anyway, and the bends stay 0.4 mm above the carrier's top face.
 
 ### Footprint
@@ -127,8 +128,6 @@ Not done yet:
   sheet asks for 1.2 mm on top, 2.2 mm on the bottom) are my choices.
 - **GNSS details to confirm:** whether the SKY65943-11's RF pins carry DC (the data sheet does not say; a DC
   block sits on its output for that reason), and ESD protection at the patch (the part is rated only 250 V HBM).
-- **The case:** it needs the SIM slot with a card stop 0.5 mm outside the holder's edge (the holder has no latch),
-  the USB-C opening, and the ribs for the plug, which now sits 1 mm lower than in rev 1.
 
 ## Boards
 
@@ -162,6 +161,31 @@ Placement so far:
 
 State: schematic parity 0 on both boards and no courtyard overlaps or clearance errors. All nets are unrouted
 (138 connections on the carrier, 91 on the upper board).
+
+## Case
+
+`python rev2/mechanical/case.py --render` builds a two-part case around the stack model and checks it against the
+plug and the model's parts: **49.6 × 68.1 × 24.8 mm including the plug, check passed.**
+
+![case](mechanical/out/case_closed.png)
+![case open](mechanical/out/case_open.png)
+
+- **Split** at the upper board's bottom face. The assembled stack, with the plug soldered to the carrier, drops
+  into the bottom shell from above.
+- **Closing:** the two spacers between the boards hold everything. One M2.5 screw from below goes through the
+  bottom shell and the carrier into each spacer (M2.5 × 8), one from above through the lid and the upper board
+  (M2.5 × 10). No screws into plastic. Two hooks hold the lid at the rear, as in rev 1.
+- **Plug:** a rib all around in its retention groove (bottom and sides in the bottom shell, top in the lid). The
+  case front ends at the groove.
+- **USB-C:** an opening in the rear wall, 11 × 7 mm.
+- **Micro-SIM:** a notch in the left wall at the holder, closed by a tooth on the lid, which is also the card stop
+  (the holder has no latch). To change the SIM, take the lid off and pull the card out sideways; the boards stay
+  in.
+- **Lid:** pin holes over RESET and BOOT, a 3 mm hole over the LED (a short clear rod; rev 1's 10 mm light pipe
+  does not fit).
+
+Not checked: the case is built against the stack model's boxes, not against routed boards, and nothing has been
+printed. The button height in `case.py` is an estimate.
 
 ## Decisions (2026-11-20)
 

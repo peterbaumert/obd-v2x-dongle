@@ -55,7 +55,8 @@ CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + 2.1   # on parts up 
 PARTS = [
     # --- carrier board
     part('carrier PCB', BX0, BYR, BW, BL, 0, BT, 'pcb'),
-    part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, PLUG_Z0 + 13.5 - BT, 'plug', 'rev 1 box: legs and bends'),
+    part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, PLUG_Z0 + 13.6 - BT, 'plug',
+         'drawing: upper leg row 13.2 above the housing bottom, legs 0.8 thick'),
     part('plug leg tips (below)', 110.0, -66.0, 32.0, 6.75, PLUG_Z0, -PLUG_Z0, 'plug'),
     part('EC200U', BX0 + 3.0, BYR + 3.0, 28.0, 31.0, -2.4, 2.4, 'carrier-bottom', 'body; pads reach 1.65 mm further'),
     part('socket L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
