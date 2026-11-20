@@ -55,7 +55,7 @@ HDR_L, HDR_W = 20.3, 5.0         # 2 x 8, 2.54 mm (body)
 HDR_X = 2.2                      # body this far inside the board edge: the SMD pads need 8.2 mm, 0.6 mm from the edge
 HDR_Y = BYF - 8.0 - HDR_L        # headers start 8 mm behind the front edge (behind the plug legs)
 CELL = (30.0, 20.0, 5.2)         # x, y, z: the larger common format, lying across
-UNDER_CELL = 2.8                 # tallest part allowed under the cell
+UNDER_CELL = 2.9                 # tallest part allowed under the cell (the 1210 capacitors are 2.85 at most)
 CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + UNDER_CELL + 0.1
 ESP_H = 3.45                     # ESP32-C5-WROOM-1U 3.3 +-0.15; its U.FL is on the shield side and, mated, no higher
 
@@ -77,7 +77,7 @@ PARTS = [
     part('buck inductor', BX0 + 10.5, BYF - 14.3, 7.0, 6.6, BT, 5.0, 'carrier-top'),
     part('tantalum 220u A', BX0 + 18.55, BYF - 21.15, 7.3, 4.3, BT, 3.1, 'carrier-top'),
     part('tantalum 220u B', BX0 + 27.6, BYF - 21.15, 7.3, 4.3, BT, 3.1, 'carrier-top'),
-    part('TVS SMC', BX0 + 3.05, BYF - 16.5, 5.9, 8.0, -2.62, 2.62, 'carrier-bottom', 'beside the modem'),
+    part('TVS SMC', BX0 + 3.05, BYF - 18.65, 5.9, 8.0, -2.62, 2.62, 'carrier-bottom', 'beside the modem'),
     part('LTE U.FL', BX0 + 2.5, BYF - 42.0, 3.0, 3.0, BT, 2.5, 'carrier-top', 'mated, beside the cell'),
     part('GNSS U.FL', BX0 + 39.5, BYF - 42.0, 3.0, 3.0, BT, 2.5, 'carrier-top', 'jumper to the upper board'),
     # --- between the boards

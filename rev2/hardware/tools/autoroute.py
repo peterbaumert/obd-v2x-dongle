@@ -81,6 +81,9 @@ def main():
     b = pcbnew.LoadBoard(PCB.name)
     if not pcbnew.ImportSpecctraSES(b, str(ses)):
         raise SystemExit('session import failed')
+    thin = [t for t in b.GetTracks() if not isinstance(t, pcbnew.PCB_VIA) and t.GetWidth() < pcbnew.FromMM(0.15)]
+    for t in thin:                                     # Freerouting necks down below the board's minimum
+        t.SetWidth(pcbnew.FromMM(0.15))
     b.Save(PCB.name)
     subprocess.run([str(CLI), 'pcb', 'drc', '--refill-zones', '--save-board', '-o', str(tmp / f'{PROJECT}.drc'), PCB.name],
                    capture_output=True)

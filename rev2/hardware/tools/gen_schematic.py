@@ -3,8 +3,8 @@
     python rev2/hardware/tools/gen_schematic.py [sheet ...]
 
 carrier/  power, vehicle, lte, battery, stack_carrier   (OBD plug + bus protection, supplies, modem, cell)
-upper/    mcu, xcvr, sim, gnss, stack_upper             (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM,
-                                                         GNSS patch + front end)
+upper/    mcu, xcvr, sim, gnss, charger, stack_upper    (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM,
+                                                         GNSS patch + front end, cell charger)
 
 The sheets started as a copy of rev 1's. Nets with the same name on both boards are joined through the
 board-to-board connectors (sheets "stack_*"); check with
@@ -19,11 +19,11 @@ from schgen import g  # noqa: E402
 from schgen import Sheet as _Sheet, uid  # noqa: E402
 
 BOARD = {'power': 'carrier', 'vehicle': 'carrier', 'lte': 'carrier', 'battery': 'carrier', 'stack_carrier': 'carrier',
-         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'gnss': 'upper', 'stack_upper': 'upper'}
+         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'gnss': 'upper', 'charger': 'upper', 'stack_upper': 'upper'}
 ROOTS = {b: uid('rev2/root/' + b) for b in ('carrier', 'upper')}
 SHEETS = {n: uid('rev2/sheet/' + n) for n in BOARD}
 TITLES = {'power': 'Power', 'vehicle': 'Vehicle (OBD plug, protection)', 'xcvr': 'CAN + K-Line transceivers',
-          'sim': 'Micro-SIM', 'gnss': 'GNSS patch + front end', 'lte': 'LTE + GNSS (EC200U)',
+          'sim': 'Micro-SIM', 'gnss': 'GNSS patch + front end', 'charger': 'Cell charger', 'lte': 'LTE + GNSS (EC200U)',
           'battery': 'Backup battery', 'stack_carrier': 'Board-to-board (sockets)',
           'mcu': 'MCU (ESP32-C5, USB)', 'stack_upper': 'Board-to-board (headers)'}
 ROOT = None
@@ -917,9 +917,11 @@ def gnss():
 
 
 # =====================================================================================
-def battery():
-    sh = Sheet('Backup battery', 'battery.kicad_sch', SHEETS['battery'], ROOT,
-               'Backup battery: 1S Li-ion charger (BQ25171-Q1) + priority power mux (TPS2121)')
+def charger():
+    """Li-ion charger with its NTC, on the upper board: only VIN_PROT (in) and VCELL (70 mA out) cross the stack.
+    The NTC sits over the cell, which lies between the boards."""
+    sh = Sheet('Charger', 'charger.kicad_sch', SHEETS['charger'], ROOT,
+               'Backup battery charger: 1S Li-ion (BQ25171-Q1), cell and power mux on the carrier')
     # ---------------- charger
     sh.text('Li-ion charger, fed from the car side (VIN_PROT)', g(5), g(8), 1.5, True)
     XC, YC = g(34), g(24)
@@ -962,6 +964,13 @@ def battery():
     sh.w(U['10'], (xo + g(6), yo))
     sh.rail('VCELL', (xo + g(6), yo))
     cap_to_gnd(sh, 'C502', '1uF', C0603, xo + g(3), yo, 1)
+    return sh
+
+
+# =====================================================================================
+def battery():
+    sh = Sheet('Backup battery', 'battery.kicad_sch', SHEETS['battery'], ROOT,
+               'Backup battery: cell connector + priority power mux (TPS2121); the charger is on the upper board')
     # cell connector
     sh.text('1S Li-ion/LiPo cell, 250-400 mAh, with protection PCM', g(46), g(40), 1.27, True)
     XJ, YJ = g(62), g(45)
@@ -1035,8 +1044,8 @@ def battery():
 STACK_A = ['GND', 'GND', '+3V3', '+3V3', 'CANH', 'CANL', 'GND', 'K_LINE',
            'VIN_PROT', 'GND', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'GND']
 STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN', 'VSENSE',
-           'VBUS_USB', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'GND']
-STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT'}
+           'VBUS_USB', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'VCELL']
+STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VCELL'}
 
 
 def _stack(key, refs, value, fp, flags):
@@ -1080,7 +1089,7 @@ def _stack(key, refs, value, fp, flags):
 
 def stack_carrier():
     return _stack('stack_carrier', ('J601', 'J602'), 'Socket 2x8',
-                  'Connector_PinSocket_2.54mm:PinSocket_2x08_P2.54mm_Vertical_SMD', ())
+                  'Connector_PinSocket_2.54mm:PinSocket_2x08_P2.54mm_Vertical_SMD', ('VCELL',))
 
 
 def stack_upper():

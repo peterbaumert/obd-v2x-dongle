@@ -56,14 +56,26 @@ PLACE = {
         # Modem flat on the underside, long side along y, antenna pins at the rear, UART / status / supply pins on
         # its left side, SIM and power-key pins at the front and right. A strip on its left stays free for parts.
         'U401': (28.0, 26.5, 270, B),
-        'U402': (6.0, 22.0, 90, B),            # level shifter beside the modem's UART pins
-        'D101': (6.0, 12.5, 90, B),            # input TVS (2.6 mm) beside the modem, near the plug's +12 V pin
-        # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.8 mm)
+        # underside strip left of the modem, front to rear: input chain from the plug's +12 V pin (x 8.5), level
+        # shifter at the modem's UART pins, power mux at its supply pins
+        'F101': (5.5, 8.3, 0, B),
+        'D101': (6.0, 14.65, 90, B),           # input TVS (2.6 mm)
+        'Q101': (6.0, 22.4, 0, B),
+        'U101': (6.0, 27.6, 0, B),
+        'U402': (6.0, 34.0, 90, B),
+        'U502': (6.0, 40.8, 0, B),
+        # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.9 mm)
         'L101': (14.0, 11.0, 0, T),
         'U102': (13.6, 19.3, 0, T),            # buck right next to its inductor
         'J501': (30.55, 11.7, 270, T),         # battery, side entry: the plug goes in from the left (-x)
         'C401': (22.2, 19.0, 0, T),
         'C506': (31.25, 19.0, 0, T),
+        # under the cell (parts up to 2.9 mm): the buck's diode in line with regulator and inductor, then the rest
+        'D103': (14.6, 27.2, 0, T),
+        'C107': (12.6, 33.2, 90, T), 'C108': (16.6, 33.2, 90, T),   # buck output capacitors (2.85 mm)
+        'U103': (23.5, 27.0, 0, T),            # 3.3 V regulator
+        'Q102': (23.5, 32.0, 0, T),
+        'U405': (33.5, 34.0, 0, T),            # GNSS antenna bias switch, near J403
         # antenna sockets in the rear corners, beside the cell (a mated U.FL is 2.5 mm tall), each near its modem pin
         'J402': (4.0, 40.5, 0, T),             # LTE antenna
         'J403': (41.0, 40.5, 0, T),            # GNSS: jumper to J801 on the upper board
@@ -79,12 +91,28 @@ PLACE = {
         'AE801': (21.0, 29.5, 0, T),           # GNSS patch, clear of the USB-C legs; feed pin at (21.0, 32.0)
         'U801': (25.0, 33.5, 0, B),            # GNSS front end next to the feed pin
         'J801': (26.0, 40.5, 0, B),
+        'U501': (37.0, 32.5, 0, B),            # cell charger; its NTC ends up over the cell
         # the lid side carries what must be reached or seen from outside
         'SW301': (12.5, 12.0, 0, T), 'SW302': (32.5, 12.0, 0, T), 'D301': (22.5, 3.0, 0, T),
         'U201': (14.0, 6.0, 0, T), 'U202': (31.0, 6.0, 0, T),
     },
 }[BOARD]
-ANCHOR = {}                   # ref: (anchor ref, anchor pad, side or None): overrides the automatic choice
+# ref: (anchor ref, anchor pad, side or None): overrides the automatic choice (decoupling at the pin it serves)
+ANCHOR = {
+    'carrier': {
+        'C101': ('U101', '1', None), 'C103': ('U102', '2', None), 'C104': ('U102', '1', None),
+        'C105': ('U102', '6', None), 'C106': ('U102', '6', None), 'R106': ('U102', '6', None),
+        'R101': ('U102', '3', None), 'R102': ('U102', '3', None), 'R103': ('U102', '4', None),
+        'R104': ('U102', '5', None), 'R105': ('U102', '5', None),
+        'R107': ('Q102', '1', None), 'Q103': ('Q102', '1', None), 'R108': ('Q102', '1', None),
+        'C109': ('U103', '1', None), 'C110': ('U103', '5', None),
+        'C402': ('U401', '59', T), 'C403': ('U401', '58', T), 'C404': ('U401', '57', T), 'C405': ('U401', '7', T),
+        'C406': ('U402', '1', None),
+        'Q401': ('U401', '21', T), 'Q402': ('U401', '20', T),
+        'R401': ('U401', '21', T), 'R402': ('U401', '21', T), 'R403': ('U401', '20', T), 'R404': ('U401', '20', T),
+    },
+    'upper': {},
+}[BOARD]
 # areas the automatic placement must leave free: (side, (x0, y0, x1, y1))
 KEEP = {'carrier': [(T, (21.0, 8.0, 25.4, 15.5))],     # the battery plug in front of J501, and its wires
         'upper': []}[BOARD]
@@ -101,7 +129,7 @@ HEIGHT_UNKNOWN = 2.0
 # Room above each side (mm) and the zones with less: (side, x0, y0, x1, y1, room). See rev2/mechanical/stack.py.
 ROOM = {
     'carrier': ({T: 7.0, B: 2.65},                      # top: under the ESP32 module; bottom: the modem's 2.6 mm
-                [(T, 7.5, 24.0, 37.5, 44.0, 2.8)]),     # the cell lies on these parts
+                [(T, 7.5, 24.0, 37.5, 44.0, 2.9)]),     # the cell lies on these parts
     'upper': ({T: 4.0, B: 3.6},                         # top: the patch's height; bottom: down to the cell
               [(B, 6.0, 0.0, 39.0, 6.6, 0.7)]),         # over the plug's leg bends (1.0 mm)
 }[BOARD]
@@ -422,7 +450,7 @@ def build():
                 if hit and sd == side and hit[0] <= 8:
                     break
             if best is None:
-                raise SystemExit(f'no room for {ref}')
+                raise SystemExit(f'no room for {ref} (anchor {aref}.{apad} at {ax:.1f}, {ay:.1f}, part height {height(fp)})')
             _, x, y, rot = best
             place(fp, x, y, rot, used)
             claim(fp, used)
@@ -433,7 +461,7 @@ def build():
                 fp = fps[ref]
                 hit = spiral(fp, BOARD_W / 2, BOARD_L / 2, T) or spiral(fp, BOARD_W / 2, BOARD_L / 2, B)
                 if hit is None:
-                    raise SystemExit(f'no room for {ref}')
+                    raise SystemExit(f'no room for {ref} at the board centre (part height {height(fp)})')
                 place(fp, hit[1], hit[2], hit[3], T)
                 claim(fp, T)
             todo = []

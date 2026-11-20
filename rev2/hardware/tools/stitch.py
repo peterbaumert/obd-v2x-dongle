@@ -2,8 +2,8 @@
 
     <KiCad>/bin/python rev2/hardware/tools/stitch.py carrier|upper [pitch_mm]
 
-After autorouting, the pours on the outer layers break into islands. This adds a GND via wherever the top and the
-bottom pour overlap (on a grid, default 2.5 mm), at least 0.5 mm inside both pours, outside every pad and not
+After autorouting, the pours on the outer layers break into islands. This adds a GND via wherever the pours of
+all copper layers overlap (on a grid, default 2.5 mm), at least 0.5 mm inside both pours, outside every pad and not
 within 1.2 mm of another via. Then it refills the pours. Run DRC afterwards.
 """
 import os
@@ -34,7 +34,12 @@ def main():
     os.chdir(PCB.parent)
     b = pcbnew.LoadBoard(PCB.name)
     gnd = b.FindNet('GND')
-    zones = {L: [z for z in b.Zones() if z.GetNetname() == 'GND' and z.IsOnLayer(L)] for L in (pcbnew.F_Cu, pcbnew.B_Cu)}
+    # every copper layer that has a GND pour: a via must sit inside the pour on all of them, or it would hit
+    # other copper on an inner layer
+    layers = [L for L in (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu) if b.IsLayerEnabled(L)]
+    zones = {L: [z for z in b.Zones() if z.GetNetname() == 'GND' and z.IsOnLayer(L)] for L in layers}
+    if any(not z for z in zones.values()):
+        raise SystemExit('a copper layer has no GND pour: stitching would not see its tracks')
 
     def filled(L, x, y):
         p = pcbnew.VECTOR2I(mm(x), mm(y))

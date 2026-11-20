@@ -69,20 +69,21 @@ Decided by area: with everything except the ESP32 on the carrier, its free area 
 upper board's about 9 %. With the split below it is about 45 % and 26 % (courtyard areas from the rev 1 board).
 
 **Carrier:** J201 with the bus protection at its pins (CAN TVS, K-line capacitor and TVS), input protection, buck,
-3.3 V regulator, EC200U with its supply caps, level shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), and
-the whole battery circuit: charger, power mux, cell connector, NTC. The battery circuit sits here because the
-modem's supply current then never has to cross the connectors.
+3.3 V regulator, EC200U with its supply caps, level shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), the
+cell connector and the power mux. The mux and the cell connector sit here because the modem's supply current then
+never has to cross the connectors.
 
 **Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, the CAN and K-line transceivers, the micro-SIM
-holder with its resistors and capacitors, and the ceramic GNSS patch on the top side with its front end and a
-U.FL for the jumper.
+holder with its resistors and capacitors, the cell charger with its NTC (only 70 mA of charge current crosses the
+stack; the NTC sits over the cell), and the ceramic GNSS patch on the top side with its front end and a U.FL for
+the jumper.
 
-**Across the connectors** (two 2 × 8, 32 pins): 18 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 10 × GND.
+**Across the connectors** (two 2 × 8, 32 pins): 19 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 9 × GND.
 
 | Connector | Lines |
 |---|---|
 | left (J601 / J701): the plug's bus pins and the modem's UART side | CANH, CANL (a facing pin pair), K_LINE, VIN_PROT (vehicle voltage for the K-line pull-up), modem UART TX / RX / RTS / CTS, STATUS |
-| right (J602 / J702): the modem's SIM and power-key side | PWRKEY, RESET, LTE power enable, VIN sense, USB VBUS, SIM VDD / RST / CLK / DATA, VSYS 3.8 V |
+| right (J602 / J702): the modem's SIM and power-key side | PWRKEY, RESET, LTE power enable, VIN sense, USB VBUS, SIM VDD / RST / CLK / DATA, VSYS 3.8 V, VCELL (charger to cell) |
 
 The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
 
@@ -92,8 +93,8 @@ Two KiCad 10 projects, generated like rev 1's (edit `hardware/tools/gen_schemati
 
 | Project | Sheets |
 |---|---|
-| `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery, stack_carrier |
-| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, gnss, stack_upper |
+| `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery (cell connector, power mux), stack_carrier |
+| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, gnss, charger, stack_upper |
 
 ```bash
 python rev2/hardware/tools/gen_schematic.py     # writes both projects
@@ -146,7 +147,7 @@ Placement so far:
   ESP32 module, USB-C, micro-SIM holder, GNSS patch and front end, and the carrier's tall parts (battery connector,
   inductor, tantalums) in its front half.
 - **Every other part is placed automatically** next to a part it shares a net with, and only where it fits by
-  height: at most 2.8 mm under the cell, 2.65 mm on the carrier's underside, 0.7 mm on the upper board's underside
+  height: at most 2.9 mm under the cell, 2.65 mm on the carrier's underside, 0.7 mm on the upper board's underside
   over the plug legs. The heights are a table in `gen_pcb.py` (by footprint): data-sheet maxima for the tall parts,
   typical values for the rest. A starting point, not
   a layout.
@@ -174,10 +175,11 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
   on top. DRC: 0 unconnected, parity 0, two thermal-relief notes. It is an autorouter result on an automatic
   placement: review it before ordering (the GNSS front end's short RF runs in particular), and expect to redo it
   after the placement review.
-- **Carrier: placed, not routed.** An autorouting attempt on this placement left 13 connections open and 16
-  clearance errors around the buck regulator and the left edge, so the board in the repository is the unrouted
-  placement. The small parts need to be grouped by hand around their ICs (as rev 1's generator does with its
-  anchor list) before routing it again.
+- **Carrier: placed, not routed.** Three autorouting attempts, each after regrouping the parts, got from 18 open
+  signal connections down to 4 open connections, 5 unconnected pour islands and a handful of clearance and edge
+  errors (wide power tracks around the buck regulator, tracks hugging the left edge). That is not a board to
+  commit, so the repository holds the unrouted placement. Finishing it needs manual work in KiCad on the power
+  nets, or pre-routes for them as rev 1 has for its buck node.
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
@@ -269,7 +271,7 @@ What the placement shows:
 - Carrier underside: only the EC200U (and the plug's leg tips at the front).
 - Carrier top: the two sockets along the sides; battery connector (its plug goes in from the right), buck
   inductor and regulator, and both tantalums in the front half. The input TVS is on the underside beside the modem.
-- The cell lies across the rear half, on carrier parts up to 2.8 mm tall.
+- The cell lies across the rear half, on carrier parts up to 2.9 mm tall.
 - Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge, the
   micro-SIM holder at the left rear edge (the card slot is then 12 mm above the carrier).
 - Upper top: the 25 mm GNSS patch.
