@@ -9,7 +9,7 @@ parts. It is checked against those boxes, not against the routed boards (they do
 Concept
 - Bottom shell + lid, split at the upper board's bottom face. The assembled stack (carrier, spacers, upper board,
   plug soldered to the carrier) drops into the bottom shell from above.
-- The two M2.5 x 11 mm spacers between the boards hold everything: one M2.5 screw from below through the bottom
+- The two M2.5 x 12 mm spacers between the boards hold everything: one M2.5 screw from below through the bottom
   shell and the carrier into each spacer, one from above through the lid and the upper board. No screws into plastic.
 - Two hooks at the rear hold the lid there (lid goes on rear first, then folds down), as in rev 1.
 - The plug's retention groove takes a rib all around: bottom and both sides in the bottom shell, the top in the lid.
@@ -61,10 +61,12 @@ USB_X, USB_W = S.BX0 + 39.5, 11.0                   # USB-C centre, plug over-mo
 USB_Z = (S.UZ0 - 1.63 - 3.5, S.UZ0 - 1.63 + 3.5)    # 7 mm tall around the receptacle's centre
 SIM_Y, SIM_W = S.BYF - 37.0, 12.6                   # card centre (holder centre), card 12 mm + play
 SIM_Z0 = S.UZ0 - 1.6                                # card plane just under the upper board
-BUTTONS = [(S.BX0 + 6.5, S.BYF - 12.5), (S.BX0 + 38.5, S.BYF - 12.5)]   # SW301 RESET, SW302 BOOT
+BUTTONS = [(S.BX0 + 12.5, S.BYF - 12.0), (S.BX0 + 32.5, S.BYF - 12.0)]  # SW301 RESET, SW302 BOOT
 LED = (S.BX0 + 22.5, S.BYF - 3.0)
 PIN_HOLE, PIN_BOSS, LIGHTPIPE = 1.6, 4.0, 3.0
-BUTTON_TOP = S.UZ1 + 2.0                            # CHECK: TL3342 actuator height
+BUTTON_TOP = S.UZ1 + 1.75                           # TL3342F450QG actuator top 1.50 +-0.25, actuator 2.0 mm
+PATCH_PIN = (S.BX0 + 21.0, S.BYF - 32.0)            # patch feed: its pin head stands up to 1.0 mm above the patch
+PIN_POCKET = (4.0, 1.0)                             # pocket in the roof over it: diameter, depth
 HOOKS = [S.BX0 + 8.5, S.BX0 + 24.5]                 # x centres, clear of the USB-C opening
 HOOK_W, HOOK_DROP = 8.0, 3.0
 REAR_LEDGE = (S.BX0 + 6.0, S.BX0 + 30.0, 0.8)       # under the carrier's rear edge: x0, x1, depth
@@ -101,6 +103,7 @@ def build():
             body += Pos(x, y, Z_IN_TOP - h / 2) * Cylinder(PIN_BOSS / 2, h)
         body -= Pos(x, y, Z_OUT_TOP - 5) * Cylinder(PIN_HOLE / 2, 12)
     body -= Pos(LED[0], LED[1], Z_OUT_TOP - 2) * Cylinder(LIGHTPIPE / 2, 6)
+    body -= Pos(PATCH_PIN[0], PATCH_PIN[1], Z_IN_TOP + PIN_POCKET[1] / 2 - 0.01) * Cylinder(PIN_POCKET[0] / 2, PIN_POCKET[1])
     # USB-C opening through the rear wall
     body -= box(USB_X - USB_W / 2, USB_X + USB_W / 2, Y_OUT_REAR - 1, Y_IN_REAR + 0.01, USB_Z[0], USB_Z[1])
 

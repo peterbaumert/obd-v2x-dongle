@@ -81,8 +81,9 @@ SOURCING = {
     'J801': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J601': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),  # 2 x 8 socket, 8.5 mm, SMD
     'J602': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),
-    'J701': ('HX PZ2.54-2x8P TP', 'Hanxia', 'C32713288'),  # 2 x 8 header, SMD
-    'J702': ('HX PZ2.54-2x8P TP', 'Hanxia', 'C32713288'),
+    # 2 x 8 through-hole pin header, 2.54 mm, 2.5 mm base, 6 mm pins: a generic part, pick one in stock at order time
+    'J701': ('2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm', 'generic', ''),
+    'J702': ('2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm', 'generic', ''),
     'U405': ('TPS2552DBVR-1', 'TI', 'C140331'),          # latch-off current-limited switch, GNSS antenna bias
     'L401': ('LQG15HS27NJ02D', 'Murata', 'C12669'),      # 27 nH RF choke (SRF ~1.7 GHz)
     'C417': ('0402CG330J500NT', 'FH', 'C1562'),          # 33 pF C0G DC block to the modem's GNSS input
@@ -1037,11 +1038,12 @@ STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT'}
 
 
 def _stack(key, refs, value, fp, flags):
-    sh = Sheet('Stack', f'{key}.kicad_sch', SHEETS[key], ROOT, 'Board-to-board connectors (2 x 8, 2.54 mm, 11 mm stack)')
+    sh = Sheet('Stack', f'{key}.kicad_sch', SHEETS[key], ROOT, 'Board-to-board connectors (2 x 8, 2.54 mm, 12 mm gap)')
     sh.text('Pin n of J601 / J602 (carrier top side, sockets) mates with pin n of J701 / J702 (upper board, headers).\n'
             'The headers go on the BOTTOM side of the upper board, same rotation as the sockets: KiCad numbers the\n'
             'socket footprint mirrored to the header, so the flipped header lands pin 1 on pin 1.\n'
-            '11 mm stack = Raspberry Pi HAT spacing: M2.5 x 11 mm spacers hold the boards.', g(20), g(6), 1.27, True)
+            'SMD socket (top 8.9 mm above its board) + through-hole header (2.5 mm base) on M2.5 x 12 mm spacers:\n'
+            'the spacers set the 12.0 mm gap, the connectors stay 0.6 mm short of bottoming out.', g(20), g(5), 1.27, True)
     for i, (ref, nets) in enumerate(zip(refs, (STACK_A, STACK_B))):
         x, y = g(40 + 50 * i), g(30)
         J = sh.part('Connector_Generic:Conn_02x08_Odd_Even', ref, value, fp, x, y, 0,
@@ -1057,7 +1059,7 @@ def _stack(key, refs, value, fp, flags):
                 sh.rail(net, end, rot=90 if left else 270)
             else:
                 sh.glabel(net, end, 'L' if left else 'R')
-    for i in range(2):                               # spacer screws (M2.5 x 11 mm, as on a Raspberry Pi HAT)
+    for i in range(2):                               # spacer screws (M2.5 x 12 mm spacers)
         x, y = g(120), g(24 + 6 * i)
         sh.part('Mechanical:MountingHole', f'H{refs[0][1]}0{i + 1}', 'M2.5',
                 'MountingHole:MountingHole_2.7mm_M2.5', x, y, 0,
@@ -1081,7 +1083,7 @@ def stack_carrier():
 
 def stack_upper():
     return _stack('stack_upper', ('J701', 'J702'), 'Header 2x8',
-                  'Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical_SMD',
+                  'Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical',
                   ('+3V3', 'VSYS_3V8', 'VIN_PROT', 'GND'))
 
 

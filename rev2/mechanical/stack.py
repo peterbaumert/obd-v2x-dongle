@@ -18,9 +18,7 @@ OUT = HERE / 'out'
 # ------------------------------------------------------------------ plug (rev 1 values)
 PLUG_CX = 126.0
 PLUG_REAR = -59.25               # housing rear face
-PLUG_Z0 = -2.0                   # housing bottom = leg tips, 2.0 mm below the carrier's bottom face (rev 1: 1.0).
-                                 # 1 mm lower keeps the leg bends clear of the upper board; the tips stay inside
-                                 # the 2.7 mm space under the carrier, and the bends 0.4 mm above its top face
+PLUG_Z0 = -1.0                   # housing bottom = leg tips, 1.0 mm below the carrier's bottom face, as in rev 1
 PLUG_D, PLUG_H, KEY_H = 20.0, 17.8, 1.5
 BODY_W = 40.26
 
@@ -30,14 +28,21 @@ BW, BL = 45.0, 45.0              # board width (x), length (y)
 BX0, BX1 = PLUG_CX - BW / 2, PLUG_CX + BW / 2
 BYF = PLUG_REAR - 0.35           # front edge of both boards, just behind the plug's rear face
 BYR = BYF - BL
-STACK = 11.0                     # gap between the boards: 2.54 mm header 2.5 + socket 8.5, M2.5 x 11 mm spacers
+# Gap between the boards: M2.5 x 12 mm spacers. The connectors must not bottom out before the spacers do:
+# SMD socket on the carrier, top 8.9 +-0.2 above its board (it stands on its leads); through-hole header on the
+# upper board, base 2.5 +-0.2 flat on the board: 11.4 nominal, 11.8 at most. (An SMD header + SMD socket pair
+# bottoms out at 12.1 +-0.4 and would bow the boards on 12 mm spacers.)
+STACK = 12.0
+SOCKET_H, HEADER_H = 8.9, 2.5
 UZ0 = BT + STACK                 # upper board bottom face
 UZ1 = UZ0 + BT
 
 # ------------------------------------------------------------------ case envelope
 WALL, FLOOR, ROOF, GAP = 2.0, 1.6, 2.0, 0.3
-Z_IN_BOT = -2.7                  # EC200U 2.4 mm + 0.3
-Z_IN_TOP = max(PLUG_Z0 + PLUG_H + KEY_H, UZ1 + 4.0) + 0.3   # plug key or GNSS patch, whichever is higher
+MODEM_H = 2.6                    # EC200U 2.4 +-0.2
+PATCH_H = 4.4                    # CGGBP.25.4.A.02 4.0 +-0.4 (its feed pin head adds up to 1.0: pocket in the lid)
+Z_IN_BOT = -(MODEM_H + 0.3)
+Z_IN_TOP = max(PLUG_Z0 + PLUG_H + KEY_H, UZ1 + PATCH_H) + 0.3   # plug key or GNSS patch, whichever is higher
 CLEAR = 0.3                      # wanted clearance between parts that do not touch by design
 
 
@@ -50,51 +55,53 @@ HDR_L, HDR_W = 20.3, 5.0         # 2 x 8, 2.54 mm (body)
 HDR_X = 2.2                      # body this far inside the board edge: the SMD pads need 8.2 mm, 0.6 mm from the edge
 HDR_Y = BYF - 8.0 - HDR_L        # headers start 8 mm behind the front edge (behind the plug legs)
 CELL = (30.0, 20.0, 5.2)         # x, y, z: the larger common format, lying across
-CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + 2.1   # on parts up to 2.0 mm tall
+UNDER_CELL = 2.8                 # tallest part allowed under the cell
+CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + UNDER_CELL + 0.1
+ESP_H = 3.45                     # ESP32-C5-WROOM-1U 3.3 +-0.15; its U.FL is on the shield side and, mated, no higher
 
+# Heights are data-sheet maxima (see ../README.md, "Checked against sources").
 PARTS = [
     # --- carrier board
     part('carrier PCB', BX0, BYR, BW, BL, 0, BT, 'pcb'),
     part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, PLUG_Z0 + 13.6 - BT, 'plug',
          'drawing: upper leg row 13.2 above the housing bottom, legs 0.8 thick'),
     part('plug leg tips (below)', 110.0, -66.0, 32.0, 6.75, PLUG_Z0, -PLUG_Z0, 'plug'),
-    part('EC200U', BX0 + 3.0, BYR + 3.0, 28.0, 31.0, -2.4, 2.4, 'carrier-bottom', 'body; pads reach 1.65 mm further'),
-    part('socket L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
-    part('socket R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
-    part('buck inductor', BX0 + 20.3, BYF - 14.3, 7.0, 6.6, BT, 4.8, 'carrier-top'),
-    part('tantalum 220u A', BX0 + 28.85, BYF - 15.65, 4.3, 7.3, BT, 3.1, 'carrier-top'),
-    part('tantalum 220u B', BX0 + 10.65, BYF - 22.45, 7.3, 4.3, BT, 3.1, 'carrier-top'),
-    part('TVS SMC', BX0 + 36.05, BYF - 18.0, 5.9, 8.0, -2.3, 2.3, 'carrier-bottom', 'beside the modem'),
-    part('JST-PH side entry', BX0 + 10.3, BYF - 16.3, 8.0, 7.6, BT, 5.5, 'carrier-top',
-         'S2B-PH-SM4-TB, 5.5 mm, under the ESP32 module; outline CHECK'),
-    part('LTE U.FL', BX0 + 40.0, BYF - 42.5, 3.0, 3.0, BT, 2.6, 'carrier-top', 'mated, beside the cell'),
-    part('GNSS U.FL', BX0 + 40.0, BYF - 36.0, 3.0, 3.0, BT, 2.6, 'carrier-top', 'jumper to the upper board'),
+    part('EC200U', BX0 + 3.0, BYR + 3.0, 28.0, 31.0, -MODEM_H, MODEM_H, 'carrier-bottom',
+         'body; pads reach 1.65 mm further'),
+    part('socket L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, BT, SOCKET_H, 'header'),
+    part('socket R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, BT, SOCKET_H, 'header'),
+    part('JST-PH side entry', BX0 + 10.3, BYF - 15.65, 8.6, 7.9, BT, 5.5, 'carrier-top',
+         'S2B-PH-SM4-TB, plug goes in from the right (+x)'),
+    part('battery plug', BX0 + 18.9, BYF - 14.6, 3.6, 5.8, BT + 0.5, 4.5, 'carrier-top',
+         'mated PHR-2; its wires run on to the right and back to the cell'),
+    part('buck inductor', BX0 + 25.5, BYF - 14.3, 7.0, 6.6, BT, 5.0, 'carrier-top'),
+    part('tantalum 220u A', BX0 + 10.25, BYF - 21.15, 7.3, 4.3, BT, 3.1, 'carrier-top'),
+    part('tantalum 220u B', BX0 + 19.35, BYF - 21.15, 7.3, 4.3, BT, 3.1, 'carrier-top'),
+    part('TVS SMC', BX0 + 36.05, BYF - 18.0, 5.9, 8.0, -2.62, 2.62, 'carrier-bottom', 'beside the modem'),
+    part('LTE U.FL', BX0 + 40.0, BYF - 42.5, 3.0, 3.0, BT, 2.5, 'carrier-top', 'mated, beside the cell'),
+    part('GNSS U.FL', BX0 + 40.0, BYF - 36.0, 3.0, 3.0, BT, 2.5, 'carrier-top', 'jumper to the upper board'),
     # --- between the boards
-    part('spacer L', BX0 + 1.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header', 'M2.5 x 11 mm, front corner'),
+    part('spacer L', BX0 + 1.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header', 'M2.5 x 12 mm, front corner'),
     part('spacer R', BX1 - 6.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header'),
     part('cell', CELL_X0, CELL_Y0, CELL[0], CELL[1], CELL_Z0, CELL[2], 'cell',
-         '5.2 x 20 x 30 mm, on carrier parts up to 2.0 mm tall'),
+         f'5.2 x 20 x 30 mm, on carrier parts up to {UNDER_CELL} mm tall'),
     # --- upper board
     part('upper PCB', BX0, BYR, BW, BL, UZ0, BT, 'pcb'),
-    part('header L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
-    part('header R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
-    part('ESP32-C5 module', PLUG_CX - 9.0, -66.5 - 21.2, 18.0, 21.2, UZ0 - 3.4, 3.4, 'upper-bottom',
-         'antenna end / U.FL towards the front'),
-    part('ESP32 U.FL plug', PLUG_CX - 9.0 + 1.0, -66.5 - 5.0, 4.0, 4.0, UZ0 - 3.4 - 2.0, 2.0, 'upper-bottom',
-         'mated U.FL on the module; height CHECK'),
-    part('USB-C', BX0 + 35.0, BYR - 0.5, 9.0, 7.5, UZ0 - 3.3, 3.3, 'upper-bottom', 'overhangs the rear edge 0.5 mm'),
-    part('micro-SIM holder', BX0, BYR + 0.5, 16.0, 15.0, UZ0 - 1.45, 1.45, 'upper-bottom',
-         'Molex 78646-3001, card enters from the left edge; outline CHECK'),
-    part('GNSS patch', BX0 + 21.0 - 12.5, BYR + 3.0, 25.0, 25.0, UZ1, 4.0, 'upper-top',
+    part('header L', BX0 + HDR_X, HDR_Y, HDR_W, HDR_L, UZ0 - HEADER_H, HEADER_H, 'header', 'through-hole'),
+    part('header R', BX1 - HDR_X - HDR_W, HDR_Y, HDR_W, HDR_L, UZ0 - HEADER_H, HEADER_H, 'header'),
+    part('ESP32-C5 module', PLUG_CX - 9.0, -66.5 - 21.2, 18.0, 21.2, UZ0 - ESP_H, ESP_H, 'upper-bottom'),
+    part('USB-C', BX0 + 35.0, BYR - 0.5, 9.0, 7.5, UZ0 - 3.36, 3.36, 'upper-bottom', 'overhangs the rear edge'),
+    part('micro-SIM holder', BX0, BYR + 0.5, 15.45, 12.65 + 2.35, UZ0 - 1.55, 1.55, 'upper-bottom',
+         'Molex 78646-3001 (1.45 +-0.1), card enters from the left edge'),
+    part('GNSS patch', BX0 + 21.0 - 12.55, BYR + 2.95, 25.1, 25.1, UZ1, PATCH_H, 'upper-top',
          'Taoglas CGGBP.25.4.A.02; 1.5 mm left of centre, clear of the USB-C legs'),
 ]
 
 # pairs that touch or overlap by design
 ALLOWED = {
     frozenset(p) for p in [
-        ('socket L', 'header L'), ('socket R', 'header R'),
         ('plug legs (above)', 'carrier PCB'), ('plug leg tips (below)', 'carrier PCB'),
-        ('ESP32-C5 module', 'ESP32 U.FL plug'),
+        ('JST-PH side entry', 'battery plug'),
     ]
 }
 

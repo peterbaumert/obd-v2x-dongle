@@ -5,7 +5,7 @@
 	(uuid "c8af1537-c102-5ff3-96aa-8f01f72bd926")
 	(paper "A4")
 	(title_block
-		(title "Board-to-board connectors (2 x 8, 2.54 mm, 11 mm stack)")
+		(title "Board-to-board connectors (2 x 8, 2.54 mm, 12 mm gap)")
 		(rev "0.1")
 	)
 	(lib_symbols
@@ -1320,9 +1320,9 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "Pin n of J601 / J602 (carrier top side, sockets) mates with pin n of J701 / J702 (upper board, headers).\nThe headers go on the BOTTOM side of the upper board, same rotation as the sockets: KiCad numbers the\nsocket footprint mirrored to the header, so the flipped header lands pin 1 on pin 1.\n11 mm stack = Raspberry Pi HAT spacing: M2.5 x 11 mm spacers hold the boards."
+	(text "Pin n of J601 / J602 (carrier top side, sockets) mates with pin n of J701 / J702 (upper board, headers).\nThe headers go on the BOTTOM side of the upper board, same rotation as the sockets: KiCad numbers the\nsocket footprint mirrored to the header, so the flipped header lands pin 1 on pin 1.\nSMD socket (top 8.9 mm above its board) + through-hole header (2.5 mm base) on M2.5 x 12 mm spacers:\nthe spacers set the 12.0 mm gap, the connectors stay 0.6 mm short of bottoming out."
 		(exclude_from_sim no)
-		(at 50.8 15.24 0)
+		(at 50.8 12.7 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -1330,7 +1330,7 @@
 			)
 			(justify left)
 		)
-		(uuid "5feecdc4-0a19-594f-89f1-660b47e29e8c")
+		(uuid "458e7736-f3b2-5f54-bf0d-dfbd6bc21771")
 	)
 	(wire
 		(pts
@@ -2781,7 +2781,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical_SMD"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical"
 			(at 101.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -2813,7 +2813,7 @@
 				)
 			)
 		)
-		(property "MPN" "HX PZ2.54-2x8P TP"
+		(property "MPN" "2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm"
 			(at 101.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -2824,7 +2824,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Hanxia"
+		(property "Manufacturer" "generic"
 			(at 101.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -2835,7 +2835,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C32713288"
+		(property "LCSC" ""
 			(at 101.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -3690,7 +3690,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical_SMD"
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x08_P2.54mm_Vertical"
 			(at 228.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -3722,7 +3722,7 @@
 				)
 			)
 		)
-		(property "MPN" "HX PZ2.54-2x8P TP"
+		(property "MPN" "2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm"
 			(at 228.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -3733,7 +3733,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Hanxia"
+		(property "Manufacturer" "generic"
 			(at 228.6 76.2 0)
 			(hide yes)
 			(show_name no)
@@ -3744,7 +3744,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C32713288"
+		(property "LCSC" ""
 			(at 228.6 76.2 0)
 			(hide yes)
 			(show_name no)

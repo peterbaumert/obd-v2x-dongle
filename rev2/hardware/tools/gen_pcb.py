@@ -56,11 +56,11 @@ PLACE = {
         # modem flat on the underside, long side along y; the strip at the right stays free for low parts
         'U401': (17.0, 26.5, 90, B),
         # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2 mm)
-        'J501': (14.3, 12.5, 0, T),            # battery, side entry
-        'C506': (14.3, 20.3, 0, T),
-        'L101': (23.8, 11.0, 0, T),
-        'U102': (24.0, 17.7, 0, T),            # buck right next to its inductor
-        'C401': (31.0, 12.0, 90, T),
+        'J501': (14.6, 11.7, 90, T),           # battery, side entry: the plug goes in from the right (+x)
+        'C506': (23.0, 19.0, 0, T),
+        'L101': (29.0, 11.0, 0, T),
+        'U102': (31.6, 19.3, 0, T),            # buck right next to its inductor
+        'C401': (13.9, 19.0, 0, T),
         'D101': (39.0, 14.0, 90, B),           # input TVS (2.3 mm) on the underside strip beside the modem
         # antenna sockets in the rear right corner, beside the cell (a mated U.FL is 2.6 mm tall)
         'J402': (41.5, 41.0, 0, T),            # LTE antenna
@@ -70,7 +70,8 @@ PLACE = {
     'upper': {
         'H701': (*SPACER[0], 0, T), 'H702': (*SPACER[1], 0, T),
         # headers on the bottom side, same rotation as the sockets: pin 1 lands on pin 1
-        'J701': (STACK_X[0], STACK_Y, 0, B), 'J702': (STACK_X[1], STACK_Y, 0, B),
+        # through-hole headers on the bottom side: origin = pin 1, which lands on the socket's pin 1
+        'J701': (STACK_X[0] + 1.27, STACK_Y - 8.89, 0, B), 'J702': (STACK_X[1] + 1.27, STACK_Y - 8.89, 0, B),
         'U301': (22.5, 17.5, 0, B),            # ESP32-C5 module
         'J301': (39.5, None, 0, B),            # USB-C at the rear edge (y set below)
         'J401': (8.0, 37.0, 0, B),             # micro-SIM, card enters from the left edge
@@ -78,26 +79,30 @@ PLACE = {
         'U801': (25.0, 33.5, 0, B),            # GNSS front end next to the feed pin
         'J801': (26.0, 40.5, 0, B),
         # the lid side carries what must be reached or seen from outside
-        'SW301': (6.5, 12.5, 0, T), 'SW302': (38.5, 12.5, 0, T), 'D301': (22.5, 3.0, 0, T),
+        'SW301': (12.5, 12.0, 0, T), 'SW302': (32.5, 12.0, 0, T), 'D301': (22.5, 3.0, 0, T),
         'U201': (14.0, 6.0, 0, T), 'U202': (31.0, 6.0, 0, T),
     },
 }[BOARD]
 ANCHOR = {}                   # ref: (anchor ref, anchor pad, side or None): overrides the automatic choice
+# areas the automatic placement must leave free: (side, (x0, y0, x1, y1))
+KEEP = {'carrier': [(T, (19.8, 8.0, 24.2, 15.5))],     # the battery plug in front of J501, and its wires
+        'upper': []}[BOARD]
 RAILS = ('GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VBAT_LTE', 'VBUCK_3V8', 'LTE_1V8', 'VCELL')
 
-# Part heights (mm) by footprint name, for the automatic placement. A mated U.FL counts with its plug.
-HEIGHT = {'C_0402': 0.55, 'C_0603': 0.9, 'C_0805': 1.35, 'C_1210': 2.6, 'CP_EIA-7343': 3.1, 'D_SMA': 2.3, 'D_SMC': 2.4,
-          'D_SOD-123F': 1.1, 'D_SOD-323': 1.1, 'Fuse_1206': 0.8, 'LFPAK56': 1.1, 'L_0402': 0.6, 'R_0402': 0.4,
+# Part heights (mm) by footprint name, for the automatic placement: data-sheet maxima where checked (1210, SMC, SMA,
+# tantalum, U.FL mated, LED), typical values otherwise. A mated U.FL counts with its plug.
+HEIGHT = {'C_0402': 0.55, 'C_0603': 0.9, 'C_0805': 1.35, 'C_1210': 2.85, 'CP_EIA-7343': 3.1, 'D_SMA': 2.62,
+          'D_SMC': 2.62, 'D_SOD-123F': 1.1, 'D_SOD-323': 1.1, 'Fuse_1206': 0.8, 'LFPAK56': 1.1, 'L_0402': 0.6, 'R_0402': 0.4,
           'R_0603': 0.5, 'R_1206': 0.65, 'SOIC-8': 1.75, 'SOT-23': 1.45, 'TI_SO-PowerPAD-8': 1.7, 'TSSOP-20': 1.2,
-          'TestPoint': 0.0, 'Texas_DRC': 1.0, 'Texas_VQFN': 1.0, 'U.FL': 2.6, 'LED_SK6812': 1.5,
+          'TestPoint': 0.0, 'Texas_DRC': 1.0, 'Texas_VQFN': 1.0, 'U.FL': 2.5, 'LED_SK6812': 2.05,
           'Skyworks_SKY65943': 0.7}
 HEIGHT_UNKNOWN = 2.0
 # Room above each side (mm) and the zones with less: (side, x0, y0, x1, y1, room). See rev2/mechanical/stack.py.
 ROOM = {
-    'carrier': ({T: 7.0, B: 2.4},                       # top: under the ESP32 module; bottom: the modem's 2.4 mm
-                [(T, 7.5, 24.0, 37.5, 44.0, 2.0)]),     # the cell lies on these parts
-    'upper': ({T: 4.0, B: 3.4},                         # top: the patch's height; bottom: down to the cell
-              [(B, 6.0, 0.0, 39.0, 6.6, 0.8)]),         # over the plug's leg bends
+    'carrier': ({T: 7.0, B: 2.65},                      # top: under the ESP32 module; bottom: the modem's 2.6 mm
+                [(T, 7.5, 24.0, 37.5, 44.0, 2.8)]),     # the cell lies on these parts
+    'upper': ({T: 4.0, B: 3.6},                         # top: the patch's height; bottom: down to the cell
+              [(B, 6.0, 0.0, 39.0, 6.6, 0.7)]),         # over the plug's leg bends (1.0 mm)
 }[BOARD]
 
 
@@ -329,6 +334,8 @@ def build():
         fps[ref] = fp
 
     placed = {T: [], B: []}
+    for side, bx in KEEP:
+        placed[side].append(('keep-out', bx))
 
     def claim(fp, side):
         bx = crt_box(fp)

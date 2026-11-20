@@ -7,7 +7,7 @@ shared.
 
 ## Goal
 
-The size of a commercial OBD tracker: about **68 × 50 × 25 mm including the plug**, instead of rev 1's
+Close to the size of a commercial OBD tracker (about 67 × 50 × 25 mm): **68.1 × 49.6 × 26.4 mm including the plug**, instead of rev 1's
 87.4 × 56.6 × 34.1 mm. Same functions as rev 1 except for the changes under "Decisions".
 
 ## How it gets smaller
@@ -18,29 +18,30 @@ Rev 1 is one 52 × 64.4 mm board. The 18 mm above it (the height of the OBD plug
 - **Same OBD plug** (CR-PG001, 90° through-hole), still entirely in front of the board edge.
 - **Two boards of about 45 × 45 mm**, stacked, joined by board-to-board headers.
 - **Carrier board** (lower): the plug, and the LTE module flat on the underside. Nothing else below the board is
-  taller than the module (2.4 mm).
-- **Upper board**: sits about 11 mm above the carrier, inside the plug's own height.
+  taller than the module (2.6 mm at most).
+- **Upper board**: sits 12 mm above the carrier, inside the plug's own height.
 
 ### Height budget (z = 0 at the carrier's bottom face)
 
 | From | To | What |
 |---|---|---|
-| −4.3 | −2.7 | floor, 1.6 mm |
-| −2.7 | 0 | EC200U (2.4 mm) + 0.3 mm clearance; the plug's leg tips reach −2.0 |
+| −4.5 | −2.9 | floor, 1.6 mm |
+| −2.9 | 0 | EC200U (2.4 ± 0.2 mm) + 0.3 mm clearance; the plug's leg tips reach −1.0 |
 | 0 | 1.6 | carrier board |
-| 1.6 | 12.6 | gap between the boards, 11.0 mm: carrier top-side parts, the backup cell, upper-board underside parts |
-| 12.6 | 14.2 | upper board |
-| 14.2 | 18.5 | GNSS patch (4 mm) + clearance; the plug's key ends at 17.3 |
-| 18.5 | 20.5 | roof, 2.0 mm |
+| 1.6 | 13.6 | gap between the boards, 12.0 mm: carrier top-side parts, the backup cell, upper-board underside parts |
+| 13.6 | 15.2 | upper board |
+| 15.2 | 19.9 | GNSS patch (4.0 ± 0.4 mm) + clearance; the plug's key ends at 18.3 |
+| 19.9 | 21.9 | roof, 2.0 mm, with a 1 mm pocket over the patch's feed-pin head |
 
-Total **24.8 mm**.
+Total **26.4 mm**.
 
-- **11.0 mm is the Raspberry Pi HAT spacing:** a 2.54 mm header (2.5 mm base) in an 8.5 mm socket, held by
-  M2.5 × 11 mm spacers. Two spacers sit in the front corners.
-- **The plug sits 2.0 mm below the carrier's bottom face** (rev 1: 1.0 mm). Its legs then end 1.0 mm under
-  the upper board instead of touching it (drawing: upper leg row 13.2 mm above the housing bottom, legs 0.8 mm
-  thick). The leg tips stick out 2.0 mm below the carrier, inside the space the
-  modem needs anyway, and the bends stay 0.4 mm above the carrier's top face.
+- **The gap is 12.0 mm, set by M2.5 × 12 mm spacers** in the two front corners. The connectors must not bottom
+  out first. A surface-mount header and socket stand on their leads and bottom out at 12.1 ± 0.4 mm, which would
+  bow the boards. So the upper board carries a through-hole header (2.5 mm base, flat on the board) and the
+  carrier a surface-mount socket (top 8.9 mm above its board): 11.4 mm, 11.8 at most, 0.6 mm short of bottoming.
+  The header pins still reach 5.4 mm into the socket.
+- **The plug sits as in rev 1**, 1.0 mm below the carrier's bottom face. Its legs end 1.0 mm under the upper
+  board (drawing: upper leg row 13.2 mm above the housing bottom, legs 0.8 mm thick).
 
 ### Footprint
 
@@ -54,7 +55,7 @@ One side of a 45 × 45 mm board is 2025 mm². Rev 1 uses 1272 mm² of parts on t
 
 | Part | Size | Height | Goes on |
 |---|---|---|---|
-| EC200U-EU | 29 × 32 mm | 2.4 mm | carrier, underside |
+| EC200U-EU | 28 × 31 mm | 2.4 ± 0.2 mm | carrier, underside |
 | ESP32-C5-WROOM-1U | 18 × 21 mm | 3.4 mm | upper board, underside |
 | Micro-SIM holder | about 16 × 15 mm | 1.45 mm | upper board, underside, at the left edge (slot in the case) |
 | Buck inductor | 7 × 7 mm | 4.8 mm | carrier, top side |
@@ -148,8 +149,9 @@ Placement so far:
   ESP32 module, USB-C, micro-SIM holder, GNSS patch and front end, and the carrier's tall parts (battery connector,
   inductor, tantalums) in its front half.
 - **Every other part is placed automatically** next to a part it shares a net with, and only where it fits by
-  height: at most 2.0 mm under the cell, 2.4 mm on the carrier's underside, 0.8 mm on the upper board's underside
-  over the plug legs. The heights are a table in `gen_pcb.py` (by footprint), not measured. A starting point, not
+  height: at most 2.8 mm under the cell, 2.65 mm on the carrier's underside, 0.7 mm on the upper board's underside
+  over the plug legs. The heights are a table in `gen_pcb.py` (by footprint): data-sheet maxima for the tall parts,
+  typical values for the rest. A starting point, not
   a layout.
 - **Antenna sockets:** LTE and GNSS U.FL in the carrier's rear right corner, beside the cell.
 - **The lid side of the upper board carries what must be reached or seen:** the two buttons and the LED.
@@ -165,7 +167,7 @@ State: schematic parity 0 on both boards and no courtyard overlaps or clearance 
 ## Case
 
 `python rev2/mechanical/case.py --render` builds a two-part case around the stack model and checks it against the
-plug and the model's parts: **49.6 × 68.1 × 24.8 mm including the plug, check passed.**
+plug and the model's parts: **49.6 × 68.1 × 26.4 mm including the plug, check passed.**
 
 ![case](mechanical/out/case_closed.png)
 ![case open](mechanical/out/case_open.png)
@@ -174,18 +176,18 @@ plug and the model's parts: **49.6 × 68.1 × 24.8 mm including the plug, check 
   into the bottom shell from above.
 - **Closing:** the two spacers between the boards hold everything. One M2.5 screw from below goes through the
   bottom shell and the carrier into each spacer (M2.5 × 8), one from above through the lid and the upper board
-  (M2.5 × 10). No screws into plastic. Two hooks hold the lid at the rear, as in rev 1.
+  (M2.5 × 10). The spacers are M2.5 × 12 mm, female-female. No screws into plastic. Two hooks hold the lid at the rear, as in rev 1.
 - **Plug:** a rib all around in its retention groove (bottom and sides in the bottom shell, top in the lid). The
   case front ends at the groove.
 - **USB-C:** an opening in the rear wall, 11 × 7 mm.
 - **Micro-SIM:** a notch in the left wall at the holder, closed by a tooth on the lid, which is also the card stop
   (the holder has no latch). To change the SIM, take the lid off and pull the card out sideways; the boards stay
   in.
-- **Lid:** pin holes over RESET and BOOT, a 3 mm hole over the LED (a short clear rod; rev 1's 10 mm light pipe
-  does not fit).
+- **Lid:** pin holes over RESET and BOOT (actuator top 1.5 mm above the board), a 3 mm hole over the LED (a short
+  clear rod; rev 1's 10 mm light pipe does not fit), and a 1 mm pocket over the patch's feed-pin head.
 
 Not checked: the case is built against the stack model's boxes, not against routed boards, and nothing has been
-printed. The button height in `case.py` is an estimate.
+printed.
 
 ## Checked against sources (2026-11-20)
 
@@ -198,17 +200,23 @@ printed. The button height in `case.py` is an estimate.
 | EC200U thickness | 2.4 ± 0.2 mm | same |
 | EC200U power-on | PWRKEY low for at least 2 s, 1.8 V I/O: unchanged. New note: if USB VBUS is present before VBAT, wait 2 s after VBAT is stable before PWRKEY | same |
 | Plug leg height | Upper leg row 13.2 mm above the housing bottom, legs 0.8 mm thick: 1.0 mm under the upper board | CR-PG001 drawing |
-| Connector orientation | Flipped header lands pin 1 on the socket's pin 1 | KiCad's two SMD footprints |
+| Connector orientation | Flipped header lands pin 1 on the socket's pin 1 | pad positions on the generated boards |
+| Connector stack height | SMD header 3.2 mm + SMD socket 8.9 mm = 12.1 ± 0.4 mm, not 11.0. Raspberry Pi's HAT documents do not state an 11 mm spacing | Hanxia drawings; Raspberry Pi HAT README and HAT+ specification |
+| Part heights (maxima) | 1210 capacitors 2.85 (TDK 47 µF) and 2.7; SMC diodes 2.62 and 2.5; SMA 2.42; tantalum 3.1; inductor 5.0; EC200U 2.6; ESP32-C5 module 3.45; USB-C 3.36; LED 2.05; button actuator 1.75; mated U.FL 2.5 | manufacturers' data sheets (the SMCJ value from Littelfuse's table for the same package) |
+| ESP32-C5 module antenna socket | On the shield side, in the corner 3 mm from one long edge and 2.4 mm from the end opposite the pad row. Mated, it is no higher than the shield | Espressif data sheet v1.3, Fig. 10-2 / 10-3 |
+| Battery connector | S2B-PH-SM4-TB is 5.5 mm tall; the plug goes in parallel to the board and sticks out 3.6 mm beyond the header, plus the wires | JST PH catalogue |
 
 LCSC stock on 2026-11-20: header C32713288 37,645; socket C41427537 5,064; second-source socket C22436156 2,494 and
 header C42163086 290; SKY65943-11 C2654442 338; S2B-PH-SM4-TB C295747 13,090; U.FL C88373 35,470; ESP32-C5 module
 C54951857 496; BQ25171 C2861221 346; 9.1 nH LQW15AN9N1J00D C437364 4,060. The modem (C2942341) is not listed at
 LCSC, only at JLCPCB (50). Digi-Key: Molex 0786463001 113,150 and Taoglas CGGBP.25.4.A.02 6,403, both active.
 
-Two things this turned up:
+Three things this turned up:
 
 - **A.c. termination:** the standard asks a tester for 100 Ω + 560 pF from each CAN line to ground. Rev 1 has none.
   Rev 2 has the four footprints at the plug (R205, R206, C204, C205), not fitted, to try on a car.
+- **Connector stack:** my 11.0 mm figure was a sum of insulator heights and wrong for surface-mount parts. The
+  gap is now 12.0 mm with a through-hole header, and the case is 26.4 mm tall instead of 24.8.
 - **Power-on sequencing with USB:** the firmware should wait 2 s after VBAT is stable before PWRKEY when USB VBUS
   is already present.
 
@@ -226,7 +234,7 @@ Two things this turned up:
 ## Assumed unless changed
 
 - Both boards 4 layers, 1.6 mm, 45 × 45 mm.
-- The stack is held by two screws with 11 mm spacers (or by the case), not by the header friction.
+- The stack is held by two M2.5 × 12 mm spacers and their screws, not by the header friction.
 - USB-C, LED and the two buttons as in rev 1, on the upper board.
 - Battery space sized for a 5.2 × 20 × 30 mm cell, so more than one product fits.
 - Same ESP32-C5 module and, where possible, the same GPIO assignment, so the firmware stays shared.
@@ -234,7 +242,7 @@ Two things this turned up:
 ## Stack model
 
 `python rev2/mechanical/stack.py --render` places the plug, both boards and their big parts as boxes, checks the
-clearances and prints the case envelope: **49.6 × 68.1 × 24.8 mm including the plug, check passed.**
+clearances and prints the case envelope: **49.6 × 68.1 × 26.4 mm including the plug, check passed.**
 
 ![stack](mechanical/out/stack_iso.png)
 ![stack from the side](mechanical/out/stack_side.png)
@@ -242,17 +250,16 @@ clearances and prints the case envelope: **49.6 × 68.1 × 24.8 mm including the
 What the placement shows:
 
 - Carrier underside: only the EC200U (and the plug's leg tips at the front).
-- Carrier top: the two header sockets along the sides, buck inductor, tantalum, TVS and the battery connector in
-  the front half.
-- The cell lies across the rear half, on carrier parts up to 2.0 mm tall.
+- Carrier top: the two sockets along the sides; battery connector (its plug goes in from the right), buck
+  inductor and regulator, and both tantalums in the front half. The input TVS is on the underside beside the modem.
+- The cell lies across the rear half, on carrier parts up to 2.8 mm tall.
 - Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge, the
-  micro-SIM holder at the left rear edge (the card slot is then 11 mm above the carrier).
+  micro-SIM holder at the left rear edge (the card slot is then 12 mm above the carrier).
 - Upper top: the 25 mm GNSS patch.
-- No clearance is below 0.3 mm. The outlines marked CHECK in the script are estimates; confirm them from the
-  drawings.
+- No clearance is below 0.3 mm. Part heights are data-sheet maxima.
 - **Connector orientation:** sockets on the carrier's top side, headers on the upper board's bottom side, same
   rotation. KiCad numbers its socket footprint mirrored to its header footprint, so the flipped header puts pin 1
-  on pin 1 (checked against both SMD footprints).
+  on pin 1 (checked on the generated boards: header pin 1 and the socket's pin 1 contact are at the same x, y).
 
 ## Still open
 
@@ -276,15 +283,18 @@ Digi-Key stock and prices were read from live pages. LCSC stock was read from LC
 Sourcing rule: only parts that should still be buyable when the boards are built: distributor stock (Digi-Key,
 Mouser, LCSC) or a regular shop, and standard formats with more than one maker. No eBay or marketplace-only items.
 
-### Board-to-board connectors (11 mm stack)
+### Board-to-board connectors (12 mm gap)
 
-| Option | Parts | Stack | Notes |
-|---|---|---|---|
-| **Pick: 2.54 mm SMD header + SMD socket, 2 × 8** | Hanxia HX PZ2.54-2x8P TP (LCSC C32713288) + HX PM2.54-2x8P TP (C41427537). Second source: Hong Cheng HC-PZ254-11L-2x8PS (C42163086) + HC-PM254-8.5H-2x8PS (C22436156) | 11.0 mm = 8.5 mm socket + 2.5 mm header base (sum of the listed heights, check the drawings) | 3 A per pin, about $0.60 per pair. Friction only: hold the boards with 11 mm spacers or the case, not with the connectors |
-| Harwin Archer Kontrol 1.27 mm, 16 pins | M55-6001642R + M55-7021642R | 11.1 mm (Digi-Key listing) | Shrouded and polarised, 1.2 A per pin, about $4 per pair, thin stock (187 of the male half) |
+| Board | Part | Notes |
+|---|---|---|
+| carrier | **2 × 8 SMD socket, 2.54 mm, 8.5 mm insulator:** Hanxia HX PM2.54-2x8P TP (LCSC C41427537); second source Hong Cheng HC-PM254-8.5H-2x8PS (C22436156) | Top 8.9 ± 0.2 mm above the board (Hanxia drawing). 3 A per pin |
+| upper | **2 × 8 through-hole pin header, 2.54 mm**, 2.5 mm base, 6 mm pins | A generic part with many makers; pick one in stock at order time. Its base sits flat on the board |
+| both | **M2.5 × 12 mm female-female spacers** | A standard length. Friction alone does not hold the connectors in a car |
 
-Plain 2.0 mm and 1.27 mm header pairs only reach about 6–8 mm. Samtec SFM / TFM has a 9.91 mm height that is not
-stocked.
+Why not the surface-mount header I first picked (Hanxia HX PZ2.54-2x8P TP): its insulator top is 3.2 mm above the
+board, so with the socket it bottoms out at 12.1 ± 0.4 mm. Other options looked at: Harwin Archer Kontrol 1.27 mm
+(M55-6001642R + M55-7021642R, 11.1 mm, shrouded, 1.2 A per pin, thin stock); plain 2.0 mm and 1.27 mm header pairs
+reach only 6–8 mm.
 
 ### GNSS
 
