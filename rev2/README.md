@@ -78,8 +78,11 @@ signals: two 2 × 8 headers, one at each side, which also hold the boards parall
 
 ## Still open
 
-- **Passive patch or patch + LNA:** a passive patch right at the modem input may be enough. Decide from the EC200U
-  hardware design guide and rev 1's GNSS results; keep rev 1's 3.3 V bias switch only if an LNA is used.
+- **GNSS front end:** the commercial tracker this layout follows has its own GNSS receiver chip directly under
+  the patch, so its antenna path is a few millimetres. Ours is longer: patch on the upper board, receiver inside the
+  modem on the carrier, a jumper cable between them. Plan: SAW filter + LNA right at the patch, powered through the
+  jumper by rev 1's 3.3 V bias switch (the patch then behaves like rev 1's active antenna). Check the EC200U
+  hardware design guide and rev 1's GNSS results before fixing the parts.
 - **5.9 GHz and LTE antennas:** flex antennas on the case walls as in rev 1. The space is tighter, so check that
   they fit and stay away from the modem shield.
 
