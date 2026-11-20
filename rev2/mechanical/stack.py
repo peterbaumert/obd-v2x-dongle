@@ -18,7 +18,9 @@ OUT = HERE / 'out'
 # ------------------------------------------------------------------ plug (rev 1 values)
 PLUG_CX = 126.0
 PLUG_REAR = -59.25               # housing rear face
-PLUG_Z0 = -1.0                   # housing bottom = leg tips, 1.0 mm below the carrier's bottom face
+PLUG_Z0 = -2.0                   # housing bottom = leg tips, 2.0 mm below the carrier's bottom face (rev 1: 1.0).
+                                 # 1 mm lower keeps the leg bends clear of the upper board; the tips stay inside
+                                 # the 2.7 mm space under the carrier, and the bends 0.4 mm above its top face
 PLUG_D, PLUG_H, KEY_H = 20.0, 17.8, 1.5
 BODY_W = 40.26
 
@@ -28,14 +30,14 @@ BW, BL = 45.0, 45.0              # board width (x), length (y)
 BX0, BX1 = PLUG_CX - BW / 2, PLUG_CX + BW / 2
 BYF = PLUG_REAR - 0.35           # front edge of both boards, just behind the plug's rear face
 BYR = BYF - BL
-STACK = 11.2                     # gap between the boards (2.54 mm header 2.5 + socket 8.5 = 11.0, + 0.2)
+STACK = 11.0                     # gap between the boards: 2.54 mm header 2.5 + socket 8.5, M2.5 x 11 mm spacers
 UZ0 = BT + STACK                 # upper board bottom face
 UZ1 = UZ0 + BT
 
 # ------------------------------------------------------------------ case envelope
 WALL, FLOOR, ROOF, GAP = 2.0, 1.6, 2.0, 0.3
 Z_IN_BOT = -2.7                  # EC200U 2.4 mm + 0.3
-Z_IN_TOP = PLUG_Z0 + PLUG_H + KEY_H + 0.3
+Z_IN_TOP = max(PLUG_Z0 + PLUG_H + KEY_H, UZ1 + 4.0) + 0.3   # plug key or GNSS patch, whichever is higher
 CLEAR = 0.3                      # wanted clearance between parts that do not touch by design
 
 
@@ -47,13 +49,13 @@ def part(name, x0, y0, w, l, z0, h, group, note=''):
 HDR_L, HDR_W = 20.3, 5.0         # 2 x 8, 2.54 mm
 HDR_Y = BYF - 8.0 - HDR_L        # headers start 8 mm behind the front edge (behind the plug legs)
 CELL = (30.0, 20.0, 5.2)         # x, y, z: the larger common format, lying across
-CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + 2.3   # on parts up to 2.3 mm tall
+CELL_X0, CELL_Y0, CELL_Z0 = PLUG_CX - 15.0, BYR + 1.0, BT + 2.1   # on parts up to 2.0 mm tall
 
 PARTS = [
     # --- carrier board
     part('carrier PCB', BX0, BYR, BW, BL, 0, BT, 'pcb'),
-    part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, 10.9, 'plug', 'rev 1 box: legs and bends'),
-    part('plug leg tips (below)', 110.0, -66.0, 32.0, 6.75, -1.0, 1.0, 'plug'),
+    part('plug legs (above)', 110.0, -66.0, 32.0, 6.75, BT, PLUG_Z0 + 13.5 - BT, 'plug', 'rev 1 box: legs and bends'),
+    part('plug leg tips (below)', 110.0, -66.0, 32.0, 6.75, PLUG_Z0, -PLUG_Z0, 'plug'),
     part('EC200U', BX0 + 1.0, BYR + 1.5, 29.0, 32.0, -2.4, 2.4, 'carrier-bottom'),
     part('socket L', BX0 + 0.5, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
     part('socket R', BX1 - 0.5 - HDR_W, HDR_Y, HDR_W, HDR_L, BT, 8.5, 'header'),
@@ -62,11 +64,13 @@ PARTS = [
     part('buck inductor', BX1 - 7.5 - 7.0, -66.0 - 8.0, 7.0, 6.6, BT, 4.8, 'carrier-top'),
     part('tantalum 220u', BX1 - 7.5 - 7.3, -66.0 - 13.5, 7.3, 4.3, BT, 3.1, 'carrier-top'),
     part('TVS SMC', 121.0, -66.0 - 7.0, 8.0, 5.9, BT, 2.3, 'carrier-top'),
-    part('JST-PH side entry', 111.0, -66.5 - 7.6, 8.0, 7.6, BT, 5.5, 'carrier-top',
+    part('JST-PH side entry', 109.5, -66.5 - 7.6, 8.0, 7.6, BT, 5.5, 'carrier-top',
          'S2B-PH-SM4-TB, 5.5 mm, under the ESP32 module; outline CHECK'),
     # --- between the boards
+    part('spacer L', BX0 + 1.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header', 'M2.5 x 11 mm, front corner'),
+    part('spacer R', BX1 - 6.0, BYF - 6.5, 5.0, 5.0, BT, STACK, 'header'),
     part('cell', CELL_X0, CELL_Y0, CELL[0], CELL[1], CELL_Z0, CELL[2], 'cell',
-         '5.2 x 20 x 30 mm, on carrier parts up to 2.3 mm tall'),
+         '5.2 x 20 x 30 mm, on carrier parts up to 2.0 mm tall'),
     # --- upper board
     part('upper PCB', BX0, BYR, BW, BL, UZ0, BT, 'pcb'),
     part('header L', BX0 + 0.5, HDR_Y, HDR_W, HDR_L, UZ0 - 2.5, 2.5, 'header'),
@@ -135,7 +139,7 @@ def render():
     import render as r
     colors = {'pcb': '#2e7d32', 'plug': '#b0b0b0', 'carrier-bottom': '#9e9e9e', 'carrier-top': '#6d4c41',
               'header': '#212121', 'cell': '#90caf9', 'upper-bottom': '#757575', 'upper-top': '#d7a98c'}
-    items = [(r.mesh(rev1.plug_model()), '#2b2b2b', 1)]
+    items = [(r.mesh(rev1.plug_model(), (0, 0, PLUG_Z0 - rev1.PLUG_Z0)), '#2b2b2b', 1)]
     for p in PARTS:
         b = rev1.box(p['x'][0], p['x'][1], p['y'][0], p['y'][1], p['z'][0], p['z'][1])
         items.append((r.mesh(b), colors[p['group']], 0.35 if p['name'] == 'upper PCB' else 1))

@@ -911,8 +911,10 @@ STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8'}
 
 def _stack(key, refs, value, fp, flags):
     sh = Sheet('Stack', f'{key}.kicad_sch', SHEETS[key], ROOT, 'Board-to-board connectors (2 x 8, 2.54 mm, 11 mm stack)')
-    sh.text('Pin n of J601 / J602 (carrier, sockets) mates with pin n of J701 / J702 (upper board, headers).\n'
-            'Check the pin-1 corners of both footprints against each other before layout.', g(20), g(8), 1.27, True)
+    sh.text('Pin n of J601 / J602 (carrier top side, sockets) mates with pin n of J701 / J702 (upper board, headers).\n'
+            'The headers go on the BOTTOM side of the upper board, same rotation as the sockets: KiCad numbers the\n'
+            'socket footprint mirrored to the header, so the flipped header lands pin 1 on pin 1.\n'
+            '11 mm stack = Raspberry Pi HAT spacing: M2.5 x 11 mm spacers hold the boards.', g(20), g(6), 1.27, True)
     for i, (ref, nets) in enumerate(zip(refs, (STACK_A, STACK_B))):
         x, y = g(40 + 50 * i), g(30)
         J = sh.part('Connector_Generic:Conn_02x08_Odd_Even', ref, value, fp, x, y, 0,
@@ -928,6 +930,11 @@ def _stack(key, refs, value, fp, flags):
                 sh.rail(net, end, rot=90 if left else 270)
             else:
                 sh.glabel(net, end, 'L' if left else 'R')
+    for i in range(2):                               # spacer screws (M2.5 x 11 mm, as on a Raspberry Pi HAT)
+        x, y = g(120), g(24 + 6 * i)
+        sh.part('Mechanical:MountingHole', f'H{refs[0][1]}0{i + 1}', 'M2.5',
+                'MountingHole:MountingHole_2.7mm_M2.5', x, y, 0,
+                fields={'ref': (x + g(2), y - 1.27, 'left'), 'val': (x + g(2), y + 1.27, 'left')})
     # this board's supplies arrive through the connectors: tell ERC they are driven
     for i, net in enumerate(flags):
         x, y = g(40 + 20 * i), g(52)

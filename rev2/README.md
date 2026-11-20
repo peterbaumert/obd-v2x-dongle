@@ -25,16 +25,20 @@ Rev 1 is one 52 × 64.4 mm board. The 18 mm above it (the height of the OBD plug
 | From | To | What |
 |---|---|---|
 | −4.3 | −2.7 | floor, 1.6 mm |
-| −2.7 | 0 | EC200U (2.4 mm) + 0.3 mm clearance |
+| −2.7 | 0 | EC200U (2.4 mm) + 0.3 mm clearance; the plug's leg tips reach −2.0 |
 | 0 | 1.6 | carrier board |
-| 1.6 | 12.8 | gap between the boards, 11.2 mm: carrier top-side parts, the backup cell, upper-board underside parts |
-| 12.8 | 14.4 | upper board |
-| 14.4 | 18.6 | GNSS patch (4 mm) + clearance; the plug's key ends at 18.3 |
-| 18.6 | 20.6 | roof, 2.0 mm |
+| 1.6 | 12.6 | gap between the boards, 11.0 mm: carrier top-side parts, the backup cell, upper-board underside parts |
+| 12.6 | 14.2 | upper board |
+| 14.2 | 18.5 | GNSS patch (4 mm) + clearance; the plug's key ends at 17.3 |
+| 18.5 | 20.5 | roof, 2.0 mm |
 
-Total **24.9 mm**. The plug legs reach 12.5 mm above the carrier's bottom face (rev 1's model), 0.3 mm under the
-upper board.
-A standard 2.54 mm header in a standard socket stacks at 11.0 mm, which fits the 11.2 mm gap.
+Total **24.8 mm**.
+
+- **11.0 mm is the Raspberry Pi HAT spacing:** a 2.54 mm header (2.5 mm base) in an 8.5 mm socket, held by
+  M2.5 × 11 mm spacers. Two spacers sit in the front corners.
+- **The plug sits 2.0 mm below the carrier's bottom face** (rev 1: 1.0 mm). Its leg bends then end 1.1 mm under
+  the upper board instead of touching it. The leg tips stick out 2.0 mm below the carrier, inside the space the
+  modem needs anyway, and the bends stay 0.4 mm above the carrier's top face.
 
 ### Footprint
 
@@ -96,9 +100,6 @@ Not done yet:
   The carrier still has rev 1's GNSS U.FL with antenna bias.
 - **Micro-SIM footprint:** the schematic uses KiCad's JAE footprint as a placeholder. Draw the Molex 78646-3001
   footprint from its drawing before layout.
-- **Connector pin-1 corners:** pin n mates with pin n in the schematic. Check the socket and header footprints
-  against each other (one is seen from below) before layout.
-- **Mounting holes** for the two spacer screws, on both boards.
 - Layout of either board.
 
 ## Decisions (2026-11-20)
@@ -123,7 +124,7 @@ Not done yet:
 ## Stack model
 
 `python rev2/mechanical/stack.py --render` places the plug, both boards and their big parts as boxes, checks the
-clearances and prints the case envelope: **49.6 × 68.1 × 24.9 mm including the plug, check passed.**
+clearances and prints the case envelope: **49.6 × 68.1 × 24.8 mm including the plug, check passed.**
 
 ![stack](mechanical/out/stack_iso.png)
 ![stack from the side](mechanical/out/stack_side.png)
@@ -133,11 +134,14 @@ What the placement shows:
 - Carrier underside: only the EC200U (and the plug's leg tips at the front).
 - Carrier top: micro-SIM holder at the left rear edge, the two header sockets along the sides, buck inductor,
   tantalum, TVS and the battery connector in the front half.
-- The cell lies across the rear half, on carrier parts up to 2.3 mm tall (the SIM holder is 1.45 mm).
+- The cell lies across the rear half, on carrier parts up to 2.0 mm tall (the SIM holder is 1.45 mm).
 - Upper underside: ESP32-C5 module in the front half (its U.FL end towards the plug), USB-C at the rear edge.
 - Upper top: the 25 mm GNSS patch.
-- Three clearances are at the 0.3 mm minimum: plug legs to upper board, cell to ESP32 module, battery connector
-  to the ESP32's U.FL plug. The outlines marked CHECK in the script are estimates; confirm them from the drawings.
+- No clearance is below 0.3 mm. The outlines marked CHECK in the script are estimates; confirm them from the
+  drawings.
+- **Connector orientation:** sockets on the carrier's top side, headers on the upper board's bottom side, same
+  rotation. KiCad numbers its socket footprint mirrored to its header footprint, so the flipped header puts pin 1
+  on pin 1 (checked against both SMD footprints).
 
 ## Still open
 
