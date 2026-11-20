@@ -1,8 +1,8 @@
 """Two-part 3D-printed case for the OBD-II V2X dongle (build123d).
 
-    python mechanical/case.py            # build, write out/*.step + out/*.stl
-    python mechanical/case.py --check    # also check the case against the board's 3D model
-    python mechanical/case.py --render   # also write out/*.png previews
+    python rev1/mechanical/case.py            # build, write out/*.step + out/*.stl
+    python rev1/mechanical/case.py --check    # also check the case against the board's 3D model
+    python rev1/mechanical/case.py --render   # also write out/*.png previews
 
 Needs build123d (pip install build123d; pyvista for --render) and KiCad 10 (kicad-cli exports the board's
 3D model to build/board.step, which sets where ledges and ribs may go).
@@ -196,7 +196,7 @@ def ledge_segments(edge_parts, axis_lo, axis_hi, coord, band_lo, band_hi):
 
 
 def export_board_step(force=False):
-    """board 3D model via kicad-cli (hardware/tools/kicad_env.py finds KiCad)"""
+    """board 3D model via kicad-cli (rev1/hardware/tools/kicad_env.py finds KiCad)"""
     step = BUILD / 'board.step'
     pcb = HERE.parent / 'hardware' / 'obd-v2x-dongle.kicad_pcb'
     if step.exists() and not force and step.stat().st_mtime > pcb.stat().st_mtime:

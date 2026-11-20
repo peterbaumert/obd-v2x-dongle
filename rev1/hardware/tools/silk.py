@@ -1,6 +1,6 @@
 """Place reference designators on the silkscreen so they don't overlap pads, other silk or the edge.
 
-    <KiCad>/bin/python hardware/tools/silk.py      (KiCad's bundled Python provides pcbnew)
+    <KiCad>/bin/python rev1/hardware/tools/silk.py      (KiCad's bundled Python provides pcbnew)
 
 For each footprint, tries positions above / below / left / right of its courtyard (left/right also
 rotated 90 deg). If none fits, the silkscreen reference is hidden (the F.Fab/B.Fab reference stays,

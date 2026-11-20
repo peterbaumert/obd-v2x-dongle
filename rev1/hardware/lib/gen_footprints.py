@@ -1,6 +1,6 @@
-"""Generate project footprints in hardware/lib/obd-v2x.pretty.
+"""Generate project footprints in rev1/hardware/lib/obd-v2x.pretty.
 
-  python hardware/lib/gen_footprints.py
+  python rev1/hardware/lib/gen_footprints.py
 
 Quectel_EC200U: from Quectel EC200U Series QuecOpen Hardware Design V1.0,
   Figure 2 (Pin Assignment, top view) and Figure 39 (Recommended Footprint, top view).

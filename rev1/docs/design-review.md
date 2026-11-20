@@ -46,7 +46,7 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 - **Quiescent current** (parked, modem switched off by Q102, ESP32 in deep sleep): buck ≈ 0.15 mA + LM74700 ≈ 0.08 mA
   + LDO + ESP32 — well under 1 mA.
 
-## PCBWay order (outputs: `hardware/tools/fab.py` → `hardware/fab/`, git-ignored)
+## PCBWay order (outputs: `rev1/hardware/tools/fab.py` → `rev1/hardware/fab/`, git-ignored)
 
 | Item | Setting |
 |---|---|
@@ -72,7 +72,7 @@ State reviewed: routed board, DRC 0 errors / 0 unconnected, schematic parity 0, 
 | U.FL 5.9 GHz | on the ESP32 module (bottom) | inside the case ✓ |
 | Test pads: ESP UART0 TX + SIM_SEL, modem USB/USB_BOOT/debug UART | bottom | case open; modem firmware updates need the modem USB pads |
 
-Case: `mechanical/` (build123d script, STL/STEP, see its README).
+Case: `rev1/mechanical/` (build123d script, STL/STEP, see its README).
 
 ## Open decisions
 

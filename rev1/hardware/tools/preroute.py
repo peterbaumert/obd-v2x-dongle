@@ -1,7 +1,7 @@
 """Hand-specified routing for the critical nets, applied to the existing board (idempotent:
 removes its own previous tracks/vias/zones on these nets first). Run before autorouting:
 
-    <KiCad>/bin/python hardware/tools/preroute.py      (KiCad's bundled Python provides pcbnew)
+    <KiCad>/bin/python rev1/hardware/tools/preroute.py      (KiCad's bundled Python provides pcbnew)
 
 - LTE main / GNSS antenna chains: straight 0.32 mm F.Cu lines (50 ohm GCPW, see gen_pcb.py), GND vias at the
   shunt caps and U.FL shields, via fence on both sides.

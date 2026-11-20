@@ -1,6 +1,6 @@
 """Update the routed PCB from the schematic (KiCad's "Update PCB from Schematic", scripted).
 
-    <KiCad>/bin/python hardware/tools/sync_pcb.py [--dry-run]
+    <KiCad>/bin/python rev1/hardware/tools/sync_pcb.py [--dry-run]
 
 - adds footprints that are new in the schematic (positions from NEW_PLACE, else packed next to an anchor pad)
 - swaps footprints whose library footprint changed (same place and side, turned to keep each net's pads near

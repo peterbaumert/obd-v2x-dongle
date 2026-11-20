@@ -1,7 +1,7 @@
 """Compare the current schematic's connectivity with the reviewed reference netlist.
 
-    python hardware/tools/check_netlist.py            compare
-    python hardware/tools/check_netlist.py --update   accept the current connectivity (after review)
+    python rev1/hardware/tools/check_netlist.py            compare
+    python rev1/hardware/tools/check_netlist.py --update   accept the current connectivity (after review)
 
 Exports a netlist with kicad-cli and compares nets as sets of (ref, pin), ignoring net
 names (local labels get sheet-prefixed names) and #FLG/#PWR symbols.

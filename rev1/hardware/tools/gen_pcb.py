@@ -1,8 +1,8 @@
-"""Bootstrap hardware/obd-v2x-dongle.kicad_pcb from the schematic: outline, stack-up, rules,
+"""Bootstrap rev1/hardware/obd-v2x-dongle.kicad_pcb from the schematic: outline, stack-up, rules,
 footprints with nets, first-pass placement, GND planes.
 
 Run with KiCad's bundled Python (it provides pcbnew):
-    <KiCad>/bin/python hardware/tools/gen_pcb.py [--force]
+    <KiCad>/bin/python rev1/hardware/tools/gen_pcb.py [--force]
 
 The PCB is generated ONCE. After routing starts it is edited in KiCad (Tools > Update PCB from
 Schematic for netlist changes). --force overwrites the board, including any routing.
@@ -117,7 +117,7 @@ NETCLASSES = [
     ('Power', 0.6, 0.2, 0.8, 0.4, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
                                   'Net-(D202-K)', 'VBUCK_3V8', 'VCELL']),   # USB VBUS (<0.5 A) stays default class
     # 50 ohm grounded coplanar (0.32 mm, 0.25 mm gap) over In1 on PCBWay's standard 1.6 mm 4-layer stack-up
-    # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): see docs/design-review.md. Order with 50 ohm impedance control.
+    # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): see rev1/docs/design-review.md. Order with 50 ohm impedance control.
     ('RF', 0.32, 0.25, 0.6, 0.3, ['*LTE_ANT_*', 'Net-(J402-In)', 'Net-(J403-In)']),
 ]
 

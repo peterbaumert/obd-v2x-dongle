@@ -1,12 +1,12 @@
-"""Fabrication + assembly outputs for PCBWay (run with KiCad's Python: <KiCad>/bin/python hardware/tools/fab.py).
+"""Fabrication + assembly outputs for PCBWay (run with KiCad's Python: <KiCad>/bin/python rev1/hardware/tools/fab.py).
 
-Writes hardware/fab/ (git-ignored):
+Writes rev1/hardware/fab/ (git-ignored):
   obd-v2x-dongle-gerber.zip   Gerber X2 (4 copper, mask, paste, silk, edge) + Excellon PTH/NPTH drill + drill map
   obd-v2x-dongle-cpl.csv      pick & place, both sides, mm, origin = board bottom-left (drill/place origin), DNP left out
   obd-v2x-dongle-bom.csv      assembly BOM: parts PCBWay places (no DNP, no J201, no test pads), MPN / LCSC, SMD/THT, side
-Also refreshes docs/bom.csv (full BOM incl. DNP).
+Also refreshes rev1/docs/bom.csv (full BOM incl. DNP).
 
-Order notes (also in docs/design-review.md): 4 layers, 1.6 mm, 1 oz outer / 1 oz inner, PCBWay standard stack-up
+Order notes (also in rev1/docs/design-review.md): 4 layers, 1.6 mm, 1 oz outer / 1 oz inner, PCBWay standard stack-up
 with 7628 prepreg; impedance control 50 ohm on L1 (RF lines, 0.32 mm GCPW, gap 0.25 mm, reference L2);
 double-sided assembly; J201 (OBD plug) is not assembled (hand-soldered).
 """
@@ -29,7 +29,7 @@ SCH = HW / 'obd-v2x-dongle.kicad_sch'
 OUT = HW / 'fab'
 NAME = 'obd-v2x-dongle'
 LAYERS = 'F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,B.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts'
-# fitted parts PCBWay should not place (hand-soldered after assembly, see docs/bom-notes.md)
+# fitted parts PCBWay should not place (hand-soldered after assembly, see rev1/docs/bom-notes.md)
 NOT_ASSEMBLED = {'J201': 'hand-solder after assembly (OBD-II plug, AliExpress part)'}
 
 
@@ -95,7 +95,7 @@ def main():
             n += 1
             w.writerow([n, ' '.join(refs), len(refs), r['Value'], r['Manufacturer'], r['MPN'], r['LCSC'],
                         r['Footprint'].split(':')[-1], ' / '.join(sorted({kind(x) for x in refs})), ' / '.join(side), note])
-    print('wrote', ', '.join(p.name for p in sorted(OUT.iterdir()) if p.is_file()), '+ docs/bom.csv')
+    print('wrote', ', '.join(p.name for p in sorted(OUT.iterdir()) if p.is_file()), '+ rev1/docs/bom.csv')
 
 
 if __name__ == '__main__':

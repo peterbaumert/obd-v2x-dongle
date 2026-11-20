@@ -10,7 +10,7 @@ fp-info-cache
 *-bak
 
 # Fabrication outputs (generate in CI / on release)
-hardware/fab/
+rev1/hardware/fab/
 *.zip
 *-erc.rpt
 *-drc.rpt
@@ -20,13 +20,13 @@ hardware/fab/
 Thumbs.db
 .vscode/
 
-# Case build (board 3D model exported by mechanical/case.py)
-mechanical/build/
+# Case build (board 3D model exported by rev1/mechanical/case.py)
+rev1/mechanical/build/
 
 # Python
 __pycache__/
 *.pyc
-hardware/tools/stock.json
+rev1/hardware/tools/stock.json
 
 # ESPHome firmware: local secrets and build output
 firmware/secrets.yaml

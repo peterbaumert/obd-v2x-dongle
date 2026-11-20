@@ -1,6 +1,6 @@
 """Check that every pin of each project symbol has a pad in its project footprint.
 
-    python hardware/tools/check_footprints.py
+    python rev1/hardware/tools/check_footprints.py
 
 Pads without a symbol pin are listed for information (unused / reserved module pads).
 """

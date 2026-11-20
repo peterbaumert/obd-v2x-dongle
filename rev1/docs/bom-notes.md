@@ -1,9 +1,9 @@
 # BOM / sourcing notes
 
 Full BOM: [`bom.csv`](bom.csv) (exported from the schematic; MPN / Manufacturer / LCSC fields come from
-`SOURCING` in `hardware/tools/gen_schematic.py`).
+`SOURCING` in `rev1/hardware/tools/gen_schematic.py`).
 
-Stock checked **2026-11-11** with `python hardware/tools/check_stock.py` (LCSC via the JLCPCB parts API) plus
+Stock checked **2026-11-11** with `python rev1/hardware/tools/check_stock.py` (LCSC via the JLCPCB parts API) plus
 Digi-Key for the critical parts. LCSC, Digi-Key and Mouser are PCBWay's main sources; the final word is the
 PCBWay BOM-upload quote. Generic passives (R/C) are left as value + footprint so PCBWay can pick in-stock parts.
 

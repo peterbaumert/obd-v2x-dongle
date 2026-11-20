@@ -1,8 +1,8 @@
 """Small grid maze router for finishing touches on the routed board (run with KiCad's Python).
 
-    <KiCad>/bin/python hardware/tools/maze.py route NET X1 Y1 LAYER1 X2 Y2 LAYER2 [WIDTH]
-    <KiCad>/bin/python hardware/tools/maze.py gndvias
-    <KiCad>/bin/python hardware/tools/maze.py smooth
+    <KiCad>/bin/python rev1/hardware/tools/maze.py route NET X1 Y1 LAYER1 X2 Y2 LAYER2 [WIDTH]
+    <KiCad>/bin/python rev1/hardware/tools/maze.py gndvias
+    <KiCad>/bin/python rev1/hardware/tools/maze.py smooth
 
 Coordinates are board-relative mm (board origin at page 100, 50), layers F/In2/B.
 `route` adds tracks/vias for one connection, avoiding all other-net copper with clearance.

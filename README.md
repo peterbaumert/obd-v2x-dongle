@@ -25,19 +25,19 @@ Quectel EC200U-EU (LTE Cat 1 + GNSS) ── LTE main + GNSS antennas (U.FL), nan
 
 ## PCB (fully routed, DRC clean; manufacturing review pending)
 
-![PCB](docs/img/pcb-iso.png)
+![PCB](rev1/docs/img/pcb-iso.png)
 
 52 x 64.4 mm (plus the OBD plug in front), 4 layers, parts on both sides. Top: power, LTE modem, U.FL antennas. Bottom: CAN/K-Line, ESP32-C5, SIM, USB-C.
 
-Design review and open decisions: [`docs/design-review.md`](docs/design-review.md).
+Design review and open decisions: [`rev1/docs/design-review.md`](rev1/docs/design-review.md).
 
 ## Repo layout
 
 | Path | Contents |
 |---|---|
-| `hardware/` | KiCad 10 project (schematic, PCB) |
-| `firmware/` | ESP32-C5 firmware (planned) |
-| `docs/` | Datasheets notes, design decisions |
+| `rev1/` | Rev 1, the board in production: `hardware/` (KiCad 10 project), `mechanical/` (3D-printed case), `docs/` (BOM notes, design review) |
+| `rev2/` | Rev 2, design brief only so far: two stacked boards in a 25 mm case |
+| `firmware/` | ESP32-C5 firmware (ESPHome), shared by both revisions |
 
 ## Related
 

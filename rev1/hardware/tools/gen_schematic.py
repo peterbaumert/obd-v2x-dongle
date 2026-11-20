@@ -1,9 +1,9 @@
 """Generate the four hierarchical sheets with a clean, wired layout.
 
-    python hardware/tools/gen_schematic.py
+    python rev1/hardware/tools/gen_schematic.py
 
 The netlist must stay identical to the reviewed design; check with
-    python hardware/tools/check_netlist.py
+    python rev1/hardware/tools/check_netlist.py
 """
 import sys
 from pathlib import Path

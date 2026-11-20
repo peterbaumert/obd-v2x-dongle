@@ -1,6 +1,6 @@
 """Check LCSC stock for every BOM line via the public JLCPCB parts search.
 
-    python hardware/tools/check_stock.py
+    python rev1/hardware/tools/check_stock.py
 
 LCSC is one of the distributors PCBWay sources from; a part in stock here is very likely
 orderable through PCBWay assembly. Final confirmation: PCBWay BOM upload quote.

@@ -1,6 +1,6 @@
 """Route whatever KiCad's DRC reports as unconnected, one connection at a time, with maze.py.
 
-    <KiCad>/bin/python hardware/tools/route_unconnected.py [max_rounds]
+    <KiCad>/bin/python rev1/hardware/tools/route_unconnected.py [max_rounds]
 
 Each round: refill + DRC (JSON) -> delete dangling tracks/vias -> GND stitching vias -> maze-route every
 unconnected pair (Power class nets wide, falling back to narrower) -> save. Stops when nothing changes.

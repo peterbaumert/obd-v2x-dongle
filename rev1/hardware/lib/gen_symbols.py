@@ -1,11 +1,11 @@
-"""Generate hardware/lib/obd-v2x.kicad_sym (project symbol library).
+"""Generate rev1/hardware/lib/obd-v2x.kicad_sym (project symbol library).
 
 Pin data sources:
   ESP32-C5-WROOM-1U : Espressif ESP32-C5-WROOM-1/1U datasheet v1.3, Table 3-2
   EC200U-EU         : Quectel EC200U Series QuecOpen Hardware Design V1.0, Figure 2 / Table 5
   OBD2 J1962        : SAE J1962 / ISO 15031-3 pinout
 
-Run:  python hardware/lib/gen_symbols.py
+Run:  python rev1/hardware/lib/gen_symbols.py
 """
 from pathlib import Path
 

@@ -9,7 +9,7 @@
 # OBD-II requests are only sent while the engine runs (charging voltage): on cars like the Mercedes W205
 # the gateway sleeps with the ignition off, and requests would wake the bus and drain the battery.
 #
-# Pin map: hardware/tools/gen_schematic.py, sheet "MCU" (module pin -> GPIO in the comments).
+# Pin map: rev1/hardware/tools/gen_schematic.py, sheet "MCU" (module pin -> GPIO in the comments).
 
 substitutions:
   name: obd-v2x-dongle
