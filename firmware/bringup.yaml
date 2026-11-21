@@ -1,0 +1,209 @@
+# Bring-up firmware for a new obd-v2x-dongle rev 1 board (no network, no secrets needed).
+# Steps and expected results: rev1/docs/bring-up.md. Flash over USB-C:
+#   esphome run firmware/bringup.yaml        (then watch the log: esphome logs firmware/bringup.yaml)
+#
+# On boot (and on each BOOT button press) it runs a self-test and logs every step over USB:
+#   LED red / green / blue, car battery voltage, modem supply + PWRKEY + STATUS, then AT commands to the modem at
+#   115200 baud (identity, SIM, signal, network, supply voltage, GNSS on). After that, every 20 s: signal, network
+#   registration and a GNSS position. Modem answers appear as "uart_debug" lines (<<<).
+# CAN stays in standby and the K-line transceiver asleep: this firmware never sends anything on the car's bus.
+# Pin map: rev1/hardware/tools/gen_schematic.py, sheet "MCU"; same as obd-v2x-dongle.yaml.
+
+esphome:
+  name: obd-v2x-bringup
+  friendly_name: OBD V2X bring-up
+  on_boot:
+    - priority: 800            # safe state first
+      then:
+        - output.turn_off: lte_power_en
+        - output.turn_off: lte_pwrkey
+        - output.turn_off: lte_reset
+        - output.turn_on: can_standby
+        - output.turn_off: kline_slp_n
+        - output.turn_off: sim_sel
+        - output.turn_off: lte_rts
+    - priority: -100
+      then:
+        - delay: 5s            # time to open the log after flashing / plugging in
+        - script.execute: selftest
+
+esp32:
+  variant: esp32c5
+  board: esp32-c5-devkitc-1
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+psram:
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+  level: DEBUG
+
+# ---------------------------------------------------------------- board control
+output:
+  - platform: gpio            # IO8: Q103 -> Q102 modem supply switch, high = modem powered
+    id: lte_power_en
+    pin: GPIO8
+  - platform: gpio            # IO2: Q401 open collector, high = modem PWRKEY pulled low
+    id: lte_pwrkey
+    pin: GPIO2
+  - platform: gpio            # IO3: Q402 open collector, high = modem RESET_N pulled low
+    id: lte_reset
+    pin: GPIO3
+  - platform: gpio            # IO10: TCAN334 STB, high = standby (never transmits)
+    id: can_standby
+    pin: GPIO10
+  - platform: gpio            # IO7: TJA1021 SLP_N, low = sleep
+    id: kline_slp_n
+    pin: GPIO7
+  - platform: gpio            # IO12: U404 FSA2567, low = nano-SIM J401, high = eSIM U403
+    id: sim_sel
+    pin: GPIO12
+  - platform: gpio            # IO26: MCU_RTS_LTE held low (= ready); ignored while flow control is off (default)
+    id: lte_rts
+    pin: GPIO26
+
+binary_sensor:
+  - platform: gpio            # IO9: modem STATUS via TXS0108E, high = modem running
+    id: lte_status
+    name: "LTE STATUS"
+    pin: GPIO9
+    on_state:
+      - logger.log:
+          format: "modem STATUS -> %s"
+          args: ['x ? "HIGH (running)" : "LOW (off)"']
+  - platform: gpio            # IO28: BOOT button (strapping pin, free after boot), pressed = low
+    id: boot_button
+    pin:
+      number: GPIO28
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - logger.log: "BOOT pressed: running the self-test again"
+      - script.execute: selftest
+
+sensor:
+  - platform: adc             # IO1: VSENSE = VIN_PROT / 11 (R109 100k / R110 10k)
+    id: vin_prot
+    name: "VIN_PROT"
+    pin: GPIO1
+    attenuation: 12db
+    update_interval: 10s
+    unit_of_measurement: V
+    accuracy_decimals: 2
+    filters:
+      - multiply: 11.0
+
+# ---------------------------------------------------------------- status LED (D301 SK6812MINI-HS, IO27)
+light:
+  - platform: esp32_rmt_led_strip
+    id: led
+    name: "LED"
+    pin: GPIO27
+    num_leds: 1
+    chipset: SK6812
+    rgb_order: GRB
+    default_transition_length: 0s
+    restore_mode: ALWAYS_OFF
+
+# ---------------------------------------------------------------- modem UART (plain AT, no PPP)
+uart:
+  id: modem_uart
+  tx_pin: GPIO23              # MCU_TX_LTE -> TXS0108E -> modem RXD
+  rx_pin: GPIO24              # MCU_RX_LTE <- TXS0108E <- modem TXD
+  baud_rate: 115200           # EC200U default. After the main firmware ran, the modem may be at 921600 (AT+IPR)
+  rx_buffer_size: 2048
+  debug:
+    direction: RX
+    dummy_receiver: true
+    after:
+      delimiter: "\r\n"
+    sequence:
+      - lambda: UARTDebug::log_string(direction, bytes);
+
+globals:
+  - id: at_step               # next AT command of the identity list; -1 = not running
+    type: int
+    initial_value: '-1'
+
+script:
+  - id: selftest
+    mode: single
+    then:
+      - logger.log: "=== self-test: LED red / green / blue (1 s each)"
+      - light.turn_on: {id: led, red: 100%, green: 0%, blue: 0%, brightness: 30%}
+      - delay: 1s
+      - light.turn_on: {id: led, red: 0%, green: 100%, blue: 0%, brightness: 30%}
+      - delay: 1s
+      - light.turn_on: {id: led, red: 0%, green: 0%, blue: 100%, brightness: 30%}
+      - delay: 1s
+      - light.turn_off: led
+      - component.update: vin_prot
+      - logger.log:
+          format: "=== VIN_PROT %.2f V (in the car: battery minus ~0.1 V; USB only: ~4.5 V)"
+          args: ['id(vin_prot).state']
+      - if:
+          condition:
+            binary_sensor.is_on: lte_status
+          then:
+            - logger.log: "=== modem already running, skipping power-on"
+          else:
+            - logger.log: "=== modem supply on, waiting 2 s for VBAT to settle"
+            - output.turn_on: lte_power_en
+            - delay: 2s
+            - logger.log: "=== PWRKEY low for 2.5 s"
+            - output.turn_on: lte_pwrkey
+            - delay: 2500ms
+            - output.turn_off: lte_pwrkey
+            - wait_until:
+                condition:
+                  binary_sensor.is_on: lte_status
+                timeout: 20s
+      - if:
+          condition:
+            binary_sensor.is_on: lte_status
+          then:
+            - light.turn_on: {id: led, red: 0%, green: 100%, blue: 0%, brightness: 10%}
+            - logger.log: "=== modem STATUS high; waiting 8 s for RDY, then AT commands"
+            - delay: 8s
+            - lambda: id(at_step) = 0;
+          else:
+            - light.turn_on: {id: led, red: 100%, green: 0%, blue: 0%, brightness: 10%}
+            - logger.log:
+                level: ERROR
+                format: "=== modem STATUS stayed low: check VBAT_LTE (~3.7 V), TP407 LTE_1V8, PWRKEY at the modem"
+
+interval:
+  - interval: 1500ms          # identity list, one command every 1.5 s
+    then:
+      - lambda: |-
+          static const char *const CMDS[] = {
+            "AT", "ATI", "AT+QGMR", "AT+CPIN?", "AT+QCCID", "AT+CSQ", "AT+QNWINFO",
+            "AT+CEREG?", "AT+COPS?", "AT+CBC", "AT+QGPS=1"};
+          const int n = sizeof(CMDS) / sizeof(CMDS[0]);
+          int i = id(at_step);
+          if (i < 0 || i >= n) return;
+          ESP_LOGI("bringup", ">>> %s", CMDS[i]);
+          id(modem_uart).write_str(CMDS[i]);
+          id(modem_uart).write_str("\r\n");
+          id(at_step) = i + 1;
+          if (i + 1 == n) ESP_LOGI("bringup", "=== identity list done; every 20 s: CSQ, CEREG, GNSS position");
+  - interval: 20s             # follow-up: signal, registration, GNSS (CME error 516 = no fix yet)
+    then:
+      - if:
+          condition:
+            lambda: 'return id(at_step) >= 11 && id(lte_status).state;'
+          then:
+            - logger.log: ">>> AT+CSQ"
+            - uart.write: {id: modem_uart, data: "AT+CSQ\r\n"}
+            - delay: 500ms
+            - logger.log: ">>> AT+CEREG?"
+            - uart.write: {id: modem_uart, data: "AT+CEREG?\r\n"}
+            - delay: 500ms
+            - logger.log: ">>> AT+QGPSLOC=2"
+            - uart.write: {id: modem_uart, data: "AT+QGPSLOC=2\r\n"}

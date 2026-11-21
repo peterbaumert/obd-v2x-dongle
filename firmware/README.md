@@ -6,6 +6,7 @@ ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Que
 | File | Purpose |
 |---|---|
 | `obd-v2x-dongle.yaml` | main configuration |
+| `bringup.yaml` | first power-on of a new board: no network, self-test and modem AT sequence logged over USB (steps: `rev1/docs/bring-up.md`) |
 | `components/otm_uplink/` | second MQTT connection to the OpenTrafficMap C-ITS server |
 | `components/obd2/` | OBD-II over CAN on ESP-IDF's TWAI node driver |
 | `components/ec200u_gnss/` | GPS position from the EC200U's GNSS receiver (`AT+QGPSLOC`) |

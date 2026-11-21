@@ -136,7 +136,9 @@ script:
     mode: single
     then:
       - output.turn_on: lte_power_en
-      - delay: 500ms
+      # EC200U hardware design: PWRKEY only once VBAT has been stable; if USB VBUS reaches the modem first
+      # (test point TP401 bridged, or a modem USB cable), wait 2 s. Always waiting 2 s covers both cases.
+      - delay: 2s
       - if:
           condition:
             binary_sensor.is_off: lte_status
