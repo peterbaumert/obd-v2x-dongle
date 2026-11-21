@@ -8,9 +8,11 @@
   change run `check_stack.py` and `check_vs_rev1.py` (both in `rev2/hardware/tools`) and ERC on both (expect 0 / 0).
   Boards: `<KiCad>/bin/python rev2/hardware/tools/gen_pcb.py carrier|upper` (first-pass placement, unrouted;
   `--force` loses routing). Keep `rev2/mechanical/stack.py` in step with the big parts' positions.
-  Both rev 2 boards are routed drafts (0 unconnected, no rule errors) with hand edits: the `.kicad_pcb` files are
-  now the source, do not run `gen_pcb.py --force` on them. Routing tools and their order: `rev2/README.md`
-  ("Routing"); the Freerouting jar comes from `FREEROUTING_JAR`.
+  Both rev 2 boards are 4 layers (In1 GND plane) and fully routed after the 2026-11-21 layout review (0 unconnected,
+  no rule errors, parity 0), with hand edits: the `.kicad_pcb` files are the source, do not run `gen_pcb.py --force`.
+  Last connections and local fixes: by hand (KiCad MCP or pcbnew), checking the other side's pads first (the modem
+  sits under the carrier's top parts). Tools: `rev2/README.md` ("Routing"); Freerouting jar from `FREEROUTING_JAR`.
+  F.Cu under the GNSS patch stays ground (rule area in its footprint).
 - `firmware/` is shared by both revisions.
 
 ## Part sourcing (applies to every part choice)

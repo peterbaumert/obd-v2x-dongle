@@ -67,15 +67,15 @@ PLACE = {
         'U402': (6.0, 34.0, 90, B),
         'Q102': (6.0, 40.6, 0, B),             # modem supply switch at the modem's supply pins
         # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.9 mm)
-        'L101': (14.0, 11.0, 0, T),
-        'U102': (13.0, 19.3, 90, T),           # buck: pins face the inductor above and the diode below
+        'L101': (21.9, 19.95, 0, T),
+        'U102': (13.0, 19.3, 270, T),          # buck: SW pin down to the diode, VIN up to C102, inductor beside it
         'J501': (30.55, 11.7, 270, T),         # battery, side entry: the plug goes in from the left (-x)
-        'C401': (20.6, 19.0, 0, T),
-        'C506': (30.0, 19.0, 0, T),
+        'C401': (15.0, 36.0, 0, T),
+        'C506': (31.0, 19.0, 0, T),
         # under the cell (parts up to 2.9 mm): the buck's diode in line with regulator and inductor, then the rest
-        'D103': (14.6, 28.8, 0, T),
-        'R101': (11.6, 24.5, 0, T), 'R102': (15.2, 24.5, 0, T),      # enable divider at the regulator's pin 3
-        'C107': (12.6, 35.0, 90, T), 'C108': (16.6, 35.0, 90, T),   # buck output capacitors (2.85 mm)
+        'D103': (15.8, 28.5, 270, T),
+        'R101': (10.6, 10.4, 270, T), 'R102': (16.4, 9.6, 270, T),      # enable divider at the regulator's pin 3
+        'C107': (20.85, 26.2, 270, T), 'C108': (20.85, 31.1, 270, T),   # buck output capacitors (2.85 mm)
         'U103': (31.5, 27.0, 0, T),            # 3.3 V regulator
         'U502': (24.0, 30.0, 0, T),            # power mux in the open middle, between buck output and tantalums
         # its current-limit resistor and soft-start capacitor directly above pins 10 and 11 (pad 1 towards the chip):
@@ -195,7 +195,8 @@ def write_project_rules():
         'min_via_diameter': RULES['via_d'], 'min_through_hole_diameter': RULES['min_drill'],
         'min_via_annular_width': RULES['annular'], 'min_hole_to_hole': RULES['hole_to_hole'],
         'min_copper_edge_clearance': RULES['edge'], 'min_hole_clearance': 0.25,
-        'min_silk_clearance': 0.0, 'min_text_height': 0.8, 'min_text_thickness': 0.15,
+        'min_silk_clearance': 0.0, 'min_resolved_spokes': 1,   # one spoke is enough (and hand-solders easier)
+        'min_text_height': 0.8, 'min_text_thickness': 0.15,
     })
     ns = d.setdefault('net_settings', {})
     default = next(c for c in ns['classes'] if c['name'] == 'Default')

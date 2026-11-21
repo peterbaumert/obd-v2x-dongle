@@ -1,7 +1,8 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **schematics for both boards, a 3D stack model, a first case, and both boards routed as drafts (nothing
-unconnected, no rule errors). Not reviewed for ordering.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **both boards placed and routed after a layout review (2026-11-21): nothing unconnected, no rule errors,
+schematic parity 0; stack model and case check pass.** Not ordered: rev 1 gets brought up first, and nothing of
+rev 2 has been printed or built. Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -141,7 +142,7 @@ outline, rules, all footprints with their nets, ground pours. `--force` regenera
 | Board | Layers | Why |
 |---|---|---|
 | carrier | 4 | The modem has pads under its body and the LTE antenna line needs a ground layer right below it |
-| upper | 2 | The ESP32's radio is inside its module; the only RF runs are a few millimetres at the GNSS front end. Go to 4 layers only if it does not route cleanly |
+| upper | 4 | F.Cu under the GNSS patch has to stay solid ground (the patch's ground plane); with that, two layers left no room for the SIM lines and the rest. In1 GND plane, In2 routing |
 
 No paid impedance control: the antenna lines are designed to the fab's standard stack-up. ENIG on the carrier (flat
 pads for the modem); decide the upper board's finish from a quote.
@@ -176,21 +177,23 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 <KiCad>/bin/python rev2/hardware/tools/route_unconnected.py carrier|upper   # single connections with maze.py
 ```
 
-- **Both boards are routed as drafts.** DRC on each: 0 unconnected, schematic parity 0, no rule errors; what
-  remains is silkscreen overlap (cosmetic, no reference placement pass yet) and a few thermal-relief notes.
-- **Upper board:** `autoroute.py`, `repair.py`, `stitch.py`. Freerouting routes every net including GND.
-- **Carrier:** `autoroute.py`, `route_unconnected.py`, `repair.py`, `finish.py`, `stitch.py`, `islands.py`, then
-  hand edits on the routed board: two parts slid aside so the power mux's ground pin could go straight up, ground
-  pads given their own via after pushing a signal track aside, one track moved away from a supply via. It took ten
-  placement rounds to get there; what made the difference was moving circuits to the upper board and placing the
-  small parts of the buck regulator and the power mux by hand at their pins.
+- **Both boards are routed.** DRC on each: 0 unconnected, schematic parity 0, no rule errors. What remains is
+  part outlines from the libraries touching neighbouring pads (the fab clips silkscreen off pads) and the USB-C outline
+  at the rear edge, which the connector overhangs on purpose.
+- **Upper board:** placed, then routed from scratch on 4 layers with `autoroute.py`; `finish.py`, `stitch.py`,
+  `islands.py`, `padvia.py`; a few connections by hand. No signal copper on F.Cu under the patch.
+- **Carrier:** the buck and the modem supply were re-placed at their pins (see "Layout review"), the nets around
+  them ripped up and routed again with Freerouting (the rest locked), the last connections by hand in KiCad / the
+  KiCad MCP: VBUCK into the power mux over In2, the compensation / feedback column re-ordered (COMP on F.Cu beside it,
+  FB over In2, their ground to U102's exposed pad), the UART lines and K-line re-routed around them.
 - **From here on the two `.kicad_pcb` files are the source.** `gen_pcb.py --force` rebuilds the placement but
-  loses the routing and the hand edits; change the boards in KiCad or with the tools below.
-- **Rules:** the carrier's supply tracks are 0.4 mm (rev 1: 0.6 mm). Vehicle-voltage nets keep 0.2 mm clearance;
-  the 3.8 V supply nets use the board's 0.15 mm.
-- **Review before ordering:** this is autorouted copper on a first placement. Check the buck's switching loop,
-  the supply track widths (widen or pour where there is room), the LTE and GNSS lines, and the short RF runs at
-  the GNSS front end. Then place the references on the silkscreen.
+  loses the routing and the hand edits; `PLACE` in `gen_pcb.py` records the positions of the parts it lists.
+- **Rules:** Switch class (buck switch node) 0.8 mm, Modem class (VBAT_LTE) 0.6 mm, other supplies 0.4 mm on the
+  carrier; vehicle-voltage nets keep 0.2 mm clearance; one thermal-relief spoke is enough.
+- **Under the carrier's top parts is the modem:** its edge pads (2.5 mm long, 0.5 mm apart) leave no room for a via
+  beside them, and its centre GND pads only leave a few gaps. Check the underside before placing a via there.
+- **Still to check by a person in KiCad before ordering:** the buck loop and the RF lines by eye, track widths of the
+  supply nets where there is room to widen, the silkscreen.
 
 | Carrier, top | Carrier, underside | Upper, top | Upper, underside |
 |---|---|---|---|
@@ -206,6 +209,9 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 | `islands.py` | a via for each pour fragment that has none |
 | `movepart.py` | moves a two-pad part next to the pin it belongs to and reconnects it |
 | `localfix.py` | blunt local rip-up around a blocked pin; made things worse when tried, kept for reference |
+| `padvia.py` | a GND via for a floating GND pad (rips signal nets in the way; run `finish.py` after) |
+| `swapfp.py` | replaces placed footprints with the library version, or with another footprint (`REF=Lib:Name`) |
+| `silk.py` | puts each reference beside its part where it is clear of pads and other silkscreen, or hides it |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
@@ -308,11 +314,11 @@ What the placement shows:
 
 ## Layout review (2026-11-21)
 
-Review of the routed drafts. Both boards were **not** ready for ordering; work continues on branch `rev2-review`.
+Review of the routed drafts of 2026-11-20. All findings below are fixed except the patch's ground plane size.
 
 | Finding | Board | Status |
 |---|---|---|
-| Buck switch node (D103-K) is 36 mm of track on three layers, catch diode D103 and input capacitor C102 sit 10-13 mm from U102, compensation net 45 mm long (rev 1: 1 mm tracks, parts at the pins) | carrier | re-placed as planned below (switch node now a few mm, 0.8 mm class); VBUCK into U502 routed by hand over In2. Open: BUCK_COMP from U102 pin 6, C105's GND pad, LTE_RTS / LTE_RXD to the modem, one pour island. No via fits next to U102's bottom pins: the modem's edge pads (x 12.35-14.85 board mm, 0.5 mm apart) sit right under them, so COMP must stay on F.Cu and the comp / feedback column needs re-ordering: COMP parts on top with their COMP pads on the right (COMP down at x 12.35), FB on a rail left of the column (x 9.2), R104 at the bottom with its VBUCK sense running right under D103's body (between its pads) |
+| Buck switch node (D103-K) is 36 mm of track on three layers, catch diode D103 and input capacitor C102 sit 10-13 mm from U102, compensation net 45 mm long (rev 1: 1 mm tracks, parts at the pins) | carrier | fixed: re-placed as planned below, switch node a few mm in the 0.8 mm class, compensation and feedback parts in a column at the FB / COMP pins, their ground to U102's exposed pad |
 | Modem supply VBAT_LTE: 54 mm at 0.4 mm through several vias, ~0.13 V drop at 2 A on top of the load switch and the power mux | carrier | C401 is now a 1.9 mm polymer tantalum (KEMET T520V227M006ATE015, LCSC C696810) over the modem's VBAT pins, under the cell; VBAT_LTE routed in the Modem class (0.6 mm) |
 | 230 mm of signal tracks (19 nets) and 25 vias on F.Cu under the GNSS patch: its ground plane was cut up | upper | fixed: a rule area in the footprint keeps tracks off F.Cu under the whole patch; the upper board is now 4 layers (In1 GND plane, In2 routing) and fully routed: 0 unconnected, no rule errors, no signal copper under the patch |
 | Patch feed: copper clearance Ø3.0 (top) / Ø3.5 (bottom) from the Taoglas data sheet was only drawn, not enforced; pads 1.8 everywhere | upper | fixed: rule areas in the footprint, pads 1.4 (top, 0.15 mm ring) / 2.2 (bottom) |
