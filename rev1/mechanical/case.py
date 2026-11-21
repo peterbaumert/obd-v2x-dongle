@@ -250,6 +250,10 @@ def build(parts):
     outer = fillet(outer.edges().filter_by(Axis.Z), EDGE_R)
     fz = outer.faces().sort_by(Axis.Z)
     outer = fillet(fz[0].edges() + fz[-1].edges(), EDGE_R_H)
+    # front bottom edge stays square: the wall in front of the screw head counterbores is only 0.4 mm, the
+    # rounding would open the counterbores to the outside (it sits on the print bed, so it prints clean anyway)
+    vert = fillet(box(X_OUT0, X_OUT1, Y_OUT_REAR, FRONT_OUT, Z_OUT_BOT, Z_OUT_TOP).edges().filter_by(Axis.Z), EDGE_R)
+    outer += vert & box(X_OUT0, X_OUT1, FRONT_OUT - EDGE_R_H, FRONT_OUT, Z_OUT_BOT, Z_OUT_BOT + EDGE_R_H)
     # grip grooves: constant depth, also around the rounded top / bottom edges
     for i in range(GRIP_N):
         y = Y_OUT_REAR + GRIP_REAR + i * GRIP_PITCH
@@ -312,10 +316,34 @@ def build(parts):
     # screws
     for (x, y) in SCREWS:
         lid -= Pos(x, y, SPLIT + 6) * Cylinder(SCREW_PILOT / 2, 12)
-        bottom -= Pos(x, y, (Z_OUT_BOT + SPLIT) / 2) * Cylinder(SCREW_CLEAR / 2, SPLIT - Z_OUT_BOT + 1)
-        bottom -= Pos(x, y, (Z_OUT_BOT - 1 + SCREW_HEAD_TOP) / 2) * Cylinder(
-            SCREW_HEAD / 2, SCREW_HEAD_TOP - Z_OUT_BOT + 1)
+        bottom -= counterbore(x, y, Z_OUT_BOT, SCREW_HEAD_TOP - Z_OUT_BOT, SCREW_HEAD, SCREW_CLEAR, SPLIT + 1)
     return bottom, lid
+
+
+BRIDGE_L = 0.3                   # height of each sacrificial bridge layer over a counterbore
+
+
+def counterbore(x, y, z_face, depth, d_head, d_hole, z_end):
+    """cutter for a screw counterbore that opens on the print bed (face at z_face, going towards z_end) and the
+    clearance hole beyond it. Its floor prints over air, so it steps in through two bridge layers: first a slot as
+    wide as the hole across the counterbore, then a square as big as the hole, then the round hole. Each layer
+    bridges between solid edges instead of the slicer stringing loose loops around the hole."""
+    s = 1 if z_end > z_face else -1
+
+    def span(a, b):
+        z0, z1 = z_face + s * a, z_face + s * b
+        return min(z0, z1), max(z0, z1)
+
+    def cyl(r, a, b):
+        z0, z1 = span(a, b)
+        return Pos(x, y, (z0 + z1) / 2) * Cylinder(r, z1 - z0)
+
+    h, L = d_hole / 2, BRIDGE_L
+    cut = cyl(d_head / 2, -1, depth)
+    cut += cyl(d_head / 2, depth - 0.01, depth + L) & box(x - h, x + h, y - d_head, y + d_head, *span(depth - 0.01, depth + L))
+    cut += box(x - h, x + h, y - h, y + h, *span(depth + L - 0.01, depth + 2 * L))
+    cut += cyl(h, depth + 2 * L - 0.01, abs(z_end - z_face))
+    return cut
 
 
 def check(bottom, lid, parts):

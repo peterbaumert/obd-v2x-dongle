@@ -133,11 +133,10 @@ def build():
         lid += box(x0, x1, Y_OUT_REAR + 0.8, Y_OUT_REAR + 1.35, SPLIT - HOOK_DROP + 0.5, SPLIT - HOOK_DROP + 1.4)
 
     # spacer screws: clearance holes and head counterbores from outside
+    # (both counterbores face the print bed: stepped bridge layers, see rev1.counterbore)
     for (x, y) in SPACERS:
-        bottom -= Pos(x, y, (Z_OUT_BOT + 0.0) / 2) * Cylinder(M25_CLEAR / 2, -Z_OUT_BOT + 1)
-        bottom -= Pos(x, y, Z_OUT_BOT + HEAD_DEPTH / 2 - 0.5) * Cylinder(M25_HEAD / 2, HEAD_DEPTH + 1)
-        lid -= Pos(x, y, (S.UZ1 + Z_OUT_TOP) / 2) * Cylinder(M25_CLEAR / 2, Z_OUT_TOP - S.UZ1 + 1)
-        lid -= Pos(x, y, Z_OUT_TOP - HEAD_DEPTH / 2 + 0.5) * Cylinder(M25_HEAD / 2, HEAD_DEPTH + 1)
+        bottom -= rev1.counterbore(x, y, Z_OUT_BOT, HEAD_DEPTH, M25_HEAD, M25_CLEAR, 0.5)
+        lid -= rev1.counterbore(x, y, Z_OUT_TOP, HEAD_DEPTH, M25_HEAD, M25_CLEAR, S.UZ1 - 0.5)
     return bottom, lid
 
 
