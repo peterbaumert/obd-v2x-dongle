@@ -189,11 +189,15 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 - **From here on the two `.kicad_pcb` files are the source.** `gen_pcb.py --force` rebuilds the placement but
   loses the routing and the hand edits; `PLACE` in `gen_pcb.py` records the positions of the parts it lists.
 - **Rules:** Switch class (buck switch node) 0.8 mm, Modem class (VBAT_LTE) 0.6 mm, other supplies 0.4 mm on the
-  carrier; vehicle-voltage nets keep 0.2 mm clearance; one thermal-relief spoke is enough.
+  carrier; vehicle-voltage nets keep 0.2 mm clearance; one thermal-relief spoke is enough. `widen.py` then widened
+  every supply segment that had room: the switch node is 10 mm of 0.8-1.0 mm track on F.Cu without vias, VBAT_LTE
+  mostly 1.0 mm. RF lines are 0.32 mm throughout (0.27 mm only into the front end's own pads); the LTE line runs
+  27 mm from the corner U.FL (about 0.2-0.3 dB).
 - **Under the carrier's top parts is the modem:** its edge pads (2.5 mm long, 0.5 mm apart) leave no room for a via
   beside them, and its centre GND pads only leave a few gaps. Check the underside before placing a via there.
-- **Still to check by a person in KiCad before ordering:** the buck loop and the RF lines by eye, track widths of the
-  supply nets where there is room to widen, the silkscreen.
+- **Checked 2026-11-21:** buck loop by eye (C102 over VIN, D103's cathode under SW, L101 beside U102), switch node,
+  supply widths, RF widths. Silkscreen: references placed beside their parts; about 30 per board have no free spot
+  and are hidden (the CPL file carries the positions). Not checkable here: the patch on the 45 mm board (measure).
 
 | Carrier, top | Carrier, underside | Upper, top | Upper, underside |
 |---|---|---|---|
@@ -212,6 +216,7 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 | `padvia.py` | a GND via for a floating GND pad (rips signal nets in the way; run `finish.py` after) |
 | `swapfp.py` | replaces placed footprints with the library version, or with another footprint (`REF=Lib:Name`) |
 | `silk.py` | puts each reference beside its part where it is clear of pads and other silkscreen, or hides it |
+| `widen.py` | widens supply tracks (and necked-down RF lines back to 0.32 mm) wherever the clearance allows |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 

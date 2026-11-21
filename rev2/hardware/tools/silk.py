@@ -3,7 +3,7 @@
     <KiCad>/bin/python rev2/hardware/tools/silk.py carrier|upper
 
 For every footprint: tries its reference at spots around the part's courtyard (above, below, left, right, then the
-corners; level and turned 90 degrees), and inside the courtyard for large parts, and takes the first spot where the
+corners; level and turned 90 degrees; normal size, then 0.8 mm), and inside the courtyard for large parts, and takes the first spot where the
 text stays clear of every pad on that side, of the board edge and of the references and silkscreen already there.
 References with no free spot are hidden: the assembly data (CPL) carries the positions, the silkscreen is only an aid.
 Run DRC afterwards.
@@ -21,6 +21,7 @@ PCB = HW / BOARD / ({'carrier': 'obd-v2x-carrier', 'upper': 'obd-v2x-upper'}[BOA
 mm, tomm = pcbnew.FromMM, pcbnew.ToMM
 GAP = 0.15          # text to pads, other text, silkscreen
 EDGE = 0.5          # text to the board edge
+SMALL = 0.8         # smallest text PCBWay prints (0.15 mm stroke); tried when the normal size does not fit
 
 
 def rect(bb, grow=0.0):
@@ -29,6 +30,29 @@ def rect(bb, grow=0.0):
 
 def hit(a, b):
     return not (a[2] <= b[0] or b[2] <= a[0] or a[3] <= b[1] or b[3] <= a[1])
+
+
+def spot(ref, cy, cx, cyy, edge, pads, silk, placed):
+    """first free position for REF around (or inside) courtyard CY, level or turned 90 degrees"""
+    for ang in (0, 90):
+        ref.SetTextAngle(pcbnew.EDA_ANGLE(ang, pcbnew.DEGREES_T))
+        ref.SetPosition(pcbnew.VECTOR2I(mm(cx), mm(cyy)))
+        t = rect(ref.GetBoundingBox())
+        hw, hh = (t[2] - t[0]) / 2, (t[3] - t[1]) / 2
+        d = 0.25
+        spots = [(cx, cy[1] - hh - d), (cx, cy[3] + hh + d), (cy[0] - hw - d, cyy), (cy[2] + hw + d, cyy),
+                 (cy[0] - hw - d, cy[1] - hh - d), (cy[2] + hw + d, cy[1] - hh - d),
+                 (cy[0] - hw - d, cy[3] + hh + d), (cy[2] + hw + d, cy[3] + hh + d)]
+        if (cy[2] - cy[0]) > 2.5 * hw and (cy[3] - cy[1]) > 2.5 * hh:
+            spots.insert(0, (cx, cyy))
+        for x, y in spots:
+            r = (x - hw, y - hh, x + hw, y + hh)
+            if r[0] < edge[0] or r[1] < edge[1] or r[2] > edge[2] or r[3] > edge[3]:
+                continue
+            if any(hit(r, o) for o in pads) or any(hit(r, o) for o in silk) or any(hit(r, o) for o in placed):
+                continue
+            return (ang, x, y, r)
+    return None
 
 
 def main():
@@ -54,32 +78,17 @@ def main():
     for fp in fps:
         ref = fp.Reference()
         S = ref.GetLayer()
-        if S not in sides or not ref.IsVisible():
+        if S not in sides:
             continue
+        ref.SetVisible(True)
+        size0 = (ref.GetTextWidth(), ref.GetTextHeight(), ref.GetTextThickness())
         crt = fp.GetCourtyard(pcbnew.B_CrtYd if fp.IsFlipped() else pcbnew.F_CrtYd)
         cy = rect(crt.BBox()) if crt.OutlineCount() else rect(fp.GetBoundingBox(False))
         cx, cyy = (cy[0] + cy[2]) / 2, (cy[1] + cy[3]) / 2
         best = None
-        for ang in (0, 90):
-            ref.SetTextAngle(pcbnew.EDA_ANGLE(ang, pcbnew.DEGREES_T))
-            ref.SetPosition(pcbnew.VECTOR2I(mm(cx), mm(cyy)))
-            t = rect(ref.GetBoundingBox())
-            hw, hh = (t[2] - t[0]) / 2, (t[3] - t[1]) / 2
-            d = 0.25
-            spots = [(cx, cy[1] - hh - d), (cx, cy[3] + hh + d), (cy[0] - hw - d, cyy), (cy[2] + hw + d, cyy),
-                     (cy[0] - hw - d, cy[1] - hh - d), (cy[2] + hw + d, cy[1] - hh - d),
-                     (cy[0] - hw - d, cy[3] + hh + d), (cy[2] + hw + d, cy[3] + hh + d)]
-            if (cy[2] - cy[0]) > 2.5 * hw and (cy[3] - cy[1]) > 2.5 * hh:
-                spots.insert(0, (cx, cyy))
-            for x, y in spots:
-                r = (x - hw, y - hh, x + hw, y + hh)
-                if r[0] < edge[0] or r[1] < edge[1] or r[2] > edge[2] or r[3] > edge[3]:
-                    continue
-                if any(hit(r, o) for o in pads[S]) or any(hit(r, o) for o in silk[S]) or \
-                        any(hit(r, o) for o in placed[S]):
-                    continue
-                best = (ang, x, y, r)
-                break
+        for size in (size0, (mm(SMALL), mm(SMALL), mm(0.15))):
+            ref.SetTextWidth(size[0]); ref.SetTextHeight(size[1]); ref.SetTextThickness(size[2])
+            best = spot(ref, cy, cx, cyy, edge, pads[S], silk[S], placed[S])
             if best:
                 break
         if best:
@@ -89,6 +98,7 @@ def main():
             placed[S].append((r[0] - GAP, r[1] - GAP, r[2] + GAP, r[3] + GAP))
             moved += 1
         else:
+            ref.SetTextWidth(size0[0]); ref.SetTextHeight(size0[1]); ref.SetTextThickness(size0[2])
             ref.SetVisible(False)
             hidden += 1
     b.Save(str(PCB))
