@@ -308,30 +308,29 @@ What the placement shows:
 
 ## Layout review (2026-11-21)
 
-Review of the routed drafts. Both boards were **not** ready for ordering; work in progress on branch `rev2-review`.
+Review of the routed drafts. Both boards were **not** ready for ordering; work continues on branch `rev2-review`.
 
 | Finding | Board | Status |
 |---|---|---|
-| Buck switch node (D103-K) is 36 mm of track on three layers, catch diode D103 and input capacitor C102 sit 10-13 mm from U102, compensation net 45 mm long (rev 1: 1 mm tracks, parts at the pins) | carrier | open: re-place U102 / D103 / C102 / C103 / L101 and the compensation and feedback parts at their pins (plan below) |
-| Modem supply VBAT_LTE: 54 mm at 0.4 mm through several vias, ~0.13 V drop at 2 A on top of the load switch and the power mux | carrier | started: C401 is now a 1.9 mm polymer tantalum (KEMET T520V227M006ATE015, LCSC C696810) so it can sit over the modem's VBAT pins under the cell; net classes Switch (0.8 mm) and Modem (0.6 mm) added. Board not re-placed yet |
-| 230 mm of signal tracks (19 nets) and 25 vias on F.Cu under the GNSS patch: its ground plane was cut up | upper | fixed in the footprint: a rule area keeps tracks off F.Cu under the whole patch. Re-routed board still has 2 SIM lines and some GND islands open: two layers are not enough with a solid patch ground (see below) |
+| Buck switch node (D103-K) is 36 mm of track on three layers, catch diode D103 and input capacitor C102 sit 10-13 mm from U102, compensation net 45 mm long (rev 1: 1 mm tracks, parts at the pins) | carrier | re-placed as planned below (switch node now a few mm, 0.8 mm class); re-routed except 6 connections: VBUCK into the power mux U502 (its input pin is boxed in by VSYS and PR1), BUCK_COMP at U102, two 1.8 V UART lines to the modem, a GND pad and a pour island |
+| Modem supply VBAT_LTE: 54 mm at 0.4 mm through several vias, ~0.13 V drop at 2 A on top of the load switch and the power mux | carrier | C401 is now a 1.9 mm polymer tantalum (KEMET T520V227M006ATE015, LCSC C696810) over the modem's VBAT pins, under the cell; VBAT_LTE routed in the Modem class (0.6 mm) |
+| 230 mm of signal tracks (19 nets) and 25 vias on F.Cu under the GNSS patch: its ground plane was cut up | upper | fixed: a rule area in the footprint keeps tracks off F.Cu under the whole patch; the upper board is now 4 layers (In1 GND plane, In2 routing) and fully routed: 0 unconnected, no rule errors, no signal copper under the patch |
 | Patch feed: copper clearance Ø3.0 (top) / Ø3.5 (bottom) from the Taoglas data sheet was only drawn, not enforced; pads 1.8 everywhere | upper | fixed: rule areas in the footprint, pads 1.4 (top, 0.15 mm ring) / 2.2 (bottom) |
 | GNSS output J801-In ran ~30 mm, two layer changes, a via in the feed clearance (because of where R802 sat) | upper | fixed in placement: U801 turned so RF in faces the feed and RF out faces J801, L801 / C801 / R802 / C802 moved |
 | SKY65943 centre pad 1.40 vs 1.45, paste at the low end of the data sheet's range | upper | fixed (1.45, data sheet stencil) |
 | Micro-SIM holder footprint | upper | checked against Molex SD-78646-001 rev C1: matches |
 | Patch on a 45 mm ground plane (Taoglas tunes it on 70 x 70 mm) | upper | open: expect detuning; measure on the first boards |
 
-**Upper board, layer count:** with F.Cu under the patch kept as ground, the SIM lines (holder on the left edge, modem
-lines arriving on the right connector) and the front end's supply have no path left on the bottom layer. Options:
-4 layers (In1 ground, In2 routing; costs more per order), or keep 2 layers and accept some tracks under the patch.
+**Upper board, layer count (decided 2026-11-21): 4 layers.** With F.Cu under the patch kept as ground, two layers left
+no path for the SIM lines (holder on the left edge, modem lines on the right connector). 4 layers cost more per order.
 
 **Carrier buck, planned placement** (board mm): U102 (13.0, 19.3) turned 180° so SW faces down; C102 over VIN at
 (13.6, 12.6); L101 right of U102 at (21.9, 19.3); D103 vertical at (15.8, 29.0), cathode next to SW; C107 / C108 at
 (20.85, 26.5 / 31.4); compensation and feedback in one column at x 10.85, y 24-31; R101 / R103 left of C102; C401
 over the modem VBAT pins at (15.0, 36.5); C506 at (31.0, 19.0).
 
-New tools: `swapfp.py` (replace placed footprints with the library version), `autoroute.py --no-gnd` (upper board:
-GND left to the pours and stitching, more room for signals).
+New tools: `swapfp.py` (replace placed footprints with the library or another footprint), `padvia.py` (GND via for a
+floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4 layers.
 
 ## Still open
 

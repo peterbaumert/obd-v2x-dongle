@@ -1,8 +1,9 @@
 """Replace placed footprints on a routed rev 2 board with the current library version (KiCad's Python).
 
-    <KiCad>/bin/python rev2/hardware/tools/swapfp.py carrier|upper REF [REF ...]
+    <KiCad>/bin/python rev2/hardware/tools/swapfp.py carrier|upper REF[=Lib:Footprint] [...]
 
-After changing a footprint in rev2/hardware/lib/gen_footprints.py: keeps each part's position, rotation, side,
+After changing a footprint in rev2/hardware/lib/gen_footprints.py (or, with =Lib:Footprint, after giving a part another
+footprint in the schematic; KiCad's own libraries are found next to kicad-cli): keeps each part's position, rotation, side,
 fields and pad nets (by pad number); tracks stay. Run DRC afterwards: copper that no longer fits the new pads shows
 up there.
 """
@@ -11,6 +12,9 @@ from pathlib import Path
 
 import pcbnew
 
+sys.path.insert(0, str(Path(__file__).parent))
+from kicad_env import CLI  # noqa: E402
+
 HW = Path(__file__).resolve().parents[1]
 args = sys.argv[1:]
 if len(args) < 2 or args[0] not in ('carrier', 'upper'):
@@ -18,18 +22,22 @@ if len(args) < 2 or args[0] not in ('carrier', 'upper'):
 BOARD, REFS = args[0], args[1:]
 PCB = HW / BOARD / ({'carrier': 'obd-v2x-carrier', 'upper': 'obd-v2x-upper'}[BOARD] + '.kicad_pcb')
 LIB = HW / 'lib' / 'obd-v2x.pretty'
+STD = Path(CLI).resolve().parent.parent / 'share' / 'kicad' / 'footprints'
 
 
 def main():
     b = pcbnew.LoadBoard(str(PCB))
     fps = {f.GetReference(): f for f in b.GetFootprints()}
-    for ref in REFS:
+    for arg in REFS:
+        ref, _, target = arg.partition('=')
         old = fps[ref]
-        name = old.GetFPID().GetLibItemName().wx_str()
-        new = pcbnew.FootprintLoad(str(LIB), name)
+        lib, name = (target.split(':') if target else
+                     (old.GetFPID().GetLibNickname().wx_str(), old.GetFPID().GetLibItemName().wx_str()))
+        path = LIB if lib == 'obd-v2x' else STD / f'{lib}.pretty'
+        new = pcbnew.FootprintLoad(str(path), name)
         if new is None:
-            raise SystemExit(f'{ref}: {name} not in {LIB}')
-        new.SetFPID(old.GetFPID())
+            raise SystemExit(f'{ref}: {name} not in {path}')
+        new.SetFPID(pcbnew.LIB_ID(lib, name))
         new.SetParent(b)
         b.Add(new)
         if old.IsFlipped():
