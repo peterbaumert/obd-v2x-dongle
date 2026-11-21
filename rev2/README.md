@@ -223,7 +223,11 @@ State: schematic parity 0 on both boards and no courtyard overlaps.
 ## Case
 
 `python rev2/mechanical/case.py --render` builds a two-part case around the stack model and checks it against the
-plug and the model's parts: **49.6 × 68.1 × 26.4 mm including the plug, check passed.**
+plug, the model's parts and every part of both routed boards (kicad-cli exports their 3D models to
+`mechanical/build/`): **49.6 × 68.1 × 26.4 mm including the plug, check passed.** The real boards showed two small
+resistors under the carrier's front corners (R205 / R206) touching the spacer screw bosses; the bottom shell
+now has a pocket for each. Print files: `mechanical/out/case_print.stl` (both shells in print orientation) and,
+with `--fit-test`, `mechanical/out/fit_test_plug_end.stl` (front 12 mm only, to try the plug grip first).
 
 ![case](mechanical/out/case_closed.png)
 ![case open](mechanical/out/case_open.png)

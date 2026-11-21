@@ -2,9 +2,12 @@
 
     python rev2/mechanical/case.py            # build, check against the stack model, write out/*.step + out/*.stl
     python rev2/mechanical/case.py --render   # also write out/case_*.png (needs pyvista)
+    python rev2/mechanical/case.py --fit-test # also write out/fit_test_plug_end.stl (front 12 mm only)
 
 The case is built around rev2/mechanical/stack.py (same coordinates): the plug, the two boards and their big
-parts. It is checked against those boxes, not against the routed boards (they do not exist yet).
+parts. It is checked against those boxes and against every part of the two routed boards: kicad-cli exports both
+boards' 3D models to build/ (parts without a 3D model, like the patch and the SIM holder, are in the stack model).
+out/case_print.stl holds both shells in print orientation.
 
 Concept
 - Bottom shell + lid, split at the upper board's bottom face. The assembled stack (carrier, spacers, upper board,
@@ -30,9 +33,13 @@ sys.path.insert(0, str(HERE.parents[1] / 'rev1' / 'mechanical'))
 
 import stack as S  # noqa: E402
 import case as rev1  # noqa: E402  (plug shape and helpers)
-from build123d import Axis, Cylinder, Pos, export_step, export_stl, fillet  # noqa: E402
+from build123d import Axis, Compound, Cylinder, Pos, export_step, export_stl, fillet, import_step  # noqa: E402
 
 rev1.PLUG_Z0 = S.PLUG_Z0            # the plug sits 1 mm lower than in rev 1
+BUILD = HERE / 'build'
+BOARDS = (('carrier', 'obd-v2x-carrier', 0.0), ('upper', 'obd-v2x-upper', S.UZ0))   # name, file, z of its bottom
+# KiCad board coordinates -> model: x + DX, STEP y (= -KiCad y) + DY
+DX, DY = S.BX0 - 100.0, S.BYF + 50.0
 box, prism = rev1.box, rev1.prism
 
 WALL, FLOOR, ROOF, GAP = S.WALL, S.FLOOR, S.ROOF, S.GAP
@@ -138,7 +145,53 @@ def plug_model():
     return rev1.plug_model()
 
 
-def check(bottom, lid):
+def export_board_steps():
+    """both routed boards' 3D models via kicad-cli (rev2/hardware/tools/kicad_env.py finds KiCad)"""
+    import subprocess
+    sys.path.insert(0, str(HERE.parent / 'hardware' / 'tools'))
+    from kicad_env import CLI
+    BUILD.mkdir(exist_ok=True)
+    for board, name, _ in BOARDS:
+        pcb = HERE.parent / 'hardware' / board / f'{name}.kicad_pcb'
+        step = BUILD / f'{board}.step'
+        if step.exists() and step.stat().st_mtime > pcb.stat().st_mtime:
+            continue
+        subprocess.run([str(CLI), 'pcb', 'export', 'step', '--subst-models', '--force', '-o', str(step), str(pcb)],
+                       check=True, stdout=subprocess.DEVNULL)
+
+
+def board_part_boxes():
+    """(name, (x0, x1, y0, y1, z0, z1)) of every part on both boards, model coordinates"""
+    boxes = []
+    for board, _, z in BOARDS:
+        step = BUILD / f'{board}.step'
+        if not step.exists():
+            continue
+        for c in import_step(str(step)).children:
+            b = c.bounding_box()
+            if b.size.X > 40 and b.size.Y > 40 and b.size.Z < 1.7:
+                continue                                   # the board itself
+            if 'J201' in (c.label or ''):
+                continue                                   # the plug: checked against its real shape
+            boxes.append((f'{board} {c.label}', (b.min.X + DX, b.max.X + DX, b.min.Y + DY, b.max.Y + DY,
+                                                 b.min.Z + z, b.max.Z + z)))
+    return boxes
+
+
+def clear_parts(bottom, lid, parts, gap=0.25):
+    """where a real part touches a shell (e.g. a small resistor beside a screw boss), cut a pocket around it"""
+    out = []
+    for name, shell in (('bottom', bottom), ('lid', lid)):
+        for n, p in parts:
+            b = box(*p)
+            if (shell & b).volume > 0.01:
+                shell -= box(p[0] - gap, p[1] + gap, p[2] - gap, p[3] + gap, p[4] - gap, p[5] + gap)
+                print(f'  {name}: pocket for {n}')
+        out.append(shell)
+    return out
+
+
+def check(bottom, lid, parts=()):
     """overlap of each shell with the stack's parts and with the plug; the ribs must sit in the groove"""
     ok = True
     targets = [('plug', plug_model())]
@@ -146,6 +199,8 @@ def check(bottom, lid):
         if p['group'] == 'plug' or p['name'].startswith('spacer'):
             continue                                   # legs are inside the interior; spacers sit between the boards
         targets.append((p['name'], box(p['x'][0], p['x'][1], p['y'][0], p['y'][1], p['z'][0], p['z'][1])))
+    for n, b in parts:
+        targets.append((f'{n} @ x {b[0]:.1f}..{b[1]:.1f} y {b[2]:.1f}..{b[3]:.1f} z {b[4]:.2f}..{b[5]:.2f}', box(*b)))
     for name, shell in (('bottom', bottom), ('lid', lid)):
         for tname, t in targets:
             v = (shell & t).volume
@@ -164,8 +219,13 @@ def check(bottom, lid):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--render', action='store_true')
+    ap.add_argument('--fit-test', action='store_true', help='also write out/fit_test_plug_end.stl')
     a = ap.parse_args()
+    export_board_steps()
+    parts = board_part_boxes()
+    print(f'{len(parts)} parts from the two boards\' 3D models')
     bottom, lid = build()
+    bottom, lid = clear_parts(bottom, lid, parts)
     OUT.mkdir(exist_ok=True)
     for name, shape in (('case_bottom', bottom), ('case_lid', lid)):
         export_step(shape, str(OUT / f'{name}.step'))
@@ -174,7 +234,12 @@ def main():
         print(f'{name}: {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm, {shape.volume / 1000:.1f} cm3')
     length = S.PLUG_REAR + S.PLUG_D - Y_OUT_REAR
     print(f'closed case incl. plug: {X_OUT1 - X_OUT0:.1f} x {length:.1f} x {Z_OUT_TOP - Z_OUT_BOT:.1f} mm')
-    ok = check(bottom, lid)
+    ok = check(bottom, lid, parts)
+    print_layout(bottom, lid, 'case_print.stl')
+    if a.fit_test:
+        # front end only (plug ribs, spacer screws, front corners) for a quick test print
+        cut = box(X_OUT0 - 1, X_OUT1 + 1, S.BYF - 12.0, FRONT_OUT + 1, Z_OUT_BOT - 1, Z_OUT_TOP + 1)
+        print_layout(bottom & cut, lid & cut, 'fit_test_plug_end.stl')
     print('check passed' if ok else 'check FAILED')
     if a.render:
         import render as r
@@ -193,6 +258,19 @@ def main():
         print('wrote case_closed.png, case_closed_rear.png, case_open.png')
     return 0 if ok else 1
 
+
+
+def print_layout(bottom, lid, name):
+    """both shells in print orientation (bottom shell on its floor, lid upside down), side by side, one STL"""
+    pieces = []
+    for k, sh in enumerate((bottom, lid.rotate(Axis.X, 180))):
+        bb = sh.bounding_box()
+        cx = (k - 0.5) * (bb.size.X + 10)
+        pieces.append(sh.translate((cx - (bb.min.X + bb.max.X) / 2, -(bb.min.Y + bb.max.Y) / 2, -bb.min.Z)))
+    both = Compound(pieces)
+    export_stl(both, str(OUT / name), tolerance=0.02, angular_tolerance=0.2)
+    bb = both.bounding_box()
+    print(f'{name}: {bb.size.X:.1f} x {bb.size.Y:.1f} x {bb.size.Z:.1f} mm (print orientation)')
 
 if __name__ == '__main__':
     sys.exit(main())
