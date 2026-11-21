@@ -28,12 +28,8 @@ OX, OY = 100.0, 50.0
 RES = 0.1                      # grid, mm
 CLR = float(os.environ.get('MAZE_CLR', 0.2))   # router clearance (rule is 0.15)
 VIA_D, VIA_DR = 0.6, 0.3
-if BOARD == 'carrier':
-    LAYERS = [pcbnew.F_Cu, pcbnew.In2_Cu, pcbnew.B_Cu]
-    LNAME = {'F': 0, 'In2': 1, 'B': 2}
-else:
-    LAYERS = [pcbnew.F_Cu, pcbnew.B_Cu]
-    LNAME = {'F': 0, 'B': 1}
+LAYERS = [pcbnew.F_Cu, pcbnew.In2_Cu, pcbnew.B_Cu]   # both boards: In1 is the GND plane, no tracks
+LNAME = {'F': 0, 'In2': 1, 'B': 2}
 VIA_COST = 12
 
 

@@ -36,7 +36,9 @@ PROJECT = {'carrier': 'obd-v2x-carrier', 'upper': 'obd-v2x-upper'}[BOARD]
 PCB = HW / BOARD / f'{PROJECT}.kicad_pcb'
 SCH = HW / BOARD / f'{PROJECT}.kicad_sch'
 PRO = HW / BOARD / f'{PROJECT}.kicad_pro'
-LAYERS = {'carrier': 4, 'upper': 2}[BOARD]     # carrier: modem + LTE antenna line; upper: slow signals, short RF
+# both 4 layers, In1 a solid GND plane: carrier for the modem and the LTE antenna line; upper because F.Cu under
+# the GNSS patch must stay ground (its footprint keeps tracks off), which leaves 2 layers too few for the rest
+LAYERS = {'carrier': 4, 'upper': 4}[BOARD]
 
 OX, OY = 100.0, 50.0          # board origin on the page
 BOARD_W, BOARD_L = 45.0, 45.0
