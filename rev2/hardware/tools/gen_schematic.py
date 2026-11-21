@@ -98,7 +98,7 @@ SOURCING = {
     'C506': ('T495D227K006ATE100', 'KEMET', 'C2798131'),
     'J402': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J403': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
-    'C401': ('T495D227K006ATE100', 'Kemet', 'C2798131'),
+    'C401': ('T520V227M006ATE015', 'KEMET', 'C696810'),          # polymer, 1.9 mm: fits under the cell
     'J201': ('CR-PG001 (OBD2 male 90deg PCB, hand-fitted)', 'Jiatel or equivalent', ''),
 }
 
@@ -679,7 +679,7 @@ def lte():
     sh.gnd(U['8'])
     # VBAT decoupling
     sh.text('VBAT_LTE bulk/decoupling (close to pins 57-60)', g(3), g(55), 1.27, True)
-    decap(sh, 'C401', '220uF 6.3V', 'Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D', g(5), g(58), 'VBAT_LTE', lib='Device:C_Polarized')
+    decap(sh, 'C401', '220uF 6.3V', 'Capacitor_Tantalum_SMD:CP_EIA-7343-20_Kemet-V', g(5), g(58), 'VBAT_LTE', lib='Device:C_Polarized')
     decap(sh, 'C402', '100nF', C0603, g(13), g(58), 'VBAT_LTE')
     decap(sh, 'C403', '33pF', C0402, g(19), g(58), 'VBAT_LTE')
     decap(sh, 'C404', '10pF', C0402, g(25), g(58), 'VBAT_LTE')

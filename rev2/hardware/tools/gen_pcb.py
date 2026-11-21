@@ -123,7 +123,7 @@ RAILS = ('GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VBAT_LTE', 'VBUCK_3V8', 'LTE_1V
 
 # Part heights (mm) by footprint name, for the automatic placement: data-sheet maxima where checked (1210, SMC, SMA,
 # tantalum, U.FL mated, LED), typical values otherwise. A mated U.FL counts with its plug.
-HEIGHT = {'C_0402': 0.55, 'C_0603': 0.9, 'C_0805': 1.35, 'C_1210': 2.85, 'CP_EIA-7343': 3.1, 'D_SMA': 2.62,
+HEIGHT = {'C_0402': 0.55, 'C_0603': 0.9, 'C_0805': 1.35, 'C_1210': 2.85, 'CP_EIA-7343-20': 2.0, 'CP_EIA-7343': 3.1, 'D_SMA': 2.62,
           'D_SMC': 2.62, 'D_SOD-123F': 1.1, 'D_SOD-323': 1.1, 'Fuse_1206': 0.8, 'LFPAK56': 1.1, 'L_0402': 0.6, 'R_0402': 0.4,
           'R_0603': 0.5, 'R_1206': 0.65, 'SOIC-8': 1.75, 'SOT-23': 1.45, 'TI_SO-PowerPAD-8': 1.7, 'TSSOP-20': 1.2,
           'TestPoint': 0.0, 'Texas_DRC': 1.0, 'Texas_VQFN': 1.0, 'U.FL': 2.5, 'LED_SK6812': 2.05,
@@ -167,10 +167,14 @@ NETCLASSES = [
     # 0.4 mm on the carrier: 0.6 mm supply tracks do not fit between its parts. Short runs; widen by hand or with
     # pours where there is room.
     # Vehicle-voltage nets (up to 30 V and more, and the buck's switch node) keep 0.2 mm clearance.
-    ('Power', 0.4 if BOARD == 'carrier' else 0.6, 0.2, 0.6, 0.3, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'Net-(D103-K)',
+    # The buck's switch node: short and wide (rev 1: 1 mm).
+    ('Switch', 0.8, 0.2, 0.6, 0.3, ['Net-(D103-K)']),
+    # The modem's supply carries 2 A bursts.
+    ('Modem', 0.6, 0.15, 0.6, 0.3, ['VBAT_LTE']),
+    ('Power', 0.4 if BOARD == 'carrier' else 0.6, 0.2, 0.6, 0.3, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT',
                                   'Net-(D202-K)']),               # USB VBUS (<0.5 A) stays default class
     # The 3.8 V supply nets only need the board's 0.15 mm.
-    ('PowerLV', 0.4 if BOARD == 'carrier' else 0.6, 0.15, 0.6, 0.3, ['VSYS_3V8', 'VBAT_LTE', 'VBUCK_3V8', 'VCELL']),
+    ('PowerLV', 0.4 if BOARD == 'carrier' else 0.6, 0.15, 0.6, 0.3, ['VSYS_3V8', 'VBUCK_3V8', 'VCELL']),
     # 50 ohm grounded coplanar (0.32 mm, 0.25 mm gap) over In1 on PCBWay's standard 1.6 mm 4-layer stack-up
     # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): designed to the stack-up, no paid impedance control.
     # On the 2-layer upper board 0.32 / 0.25 is not 50 ohm; its RF runs are a few mm, keep them short.

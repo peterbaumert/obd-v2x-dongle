@@ -1,6 +1,6 @@
 """Autoroute one rev 2 board with Freerouting (run with KiCad's Python, from anywhere).
 
-    FREEROUTING_JAR=<path to freerouting-2.x.jar>  <KiCad>/bin/python rev2/hardware/tools/autoroute.py carrier|upper [passes]
+    FREEROUTING_JAR=<path to freerouting-2.x.jar>  <KiCad>/bin/python rev2/hardware/tools/autoroute.py carrier|upper [passes] [--no-gnd]
 
 Needs Java 25 on PATH. Steps: export a Specctra DSN without the copper pours -> adapt it (see below) -> Freerouting
 -> import the session into the board -> refill the pours. Existing tracks stay; locked ones are left out of
@@ -9,6 +9,8 @@ Freerouting's result, so save a lock before re-running.
 DSN changes:
   upper (2 layers):   none. GND is routed like any other net, so every GND pad has a real track; the pours and
                       stitching vias (stitch.py) come on top. Pours alone leave isolated islands on two layers.
+                      --no-gnd leaves GND out (more room for the signals); then stitch.py, islands.py and
+                      finish.py connect the GND pads through the pours, which the solid F.Cu under the patch helps.
   carrier (4 layers): In1 is declared a power layer with a GND plane, so Freerouting drops a via from each GND pad
                       and routes nothing on In1.
 """
@@ -43,6 +45,14 @@ def gnd_plane(dsn):
     return dsn.replace(m.group(0), m.group(0) + f'\n    (plane GND (polygon In1.Cu 0 {pts}))', 1)
 
 
+def drop_net(dsn, net):
+    """leave NET out of the routing (its pads stay obstacles): the pours and stitching vias connect it instead"""
+    dsn, n = re.subn(r'\(net ' + re.escape(net) + r'\s*\(pins[^)]*\)\s*\)', '', dsn)
+    if n != 1:
+        raise SystemExit(f'DSN: net {net} not found')
+    return dsn
+
+
 def export():
     """write the adapted DSN from a copy of the board without pours (never saved)"""
     os.chdir(PCB.parent)
@@ -55,6 +65,8 @@ def export():
     t = dsn.read_text(encoding='utf-8')
     if BOARD == 'carrier':
         t = gnd_plane(t)
+    elif '--no-gnd' in sys.argv:
+        t = drop_net(t, 'GND')
     dsn.write_text(t, encoding='utf-8')
 
 
@@ -69,7 +81,7 @@ def main():
         f.unlink(missing_ok=True)
 
     # export in a process of its own: pcbnew cannot load the same board twice in one process
-    subprocess.run([sys.executable, __file__, BOARD, '--export'], check=True)
+    subprocess.run([sys.executable, __file__, BOARD, '--export'] + (['--no-gnd'] if '--no-gnd' in sys.argv else []), check=True)
 
     r = subprocess.run(['java', '-jar', jar, '-de', str(dsn), '-do', str(ses), '-mp', PASSES],
                        capture_output=True, text=True)

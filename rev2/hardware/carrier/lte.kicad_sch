@@ -5980,7 +5980,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-7343-31_Kemet-D"
+		(property "Footprint" "Capacitor_Tantalum_SMD:CP_EIA-7343-20_Kemet-V"
 			(at 12.7 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -6012,7 +6012,7 @@
 				)
 			)
 		)
-		(property "MPN" "T495D227K006ATE100"
+		(property "MPN" "T520V227M006ATE015"
 			(at 12.7 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -6023,7 +6023,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Kemet"
+		(property "Manufacturer" "KEMET"
 			(at 12.7 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -6034,7 +6034,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C2798131"
+		(property "LCSC" "C696810"
 			(at 12.7 151.13 0)
 			(hide yes)
 			(show_name no)

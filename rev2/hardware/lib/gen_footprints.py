@@ -17,6 +17,7 @@ microSIM_Molex_78646-3001, Skyworks_SKY65943-11_MCM-10_2.5x2.5mm, Antenna_Taogla
 ESP32-C5-WROOM-1U.kicad_mod is vendored from espressif/kicad-libraries (CC-BY-SA 4.0 with
 the KiCad design exception), not generated here.
 """
+import math
 import uuid
 from pathlib import Path
 
@@ -247,17 +248,17 @@ def sky65943():
     """Skyworks SKY65943-11 GNSS front end (SAW + LNA + SAW), MCM-10, 2.5 x 2.5 x 0.65 mm.
     Data sheet 204404H, Figure 7 (PCB metallization, top view): pads 0.425 wide at x +-1.1875, rows at y 0, +-0.5
     (0.275 high) and +-1.1435 (0.515 high); pins 1-5 down the left side, 10-6 down the right. Drawing y is up:
-    negated here. Centre ground copper 1.4 wide (data sheet: 1.45, 0.25 to the pads; 0.275 here) over the package height = pad 11.
-    Paste on the centre pad as three apertures. The data sheet shows 8 filled thermal vias (0.3 mm, 0.6 pitch)
+    negated here. Centre ground copper 1.45 wide (0.25 to the pads) over the package height = pad 11.
+    Paste on the centre pad as three apertures, the data sheet's stencil (1.4 x 0.745 / 0.67 / 0.745). The data sheet shows 8 filled thermal vias (0.3 mm, 0.6 pitch)
     in the centre pad: optional, add them in the layout."""
     px = 1.1875
     rows = ((1, -px, 1.1435, 0.515), (2, -px, 0.5, 0.275), (3, -px, 0.0, 0.275), (4, -px, -0.5, 0.275),
             (5, -px, -1.1435, 0.515), (6, px, -1.1435, 0.515), (7, px, -0.5, 0.275), (8, px, 0.0, 0.275),
             (9, px, 0.5, 0.275), (10, px, 1.1435, 0.515))
     body = ''.join(pad(n, 'rect', x, -y, 0.425, h) for n, x, y, h in rows)
-    body += (f'\t(pad "11" smd rect (at 0 0) (size 1.4 2.4) (layers "F.Cu" "F.Mask") (uuid "{uid("sky/ep")}"))\n')
-    for i, (y, h) in enumerate(((-0.8775, 0.66), (0, 0.6), (0.8775, 0.66))):
-        body += (f'\t(pad "" smd rect (at 0 {f(y)}) (size 1.3 {f(h)}) (layers "F.Paste") (uuid "{uid(f"sky/paste{i}")}"))\n')
+    body += (f'\t(pad "11" smd rect (at 0 0) (size 1.45 2.4) (layers "F.Cu" "F.Mask") (uuid "{uid("sky/ep")}"))\n')
+    for i, (y, h) in enumerate(((-0.82, 0.745), (0, 0.67), (0.82, 0.745))):
+        body += (f'\t(pad "" smd rect (at 0 {f(y)}) (size 1.4 {f(h)}) (layers "F.Paste") (uuid "{uid(f"sky/paste{i}")}"))\n')
     b = 1.25
     body += rect(-b, -b, b, b, 'F.Fab', 0.1)
     body += line(-b, -b + 0.5, -b + 0.5, -b, 'F.Fab', 0.1)                       # pin 1 corner
@@ -274,12 +275,29 @@ def gnss_patch():
     """Taoglas CGGBP.25.4.A.02 ceramic GNSS patch, 25.1 x 25.1 x 4 mm, pin-fed, stuck down with its adhesive.
     Data sheet SPE-14-8-071-G p.6 / p.9-10: feed pin 0.9 mm (max 1.05), 2.5 mm off centre towards the edge with the
     part marking (+y here); recommended hole 1.0, pads 1.2 top / 2.2 bottom; ground copper cleared 3.0 mm around the
-    pin on the top and inner layers and 3.5 mm on the bottom layer. Here: hole 1.1 (the pin tolerance exceeds 1.0)
-    and one 1.8 mm pad on all layers. Draw the copper clearances as rule areas in the layout: the circles on
-    Cmts.User show them. The patch is tuned on a 70 x 70 mm ground plane; keep ground under the whole patch.
+    pin on the top and inner layers and 3.5 mm on the bottom layer. Here: hole 1.1 (the pin tolerance exceeds 1.0),
+    1.4 mm pad on all layers (data sheet 1.2; 1.4 keeps the 0.15 mm annular ring PCBWay needs) plus a 2.2 mm pad on B.Cu for the hand-soldered fillet, and the clearances as rule
+    areas in the footprint (no pour, no vias; the feed track itself is allowed). The patch is tuned on a 70 x 70 mm ground plane; keep ground under the whole patch: a rule area keeps
+    tracks off F.Cu under the body.
     The pin is soldered by hand on the bottom side after reflow."""
-    body = (f'\t(pad "1" thru_hole circle (at 0 2.5) (size 1.8 1.8) (drill 1.1) (layers "*.Cu" "*.Mask") '
-            f'(uuid "{uid("patch/1")}"))\n')
+    body = (f'\t(pad "1" thru_hole circle (at 0 2.5) (size 1.4 1.4) (drill 1.1) (layers "*.Cu" "F.Mask") '
+            f'(uuid "{uid("patch/1")}"))\n'
+            f'\t(pad "1" smd circle (at 0 2.5) (size 2.2 2.2) (layers "B.Cu" "B.Mask") (uuid "{uid("patch/1b")}"))\n')
+    for d, layers in ((3.0, '"F.Cu" "In1.Cu" "In2.Cu"'), (3.5, '"B.Cu"')):
+        pts = ' '.join(f'(xy {f(d / 2 * math.cos(2 * math.pi * i / 32))} {f(2.5 + d / 2 * math.sin(2 * math.pi * i / 32))})'
+                       for i in range(32))
+        body += (f'\t(zone (net 0) (net_name "") (layers {layers}) (uuid "{uid(f"patch/keep{d}")}") '
+                 f'(name "patch feed clearance") (hatch edge 0.5) (connect_pads (clearance 0)) (min_thickness 0.25) '
+                 f'(filled_areas_thickness no) (keepout (tracks allowed) (vias not_allowed) (pads allowed) '
+                 f'(copperpour not_allowed) (footprints allowed)) (fill (thermal_gap 0.5) (thermal_bridge_width 0.5)) '
+                 f'(polygon (pts {pts})))\n')
+    # the patch's ground plane: no tracks on F.Cu under the body (pour, pads and GND vias stay allowed)
+    g = 12.55
+    body += (f'\t(zone (net 0) (net_name "") (layers "F.Cu") (uuid "{uid("patch/ground")}") '
+             f'(name "patch ground plane") (hatch edge 0.5) (connect_pads (clearance 0)) (min_thickness 0.25) '
+             f'(filled_areas_thickness no) (keepout (tracks not_allowed) (vias allowed) (pads allowed) '
+             f'(copperpour allowed) (footprints allowed)) (fill (thermal_gap 0.5) (thermal_bridge_width 0.5)) '
+             f'(polygon (pts (xy {-g} {-g}) (xy {g} {-g}) (xy {g} {g}) (xy {-g} {g}))))\n')
     for d, layer in ((3.0, 'Cmts.User'), (3.5, 'Dwgs.User')):
         body += (f'\t(fp_circle (center 0 2.5) (end {f(d / 2)} 2.5) (stroke (width 0.1) (type solid)) '
                  f'(layer "{layer}") (uuid "{uid(f"patch/c{d}")}"))\n')
