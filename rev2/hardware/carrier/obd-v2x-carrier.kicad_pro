@@ -312,6 +312,25 @@
       },
       {
         "bus_width": 12,
+        "clearance": 0.15,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "PowerLV",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.4,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      },
+      {
+        "bus_width": 12,
         "clearance": 0.25,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
@@ -321,7 +340,7 @@
         "microvia_drill": 0.1,
         "name": "RF",
         "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "priority": 2,
+        "priority": 3,
         "schematic_color": "rgba(0, 0, 0, 0.000)",
         "track_width": 0.32,
         "tuning_profile": "",
@@ -350,14 +369,6 @@
       },
       {
         "netclass": "Power",
-        "pattern": "VSYS_3V8"
-      },
-      {
-        "netclass": "Power",
-        "pattern": "VBAT_LTE"
-      },
-      {
-        "netclass": "Power",
         "pattern": "Net-(D103-K)"
       },
       {
@@ -365,11 +376,19 @@
         "pattern": "Net-(D202-K)"
       },
       {
-        "netclass": "Power",
+        "netclass": "PowerLV",
+        "pattern": "VSYS_3V8"
+      },
+      {
+        "netclass": "PowerLV",
+        "pattern": "VBAT_LTE"
+      },
+      {
+        "netclass": "PowerLV",
         "pattern": "VBUCK_3V8"
       },
       {
-        "netclass": "Power",
+        "netclass": "PowerLV",
         "pattern": "VCELL"
       },
       {

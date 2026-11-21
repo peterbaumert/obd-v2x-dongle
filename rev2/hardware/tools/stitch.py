@@ -23,7 +23,7 @@ if BOARD is None:
     raise SystemExit('usage: stitch.py carrier|upper [pitch_mm]')
 PITCH = next((float(a) for a in sys.argv[1:] if a.replace('.', '', 1).isdigit()), 2.5)
 PCB = HW / BOARD / ({'carrier': 'obd-v2x-carrier', 'upper': 'obd-v2x-upper'}[BOARD] + '.kicad_pcb')
-VIA_D, VIA_DR, MARGIN, VIA_GAP, PAD_GAP = 0.6, 0.3, 0.45, 1.2, 0.3
+VIA_D, VIA_DR, MARGIN, VIA_GAP, PAD_GAP = 0.6, 0.3, 0.4, 1.0, 0.3
 
 
 def mm(v):

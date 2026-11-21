@@ -1,7 +1,7 @@
 # Rev 2: two stacked boards in a 25 mm case
 
-Status: **schematics for both boards, a 3D stack model, a first case, the upper board routed as a draft, the
-carrier placed but not routed.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
+Status: **schematics for both boards, a 3D stack model, a first case, and both boards routed as drafts (nothing
+unconnected, no rule errors). Not reviewed for ordering.** Rev 1 (`../rev1/`) is the board in production and stays as it is.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -71,19 +71,22 @@ upper board's about 9 %. With the split below it is about 45 % and 26 % (courtya
 **Carrier:** J201 with the bus protection at its pins (CAN TVS, K-line capacitor and TVS), input protection, buck,
 3.3 V regulator, EC200U with its supply caps, level shifter, LTE U.FL, GNSS U.FL (jumper to the upper board), the
 cell connector and the power mux. The mux and the cell connector sit here because the modem's supply current then
-never has to cross the connectors.
+never has to cross the connectors. 73 parts.
 
 **Upper board:** ESP32-C5 module, USB-C, LED, RESET / BOOT buttons, the CAN and K-line transceivers, the micro-SIM
 holder with its resistors and capacitors, the cell charger with its NTC (only 70 mA of charge current crosses the
-stack; the NTC sits over the cell), and the ceramic GNSS patch on the top side with its front end and a U.FL for
-the jumper.
+stack; the NTC sits over the cell), the VIN sense divider, the open-collector drivers for the modem's PWRKEY and
+RESET_N, and the ceramic GNSS patch on the top side with its front end and a U.FL for the jumper. 65 parts.
 
-**Across the connectors** (two 2 × 8, 32 pins): 19 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 9 × GND.
+The carrier is the crowded one (the modem takes most of its underside, the cell limits part height over half of
+its top), so everything that does not have to be next to the plug, the modem or the supply path is upstairs.
+
+**Across the connectors** (two 2 × 8, 32 pins): 18 lines, 3 × 3.3 V, 1 × VSYS 3.8 V and 10 × GND.
 
 | Connector | Lines |
 |---|---|
 | left (J601 / J701): the plug's bus pins and the modem's UART side | CANH, CANL (a facing pin pair), K_LINE, VIN_PROT (vehicle voltage for the K-line pull-up), modem UART TX / RX / RTS / CTS, STATUS |
-| right (J602 / J702): the modem's SIM and power-key side | PWRKEY, RESET, LTE power enable, VIN sense, USB VBUS, SIM VDD / RST / CLK / DATA, VSYS 3.8 V, VCELL (charger to cell) |
+| right (J602 / J702): the modem's SIM and power-key side | PWRKEY and RESET_N (open-collector lines), LTE power enable, USB VBUS, SIM VDD / RST / CLK / DATA, VSYS 3.8 V, VCELL (charger to cell) |
 
 The pin lists are `STACK_A` / `STACK_B` in `hardware/tools/gen_schematic.py`.
 
@@ -94,7 +97,7 @@ Two KiCad 10 projects, generated like rev 1's (edit `hardware/tools/gen_schemati
 | Project | Sheets |
 |---|---|
 | `hardware/carrier/obd-v2x-carrier` | power, vehicle, lte, battery (cell connector, power mux), stack_carrier |
-| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, gnss, charger, stack_upper |
+| `hardware/upper/obd-v2x-upper` | mcu, xcvr (transceivers), sim, gnss, charger, sense, keys, stack_upper |
 
 ```bash
 python rev2/hardware/tools/gen_schematic.py     # writes both projects
@@ -110,10 +113,12 @@ the intended changes. The circuits are rev 1's with
 these changes: eSIM and SIM switch removed (IO12 is a spare test pad), micro-SIM holder, side-entry battery
 connector, the two board-to-board connectors with spacer holes, and the GNSS patch with its front end.
 
-GNSS on the upper board (sheet `gnss`): patch → SKY65943-11 → 33 pF DC block → U.FL J801, joined by a jumper
-cable to the carrier's GNSS socket J403. J403 still carries rev 1's current-limited 3.3 V antenna bias; a 27 nH
-choke and 100 Ω take the front end's supply from it (about 3.0 V at 3 mA, under the part's 3.3 V limit), and its
-enable pin is tied to that supply. R802 (not fitted) is a bypass link for trying the bare patch.
+GNSS on the upper board (sheet `gnss`): patch -> SKY65943-11 -> 33 pF DC block -> U.FL J801, joined by a jumper
+cable to the carrier's GNSS socket J403. The front end is powered on the upper board, from the MCU pin that
+switches the modem on (LTE_PWR_EN, 3 mA) through 100 Ω and 100 nF: about 3.0 V, under the part's 3.3 V limit, and
+only while the modem is on. Its enable pin is tied to that supply. So the coax carries no DC and rev 1's antenna
+bias switch (U405 with L401, C418, C419, C420, R415) is gone. R802 (not fitted) is a bypass link for trying the
+bare patch.
 
 New footprints, each drawn from the manufacturer's drawing (sources in `hardware/lib/gen_footprints.py`):
 Molex 78646-3001 micro-SIM holder, Skyworks SKY65943-11, Taoglas CGGBP.25.4.A.02 patch.
@@ -171,19 +176,36 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 <KiCad>/bin/python rev2/hardware/tools/route_unconnected.py carrier|upper   # single connections with maze.py
 ```
 
-- **Upper board: routed as a draft.** Freerouting routes every net including GND; pours and 92 stitching vias come
-  on top. DRC: 0 unconnected, parity 0, two thermal-relief notes. It is an autorouter result on an automatic
-  placement: review it before ordering (the GNSS front end's short RF runs in particular), and expect to redo it
-  after the placement review.
-- **Carrier: placed, not routed.** Six scripted attempts (Freerouting, then `route_unconnected.py`, `repair.py`,
-  `finish.py`, `stitch.py`), each after regrouping parts, end the same way: no rule errors, but about eight real
-  connections open (ground pads boxed in by tracks, the buck's compensation parts placed far from the regulator
-  because no closer spot was free, a test pad) plus unconnected pour islands. The board is too dense at 45 × 45 mm
-  for automatic placement and routing, so the repository holds the unrouted placement. Ways forward: lay it out by
-  hand in KiCad; make both boards a few millimetres longer; or a 6-layer carrier.
-- `repair.py` rips up and re-routes every signal net involved in a rule error; `finish.py` routes what is still
-  open, GND pads included, with narrower tracks.
-- The carrier's supply class is 0.4 mm wide (rev 1: 0.6 mm): the wider tracks did not fit.
+- **Both boards are routed as drafts.** DRC on each: 0 unconnected, schematic parity 0, no rule errors; what
+  remains is silkscreen overlap (cosmetic, no reference placement pass yet) and a few thermal-relief notes.
+- **Upper board:** `autoroute.py`, `repair.py`, `stitch.py`. Freerouting routes every net including GND.
+- **Carrier:** `autoroute.py`, `route_unconnected.py`, `repair.py`, `finish.py`, `stitch.py`, `islands.py`, then
+  hand edits on the routed board: two parts slid aside so the power mux's ground pin could go straight up, ground
+  pads given their own via after pushing a signal track aside, one track moved away from a supply via. It took ten
+  placement rounds to get there; what made the difference was moving circuits to the upper board and placing the
+  small parts of the buck regulator and the power mux by hand at their pins.
+- **From here on the two `.kicad_pcb` files are the source.** `gen_pcb.py --force` rebuilds the placement but
+  loses the routing and the hand edits; change the boards in KiCad or with the tools below.
+- **Rules:** the carrier's supply tracks are 0.4 mm (rev 1: 0.6 mm). Vehicle-voltage nets keep 0.2 mm clearance;
+  the 3.8 V supply nets use the board's 0.15 mm.
+- **Review before ordering:** this is autorouted copper on a first placement. Check the buck's switching loop,
+  the supply track widths (widen or pour where there is room), the LTE and GNSS lines, and the short RF runs at
+  the GNSS front end. Then place the references on the silkscreen.
+
+| Carrier, top | Carrier, underside | Upper, top | Upper, underside |
+|---|---|---|---|
+| ![](docs/img/carrier-top.png) | ![](docs/img/carrier-bottom.png) | ![](docs/img/upper-top.png) | ![](docs/img/upper-bottom.png) |
+
+| Tool | What it does |
+|---|---|
+| `autoroute.py` | Freerouting on a DSN export (carrier: In1 declared a GND plane) |
+| `route_unconnected.py`, `maze.py` | single connections, from rev 1 |
+| `repair.py` | fixes via drills and thin tracks; rips up and re-routes every signal net in a rule error |
+| `finish.py` | routes what is still open, GND pads included, with narrower tracks |
+| `stitch.py` | GND vias where the pours of all layers overlap |
+| `islands.py` | a via for each pour fragment that has none |
+| `movepart.py` | moves a two-pad part next to the pin it belongs to and reconnects it |
+| `localfix.py` | blunt local rip-up around a blocked pin; made things worse when tried, kept for reference |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 

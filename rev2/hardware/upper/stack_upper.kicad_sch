@@ -1875,28 +1875,6 @@
 			)
 		)
 	)
-	(global_label "LTE_PWRKEY_CTL"
-		(shape bidirectional)
-		(at 218.44 73.66 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "0fe735ca-91e7-5a15-95ba-a244a76e2e42")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 218.44 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "MCU_RX_LTE"
 		(shape bidirectional)
 		(at 114.3 81.28 0)
@@ -1975,28 +1953,6 @@
 		(uuid "30a7ef1d-89f7-5d24-bb7e-156d98bd01bc")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 218.44 81.28 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "VSENSE"
-		(shape bidirectional)
-		(at 241.3 76.2 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "474b0f57-daaa-5b00-a010-01b88470066a")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 241.3 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2117,28 +2073,6 @@
 			)
 		)
 	)
-	(global_label "LTE_RESET_CTL"
-		(shape bidirectional)
-		(at 241.3 73.66 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "86f85d7e-e786-51ab-8c0a-51012536f1ac")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 241.3 73.66 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
 	(global_label "SIM_VDD"
 		(shape bidirectional)
 		(at 218.44 86.36 180)
@@ -2151,6 +2085,28 @@
 		(uuid "8c448b5b-f85e-5296-a655-b808c4e5d40f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 218.44 86.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+	)
+	(global_label "LTE_PWRKEY"
+		(shape bidirectional)
+		(at 218.44 73.66 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a324dfc7-0293-5277-b5f8-900a35cd79f8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 218.44 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2205,154 +2161,24 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "obd-v2x:VIN_PROT")
-		(at 203.2 137.16 180)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "0403f97e-a5e4-5a96-8754-a86653a4d3c1")
-		(property "Reference" "#PWRS021"
-			(at 203.2 137.16 0)
+	(global_label "LTE_RESET_N"
+		(shape bidirectional)
+		(at 241.3 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "db21d6ec-a9e4-54d0-993e-286ce4412f2c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 241.3 73.66 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VIN_PROT"
-			(at 203.2 140.716 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 203.2 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 203.2 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 203.2 137.16 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "16595f67-507c-5df8-a77f-eb264b148e25")
-		)
-		(instances
-			(project "obd-v2x-upper"
-				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
-					(reference "#PWRS021")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "obd-v2x:VSYS_3V8")
-		(at 152.4 137.16 180)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "06a99654-b197-58fa-91b8-19d9b4f9773f")
-		(property "Reference" "#PWRS019"
-			(at 152.4 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VSYS_3V8"
-			(at 152.4 140.716 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 152.4 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 152.4 137.16 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 152.4 137.16 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "f9efe486-e14a-5235-bebc-f56f94baab92")
-		)
-		(instances
-			(project "obd-v2x-upper"
-				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
-					(reference "#PWRS019")
-					(unit 1)
 				)
 			)
 		)
@@ -2367,8 +2193,8 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(uuid "07c3fa6b-fe56-5314-b11a-f0084cb78f20")
-		(property "Reference" "#PWRS020"
+		(uuid "0403f97e-a5e4-5a96-8754-a86653a4d3c1")
+		(property "Reference" "#PWRS021"
 			(at 203.2 132.08 0)
 			(hide yes)
 			(show_name no)
@@ -2422,6 +2248,158 @@
 			)
 		)
 		(pin "1"
+			(uuid "16595f67-507c-5df8-a77f-eb264b148e25")
+		)
+		(instances
+			(project "obd-v2x-upper"
+				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
+					(reference "#PWRS021")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 152.4 132.08 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "06a99654-b197-58fa-91b8-19d9b4f9773f")
+		(property "Reference" "#PWRS019"
+			(at 152.4 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 152.4 128.27 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 132.08 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 152.4 132.08 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "f9efe486-e14a-5235-bebc-f56f94baab92")
+		)
+		(instances
+			(project "obd-v2x-upper"
+				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
+					(reference "#PWRS019")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "obd-v2x:VSYS_3V8")
+		(at 152.4 137.16 180)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "07c3fa6b-fe56-5314-b11a-f0084cb78f20")
+		(property "Reference" "#PWRS020"
+			(at 152.4 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "VSYS_3V8"
+			(at 152.4 140.716 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 152.4 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 152.4 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 152.4 137.16 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
 			(uuid "e75c8a9a-6ab3-5bf3-9877-5693b0c1852a")
 		)
 		(instances
@@ -2435,7 +2413,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 241.3 81.28 90)
+		(at 241.3 78.74 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2445,7 +2423,7 @@
 		(dnp no)
 		(uuid "0df65074-4b9c-5d41-a7a1-ea15ac7c45ee")
 		(property "Reference" "#PWRS014"
-			(at 241.3 81.28 0)
+			(at 241.3 78.74 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2456,7 +2434,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 245.11 81.28 0)
+			(at 245.11 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2466,7 +2444,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 241.3 81.28 0)
+			(at 241.3 78.74 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2477,7 +2455,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 241.3 81.28 0)
+			(at 241.3 78.74 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2488,7 +2466,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 241.3 81.28 0)
+			(at 241.3 78.74 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2662,8 +2640,8 @@
 		)
 	)
 	(symbol
-		(lib_id "obd-v2x:VCELL")
-		(at 241.3 86.36 270)
+		(lib_id "power:GND")
+		(at 241.3 81.28 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2673,7 +2651,7 @@
 		(dnp no)
 		(uuid "2132ad3e-222f-5168-b96b-2cc8a2f0c9d0")
 		(property "Reference" "#PWRS015"
-			(at 241.3 86.36 0)
+			(at 241.3 81.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2683,8 +2661,8 @@
 				)
 			)
 		)
-		(property "Value" "VCELL"
-			(at 244.856 86.36 0)
+		(property "Value" "GND"
+			(at 245.11 81.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2694,7 +2672,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 241.3 86.36 0)
+			(at 241.3 81.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2705,7 +2683,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 241.3 86.36 0)
+			(at 241.3 81.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2716,7 +2694,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 241.3 86.36 0)
+			(at 241.3 81.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2738,8 +2716,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 152.4 132.08 0)
+		(lib_id "power:+3V3")
+		(at 101.6 137.16 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -2749,7 +2727,7 @@
 		(dnp no)
 		(uuid "2272eeb4-e22f-58b5-a986-345ee13d80ea")
 		(property "Reference" "#PWRS018"
-			(at 152.4 132.08 0)
+			(at 101.6 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2759,8 +2737,8 @@
 				)
 			)
 		)
-		(property "Value" "PWR_FLAG"
-			(at 152.4 128.27 0)
+		(property "Value" "+3V3"
+			(at 101.6 140.716 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -2770,7 +2748,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 152.4 132.08 0)
+			(at 101.6 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2781,7 +2759,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 152.4 132.08 0)
+			(at 101.6 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2792,7 +2770,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 152.4 132.08 0)
+			(at 101.6 137.16 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3267,8 +3245,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 101.6 132.08 0)
+		(lib_id "obd-v2x:VCELL")
+		(at 241.3 86.36 270)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3278,7 +3256,7 @@
 		(dnp no)
 		(uuid "55ad6a5e-1fdb-5b40-a272-d3c4be353c07")
 		(property "Reference" "#PWRS016"
-			(at 101.6 132.08 0)
+			(at 241.3 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3288,8 +3266,8 @@
 				)
 			)
 		)
-		(property "Value" "PWR_FLAG"
-			(at 101.6 128.27 0)
+		(property "Value" "VCELL"
+			(at 244.856 86.36 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3299,7 +3277,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 101.6 132.08 0)
+			(at 241.3 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3310,7 +3288,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 101.6 132.08 0)
+			(at 241.3 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3321,7 +3299,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 101.6 132.08 0)
+			(at 241.3 86.36 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3648,7 +3626,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 241.3 78.74 90)
+		(at 241.3 76.2 90)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3658,7 +3636,7 @@
 		(dnp no)
 		(uuid "87be4969-6140-5544-902d-55b98aa8eda8")
 		(property "Reference" "#PWRS013"
-			(at 241.3 78.74 0)
+			(at 241.3 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3669,7 +3647,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 245.11 78.74 0)
+			(at 245.11 76.2 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3679,7 +3657,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 241.3 78.74 0)
+			(at 241.3 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3690,7 +3668,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 241.3 78.74 0)
+			(at 241.3 76.2 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3701,7 +3679,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 241.3 78.74 0)
+			(at 241.3 76.2 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3952,8 +3930,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 254 132.08 0)
+		(lib_id "obd-v2x:VIN_PROT")
+		(at 203.2 137.16 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3963,7 +3941,7 @@
 		(dnp no)
 		(uuid "9c5d2099-4aa4-569b-9561-97882b827ffe")
 		(property "Reference" "#PWRS022"
-			(at 254 132.08 0)
+			(at 203.2 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3973,8 +3951,8 @@
 				)
 			)
 		)
-		(property "Value" "PWR_FLAG"
-			(at 254 128.27 0)
+		(property "Value" "VIN_PROT"
+			(at 203.2 140.716 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3984,7 +3962,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 254 132.08 0)
+			(at 203.2 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3995,7 +3973,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 254 132.08 0)
+			(at 203.2 137.16 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4006,7 +3984,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 254 132.08 0)
+			(at 203.2 137.16 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4028,8 +4006,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
-		(at 101.6 137.16 180)
+		(lib_id "power:PWR_FLAG")
+		(at 101.6 132.08 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4039,7 +4017,7 @@
 		(dnp no)
 		(uuid "a7190ca2-7ca8-55f5-8e89-df4bf7abe34f")
 		(property "Reference" "#PWRS017"
-			(at 101.6 137.16 0)
+			(at 101.6 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4049,8 +4027,8 @@
 				)
 			)
 		)
-		(property "Value" "+3V3"
-			(at 101.6 140.716 0)
+		(property "Value" "PWR_FLAG"
+			(at 101.6 128.27 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4060,7 +4038,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 101.6 137.16 0)
+			(at 101.6 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4071,7 +4049,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 101.6 137.16 0)
+			(at 101.6 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4082,7 +4060,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 101.6 137.16 0)
+			(at 101.6 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4098,6 +4076,82 @@
 			(project "obd-v2x-upper"
 				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
 					(reference "#PWRS017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 254 137.16 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "bd2d4453-e9ac-5f6a-853b-ba13291a7637")
+		(property "Reference" "#PWRS024"
+			(at 254 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 254 140.97 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 254 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 254 137.16 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 254 137.16 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "a687882c-a9ca-5443-8342-fee87498145a")
+		)
+		(instances
+			(project "obd-v2x-upper"
+				(path "/eb5c44da-9ede-55b4-a14f-011bf648ccce/745833af-cabd-5917-85f0-4388d4965669"
+					(reference "#PWRS024")
 					(unit 1)
 				)
 			)
@@ -4180,8 +4234,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 254 137.16 0)
+		(lib_id "power:PWR_FLAG")
+		(at 254 132.08 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4191,7 +4245,7 @@
 		(dnp no)
 		(uuid "e14ea364-f510-5dae-bade-0ab46dc04297")
 		(property "Reference" "#PWRS023"
-			(at 254 137.16 0)
+			(at 254 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4201,8 +4255,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 254 140.97 0)
+		(property "Value" "PWR_FLAG"
+			(at 254 128.27 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4212,7 +4266,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 254 137.16 0)
+			(at 254 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4223,7 +4277,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 254 137.16 0)
+			(at 254 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4234,7 +4288,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 254 137.16 0)
+			(at 254 132.08 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects

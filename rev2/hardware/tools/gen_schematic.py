@@ -3,8 +3,10 @@
     python rev2/hardware/tools/gen_schematic.py [sheet ...]
 
 carrier/  power, vehicle, lte, battery, stack_carrier   (OBD plug + bus protection, supplies, modem, cell)
-upper/    mcu, xcvr, sim, gnss, charger, stack_upper    (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM,
-                                                         GNSS patch + front end, cell charger)
+upper/    mcu, xcvr, sim, gnss, charger, sense, keys, stack_upper
+                                                        (ESP32-C5, USB-C, CAN / K-Line transceivers, micro-SIM,
+                                                         GNSS patch + front end, cell charger, VIN sense,
+                                                         modem power-key / reset drivers)
 
 The sheets started as a copy of rev 1's. Nets with the same name on both boards are joined through the
 board-to-board connectors (sheets "stack_*"); check with
@@ -19,11 +21,11 @@ from schgen import g  # noqa: E402
 from schgen import Sheet as _Sheet, uid  # noqa: E402
 
 BOARD = {'power': 'carrier', 'vehicle': 'carrier', 'lte': 'carrier', 'battery': 'carrier', 'stack_carrier': 'carrier',
-         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'gnss': 'upper', 'charger': 'upper', 'stack_upper': 'upper'}
+         'mcu': 'upper', 'xcvr': 'upper', 'sim': 'upper', 'gnss': 'upper', 'charger': 'upper', 'sense': 'upper', 'keys': 'upper', 'stack_upper': 'upper'}
 ROOTS = {b: uid('rev2/root/' + b) for b in ('carrier', 'upper')}
 SHEETS = {n: uid('rev2/sheet/' + n) for n in BOARD}
 TITLES = {'power': 'Power', 'vehicle': 'Vehicle (OBD plug, protection)', 'xcvr': 'CAN + K-Line transceivers',
-          'sim': 'Micro-SIM', 'gnss': 'GNSS patch + front end', 'charger': 'Cell charger', 'lte': 'LTE + GNSS (EC200U)',
+          'sim': 'Micro-SIM', 'gnss': 'GNSS patch + front end', 'charger': 'Cell charger', 'sense': 'VIN sense', 'keys': 'Modem key drivers', 'lte': 'LTE + GNSS (EC200U)',
           'battery': 'Backup battery', 'stack_carrier': 'Board-to-board (sockets)',
           'mcu': 'MCU (ESP32-C5, USB)', 'stack_upper': 'Board-to-board (headers)'}
 ROOT = None
@@ -320,7 +322,7 @@ def power():
     sh.w(Rg[2], (Rg[2][0], gt[1] + (g(1) if gt[1] > ys else -g(1))))
     yg = Rg[2][1] + g(1)
     sh.w(Rg[2], (Rg[2][0], yg), (gt[0], yg), gt) if gt[1] > ys else None
-    sh.glabel('LTE_PWR_ON_N', (Rg[2][0], yg), 'L', 'output', stub=2)    # low while the modem is powered
+    sh.label('LTE_PWR_ON_N', (Rg[2][0], yg), 'L', stub=2)               # low while the modem is powered
     Qn = sh.part('Transistor_FET:2N7002', 'Q103', '2N7002', SOT23, gt[0] - 2.54, yg + g(2) + 5.08, 0,
                  fields={'ref': (gt[0] + 1.27, yg + g(2) + 3.81, 'left'), 'val': (gt[0] + 1.27, yg + g(2) + 6.35, 'left')})
     sh.w((gt[0], yg), Qn['D'])
@@ -329,20 +331,6 @@ def power():
     sh.glabel('LTE_PWR_EN', (Qn['G'][0] - g(4), Qn['G'][1]), 'L', 'input')
     Rpd = rv(sh, 'Device:R', 'R108', '100k', R0603, Qn['G'][0] - g(2), Qn['G'][1])
     sh.gnd(Rpd[2])
-
-    # ---------------- battery sense
-    sh.text('Battery sense (VSENSE = VIN / 11, full scale ~35 V)', g(82), yl - g(6), 1.5, True)
-    xs = g(88)
-    Rs1 = rv(sh, 'Device:R', 'R109', '100k', R0603, xs, yl - g(2))
-    sh.rail('VIN_PROT', Rs1[1])
-    Rs2 = rv(sh, 'Device:R', 'R110', '10k', R0603, xs, Rs1[2][1] + g(2))
-    sh.w(Rs1[2], Rs2[1])
-    sh.gnd(Rs2[2])
-    yn = Rs1[2][1] + g(1)
-    Cs = rv(sh, 'Device:C', 'C111', '100nF', C0603, xs + g(4), yn)
-    sh.w((xs, yn), Cs[1], (xs + g(8), yn))
-    sh.gnd(Cs[2])
-    sh.glabel('VSENSE', (xs + g(8), yn), 'R', 'output')
 
     # ---------------- power flags
     yf = g(72)
@@ -659,7 +647,8 @@ def mcu():
 
 # =====================================================================================
 LTE_GLOBAL = {'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL',
-              'SIM_VDD', 'LTE_USIM_RST', 'LTE_USIM_CLK', 'LTE_USIM_DATA'}   # the SIM holder is on the upper board
+              'SIM_VDD', 'LTE_USIM_RST', 'LTE_USIM_CLK', 'LTE_USIM_DATA',   # the SIM holder is on the upper board
+              'LTE_PWRKEY', 'LTE_RESET_N'}                                # so are the two open-collector drivers
 
 
 def lte():
@@ -695,26 +684,6 @@ def lte():
     decap(sh, 'C403', '33pF', C0402, g(19), g(58), 'VBAT_LTE')
     decap(sh, 'C404', '10pF', C0402, g(25), g(58), 'VBAT_LTE')
 
-    # PWRKEY / RESET drivers
-    sh.text('PWRKEY / RESET_N open-collector drivers (MCU high = pull low)', g(4), g(8), 1.27, True)
-    for i, (q, rb, rp, ctl, net, base) in enumerate((('Q401', 'R401', 'R402', 'LTE_PWRKEY_CTL', 'LTE_PWRKEY', 'PWRKEY_B'),
-                                                      ('Q402', 'R403', 'R404', 'LTE_RESET_CTL', 'LTE_RESET_N', 'RESET_B'))):
-        xq, yq = g(16 + 18 * i), g(16)
-        Q = sh.part('Transistor_BJT:MMBT3904', q, 'MMBT3904', SOT23, xq, yq, 0,
-                    fields={'ref': (xq + g(2), yq + 1.27, 'left'), 'val': (xq + g(2), yq + 3.81, 'left')})
-        sh.w(Q['C'], Q.out('C', 1), (Q['C'][0] + g(2), Q.out('C', 1)[1]))
-        sh.label(net, (Q['C'][0] + g(2), Q.out('C', 1)[1]), 'R')
-        sh.gnd(Q['E'])
-        Rb = rh(sh, 'Device:R', rb, '4.7k', R0603, Q['B'][0] - g(1) - 7.62, Q['B'][1])
-        sh.w(Rb[2], Q['B'])
-        sh.w(Rb[1], (Rb[1][0] - g(1), Rb[1][1]))
-        sh.glabel(ctl, (Rb[1][0] - g(1), Rb[1][1]), 'L', 'input')
-        xp = Q['B'][0] - g(1)
-        Rp = rv(sh, 'Device:R', rp, '47k', R0603, xp, Q['B'][1] + g(1))
-        Rp.fields = VL(Rp.x, Rp.y)
-        sh.w((xp, Q['B'][1]), Rp[1])
-        sh.gnd(Rp[2])
-
     # level shifter
     sh.text('1.8 V <-> 3.3 V level shifter (disabled while modem is off)', g(80), g(8), 1.27, True)
     XS, YS = g(92), g(24)
@@ -742,7 +711,7 @@ def lte():
                                                       ('C417', 'C413', 'C414', 'J403', 'LTE_ANT_GNSS', 'ANT_GNSS_RF', 'U.FL GNSS'))):
         x0, y = g(24 + 16 * i), g(69)
         sh.label(src, (x0, y), 'L')
-        if r == 'C417':      # GNSS: DC block (the U.FL side carries the active-antenna bias)
+        if r == 'C417':      # GNSS: DC block towards the front end on the upper board
             Rr = rh(sh, 'Device:C', r, '33pF', C0402, x0 + g(3), y)
         else:
             Rr = rh(sh, 'Device:R', r, '0R', R0402, x0 + g(3), y)
@@ -763,38 +732,6 @@ def lte():
         sh.gnd(Jc['2'])
         if j == 'J403':
             sh.label('LTE_ANT_GNSS_UFL', (xr2 + g(1), y), 'U', stub=2)
-
-    # GNSS active-antenna bias: 3.3 V while the modem is powered, through a latch-off current-limited switch
-    # (100-137 mA) and an RF choke onto the U.FL side. Passive antennas: harmless if DC-open; a DC-shorted one
-    # trips the switch, which stays off until the modem is power-cycled.
-    sh.text('GNSS antenna bias (active + passive antennas)\n3.3 V while the modem is on; latch-off 100-137 mA',
-            g(124), g(30), 1.27, True)
-    XB, YB = g(134), g(20)
-    Ub = sh.part('obd-v2x:TPS2552-1', 'U405', 'TPS2552DBVR-1', 'Package_TO_SOT_SMD:SOT-23-6', XB, YB, 0)
-    Ub.fields = {'ref': (XB - g(3), YB - g(4), 'left'), 'val': (XB - g(3), YB - g(3), 'left')}
-    pin_in, pin_en, pin_ilim = Ub['1'], Ub['3'], Ub['5']
-    xl = pin_in[0] - g(4)
-    sh.w(pin_in, (xl, pin_in[1]), (xl, pin_in[1] - g(2)))
-    sh.rail('+3V3', (xl, pin_in[1] - g(2)))
-    decap(sh, 'C420', '100nF', C0402, xl - g(3), pin_in[1] - g(7), '+3V3')
-    sh.glabel('LTE_PWR_ON_N', pin_en, 'L', 'input', stub=2)
-    Ril = rv(sh, 'Device:R', 'R415', '232k', R0402, pin_ilim[0] - g(1), pin_ilim[1])
-    Ril.fields = VL(Ril.x, Ril.y)
-    sh.w(pin_ilim, Ril[1])
-    sh.gnd(Ril[2])
-    sh.gnd(Ub['2'])
-    sh.nc(Ub, '4')
-    po = Ub['6']
-    xo = po[0] + g(3)
-    sh.w(po, (xo, po[1]))
-    Co = rv(sh, 'Device:C', 'C419', '100nF', C0402, xo, po[1])
-    sh.gnd(Co[2])
-    Cr = rv(sh, 'Device:C', 'C418', '33pF', C0402, xo + g(4), po[1])
-    sh.gnd(Cr[2])
-    Lb = rh(sh, 'Device:L', 'L401', '27nH', 'Inductor_SMD:L_0402_1005Metric', xo + g(7), po[1])
-    sh.w((xo, po[1]), Lb[1])
-    sh.w(Lb[2], (Lb[2][0] + g(2), po[1]))
-    sh.label('LTE_ANT_GNSS_UFL', (Lb[2][0] + g(2), po[1]), 'R')
 
     # test points
     sh.text('Test pads: modem USB\n(firmware update), debug UART', g(3), g(29), 1.27, True)
@@ -855,8 +792,8 @@ def sim():
 # =====================================================================================
 def gnss():
     """GNSS patch with its front end on the upper board. The receiver is in the modem on the carrier: a short
-    U.FL jumper joins J801 here to J403 there. J403 carries the 3.3 V antenna bias (carrier: U405, L401), which
-    powers the front end through the coax, as in an active antenna."""
+    U.FL jumper joins J801 here to J403 there. The front end is powered here, from the MCU pin that switches the
+    modem on, so the coax carries no DC and the carrier needs no antenna bias circuit."""
     sh = Sheet('GNSS', 'gnss.kicad_sch', SHEETS['gnss'], ROOT, 'GNSS patch antenna + front end (SAW, LNA, SAW)')
     sh.text('GNSS: ceramic patch -> SKY65943-11 (pre-filter, LNA, post-filter, 16 dB) -> U.FL jumper to the carrier (J403)',
             g(14), g(8), 1.5, True)
@@ -884,7 +821,7 @@ def gnss():
         sh.w(U[pin], U.out(pin, 2))
         sh.label('GNSS_VCC', U.out(pin, 2), 'L')
     sh.gnd(U['1'])
-    # output: DC block, then the coax node with the bias tee
+    # output: DC block, then the coax to the carrier
     Cb = rh(sh, 'Device:C', 'C801', '33pF', C0402, U['10'][0] + g(8), yo)
     sh.w(U['10'], Cb[1])
     xn = Cb[2][0] + g(4)
@@ -894,18 +831,19 @@ def gnss():
                 fields={'ref': (xj - g(1), yo - g(3), None), 'val': (xj - g(1), yo - g(2), None)})
     sh.w(Cb[2], (xn, yo), J['1'])
     sh.gnd(J['2'])
-    Lb = rv(sh, 'Device:L', 'L802', '27nH', 'Inductor_SMD:L_0402_1005Metric', xn, yo)
-    yv = Lb[2][1] + g(1)
-    sh.w(Lb[2], (xn, yv), (xn + g(7), yv))
-    cap_to_gnd(sh, 'C803', '33pF', C0402, xn + g(4), yv, 1)
-    Rd = rh(sh, 'Device:R', 'R801', '100R', R0402, xn + g(7), yv)
-    sh.w(Rd[2], (xn + g(18), yv))
-    cap_to_gnd(sh, 'C802', '100nF', C0402, xn + g(13), yv, 1)
-    sh.power('power:PWR_FLAG', (xn + g(16), yv))
-    sh.label('GNSS_VCC', (xn + g(18), yv), 'R')
-    sh.text('Bias from the carrier (3.3 V on the coax, U405 limits it): 27 nH choke, 100R drops it to about 3.0 V\n'
-            '(SKY65943-11: 1.62-3.3 V, 3 mA; VEN needs VCC - 0.3 V, so it is tied to VCC).',
-            xn - g(6), yv + g(7), 1.27)
+    # supply: straight from the MCU pin that switches the modem on (3 mA), filtered by 100R + 100 nF
+    yv = yo + g(5)
+    xs = xn - g(6)
+    sh.glabel('LTE_PWR_EN', (xs, yv), 'L', 'input')
+    Rd = rh(sh, 'Device:R', 'R801', '100R', R0402, xs + g(2), yv)
+    sh.w((xs, yv), Rd[1])
+    sh.w(Rd[2], (xs + g(14), yv))
+    cap_to_gnd(sh, 'C802', '100nF', C0402, xs + g(9), yv, 1)
+    sh.power('power:PWR_FLAG', (xs + g(12), yv))
+    sh.label('GNSS_VCC', (xs + g(14), yv), 'R')
+    sh.text('Supply = LTE_PWR_EN (MCU pin, high while the modem is on) through 100R: about 3.0 V at 3 mA\n'
+            '(SKY65943-11: 1.62-3.3 V; VEN needs VCC - 0.3 V, so it is tied to VCC). No DC on the coax.',
+            xs - g(2), yv + g(7), 1.27)
     # bypass: fit R802 (and remove C801) to try the bare patch
     yb = yin - g(8)
     xb = xa + g(6)
@@ -913,6 +851,51 @@ def gnss():
     sh.w((xb, yin), (xb, yb), Rb[1])
     sh.w(Rb[2], (xn + g(3), yb), (xn + g(3), yo))
     sh.text('R802 (not fitted): bypass link to compare the bare patch', xb + g(8), yb - g(3), 1.27)
+    return sh
+
+
+# =====================================================================================
+def sense():
+    """VIN sense divider at the MCU: VIN_PROT is on the upper board anyway (K-Line pull-up, charger)"""
+    sh = Sheet('Sense', 'sense.kicad_sch', SHEETS['sense'], ROOT, 'Battery voltage sense divider')
+    yl = g(30)
+    sh.text('Battery sense (VSENSE = VIN / 11, full scale ~35 V)', g(82), yl - g(6), 1.5, True)
+    xs = g(88)
+    Rs1 = rv(sh, 'Device:R', 'R109', '100k', R0603, xs, yl - g(2))
+    sh.rail('VIN_PROT', Rs1[1])
+    Rs2 = rv(sh, 'Device:R', 'R110', '10k', R0603, xs, Rs1[2][1] + g(2))
+    sh.w(Rs1[2], Rs2[1])
+    sh.gnd(Rs2[2])
+    yn = Rs1[2][1] + g(1)
+    Cs = rv(sh, 'Device:C', 'C111', '100nF', C0603, xs + g(4), yn)
+    sh.w((xs, yn), Cs[1], (xs + g(8), yn))
+    sh.gnd(Cs[2])
+    sh.glabel('VSENSE', (xs + g(8), yn), 'R', 'output')
+    return sh
+
+
+def keys():
+    """open-collector drivers for the modem's PWRKEY and RESET_N: only the two collector lines cross the stack"""
+    sh = Sheet('Keys', 'keys.kicad_sch', SHEETS['keys'], ROOT, 'Modem PWRKEY / RESET_N drivers')
+    # PWRKEY / RESET drivers
+    sh.text('PWRKEY / RESET_N open-collector drivers (MCU high = pull low)', g(4), g(8), 1.27, True)
+    for i, (q, rb, rp, ctl, net, base) in enumerate((('Q401', 'R401', 'R402', 'LTE_PWRKEY_CTL', 'LTE_PWRKEY', 'PWRKEY_B'),
+                                                      ('Q402', 'R403', 'R404', 'LTE_RESET_CTL', 'LTE_RESET_N', 'RESET_B'))):
+        xq, yq = g(16 + 18 * i), g(16)
+        Q = sh.part('Transistor_BJT:MMBT3904', q, 'MMBT3904', SOT23, xq, yq, 0,
+                    fields={'ref': (xq + g(2), yq + 1.27, 'left'), 'val': (xq + g(2), yq + 3.81, 'left')})
+        sh.w(Q['C'], Q.out('C', 1), (Q['C'][0] + g(2), Q.out('C', 1)[1]))
+        sh.glabel(net, (Q['C'][0] + g(2), Q.out('C', 1)[1]), 'R', 'output')
+        sh.gnd(Q['E'])
+        Rb = rh(sh, 'Device:R', rb, '4.7k', R0603, Q['B'][0] - g(1) - 7.62, Q['B'][1])
+        sh.w(Rb[2], Q['B'])
+        sh.w(Rb[1], (Rb[1][0] - g(1), Rb[1][1]))
+        sh.glabel(ctl, (Rb[1][0] - g(1), Rb[1][1]), 'L', 'input')
+        xp = Q['B'][0] - g(1)
+        Rp = rv(sh, 'Device:R', rp, '47k', R0603, xp, Q['B'][1] + g(1))
+        Rp.fields = VL(Rp.x, Rp.y)
+        sh.w((xp, Q['B'][1]), Rp[1])
+        sh.gnd(Rp[2])
     return sh
 
 
@@ -1043,7 +1026,7 @@ def battery():
 # modem's SIM and power-key side).
 STACK_A = ['GND', 'GND', '+3V3', '+3V3', 'CANH', 'CANL', 'GND', 'K_LINE',
            'VIN_PROT', 'GND', 'MCU_TX_LTE', 'MCU_RX_LTE', 'MCU_RTS_LTE', 'MCU_CTS_LTE', 'LTE_STATUS_3V3', 'GND']
-STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'LTE_PWRKEY_CTL', 'LTE_RESET_CTL', 'LTE_PWR_EN', 'VSENSE',
+STACK_B = ['GND', 'GND', 'VSYS_3V8', '+3V3', 'LTE_PWRKEY', 'LTE_RESET_N', 'LTE_PWR_EN', 'GND',
            'VBUS_USB', 'GND', 'LTE_USIM_CLK', 'GND', 'LTE_USIM_DATA', 'LTE_USIM_RST', 'SIM_VDD', 'VCELL']
 STACK_RAILS = {'GND', '+3V3', 'VSYS_3V8', 'VIN_PROT', 'VCELL'}
 

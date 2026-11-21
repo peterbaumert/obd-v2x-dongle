@@ -26,6 +26,7 @@ import maze  # noqa: E402
 from kicad_env import CLI  # noqa: E402
 
 PCB = maze.PCB
+SUPPLY = {'OBD_VBAT', 'VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'VBUCK_3V8', 'VCELL', 'Net-(D103-K)'}   # wider tracks first
 OX, OY = maze.OX, maze.OY
 
 
@@ -66,7 +67,8 @@ def main():
             a, b = v['items'][0], v['items'][1]
             if 'Zone' in a['description']:
                 a, b = b, a
-            net = a['description'].split('[')[1].split(']')[0].split('/')[-1]
+            full = a['description'].split('[')[1].split(']')[0]        # whole name: net names may contain '/'
+            net = full[1:] if full.startswith('/') else full
             pa = (a['pos']['x'] - OX, a['pos']['y'] - OY)
             la = layer(a['description'])
             if 'Zone' in b['description']:
@@ -81,7 +83,7 @@ def main():
             if key in failed:
                 continue
             maze.CLR = 0.26 if net == 'GND' else 0.21
-            for w in (0.2, 0.15):
+            for w in ((0.4, 0.3, 0.2) if net in SUPPLY else (0.2, 0.15)):
                 board = pcbnew.LoadBoard(PCB.name)
                 try:
                     maze.route(board, maze.full_net(board, net), pa, maze.LNAME[la], pb, maze.LNAME[lb], w)

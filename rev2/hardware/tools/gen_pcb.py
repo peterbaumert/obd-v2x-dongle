@@ -63,19 +63,22 @@ PLACE = {
         'Q101': (6.0, 22.4, 0, B),
         'U101': (6.0, 27.6, 0, B),
         'U402': (6.0, 34.0, 90, B),
-        'U502': (6.0, 39.6, 180, B),           # ILIM / soft-start pins towards the rear edge, where there is room
+        'Q102': (6.0, 40.6, 0, B),             # modem supply switch at the modem's supply pins
         # tall parts in the front half, between the sockets (the cell lies over the rear half, on parts <= 2.9 mm)
         'L101': (14.0, 11.0, 0, T),
-        'U102': (13.6, 19.3, 0, T),            # buck right next to its inductor
+        'U102': (13.0, 19.3, 90, T),           # buck: pins face the inductor above and the diode below
         'J501': (30.55, 11.7, 270, T),         # battery, side entry: the plug goes in from the left (-x)
-        'C401': (22.2, 19.0, 0, T),
-        'C506': (31.25, 19.0, 0, T),
+        'C401': (20.6, 19.0, 0, T),
+        'C506': (30.0, 19.0, 0, T),
         # under the cell (parts up to 2.9 mm): the buck's diode in line with regulator and inductor, then the rest
-        'D103': (14.6, 27.2, 0, T),
-        'C107': (12.6, 33.2, 90, T), 'C108': (16.6, 33.2, 90, T),   # buck output capacitors (2.85 mm)
-        'U103': (23.5, 27.0, 0, T),            # 3.3 V regulator
-        'Q102': (23.5, 32.0, 0, T),
-        'U405': (33.5, 34.0, 0, T),            # GNSS antenna bias switch, near J403
+        'D103': (14.6, 28.8, 0, T),
+        'R101': (11.6, 24.5, 0, T), 'R102': (15.2, 24.5, 0, T),      # enable divider at the regulator's pin 3
+        'C107': (12.6, 35.0, 90, T), 'C108': (16.6, 35.0, 90, T),   # buck output capacitors (2.85 mm)
+        'U103': (31.5, 27.0, 0, T),            # 3.3 V regulator
+        'U502': (24.0, 30.0, 0, T),            # power mux in the open middle, between buck output and tantalums
+        # its current-limit resistor and soft-start capacitor directly above pins 10 and 11 (pad 1 towards the chip):
+        # those two pins have no other way out
+        'R507': (25.6, 26.5, 90, T), 'C504': (24.0, 26.5, 90, T),   # clear of pin 12 (GND), which goes straight up
         # antenna sockets in the rear corners, beside the cell (a mated U.FL is 2.5 mm tall), each near its modem pin
         'J402': (4.0, 40.5, 0, T),             # LTE antenna
         'J403': (41.0, 40.5, 0, T),            # GNSS: jumper to J801 on the upper board
@@ -102,13 +105,12 @@ ANCHOR = {
     'carrier': {
         'C101': ('U101', '1', None), 'C103': ('U102', '2', None), 'C104': ('U102', '1', None),
         'C105': ('U102', '6', None), 'C106': ('U102', '6', None), 'R106': ('U102', '6', None),
-        'R101': ('U102', '3', None), 'R102': ('U102', '3', None), 'R103': ('U102', '4', None),
+        'R103': ('U102', '4', None),
         'R104': ('U102', '5', None), 'R105': ('U102', '5', None),
         'R107': ('Q102', '1', None), 'Q103': ('Q102', '1', None), 'R108': ('Q102', '1', None),
         'C109': ('U103', '1', None), 'C110': ('U103', '5', None),
         'C402': ('U401', '59', T), 'C403': ('U401', '58', T), 'C404': ('U401', '57', T), 'C405': ('U401', '7', T),
         'C406': ('U402', '1', None),
-        'C504': ('U502', '11', None), 'R507': ('U502', '10', None),
         'Q401': ('U401', '21', T), 'Q402': ('U401', '20', T),
         'R401': ('U401', '21', T), 'R402': ('U401', '21', T), 'R403': ('U401', '20', T), 'R404': ('U401', '20', T),
     },
@@ -149,7 +151,7 @@ def room(bx, side):
     return r
 
 
-GAP = 0.3          # min gap between courtyards when auto-placing
+GAP = 0.45         # min gap between courtyards when auto-placing (room for vias and tracks between parts)
 SOLID_GND = {'U102', 'U401', 'U301', 'U801'}   # thermal / RF ground pads: solid zone connection
 EDGE = 0.8         # keep courtyards this far inside the outline
 
@@ -164,8 +166,11 @@ NETCLASSES = [
     # name, track, clearance, via_d, via_drill, net-name patterns
     # 0.4 mm on the carrier: 0.6 mm supply tracks do not fit between its parts. Short runs; widen by hand or with
     # pours where there is room.
-    ('Power', 0.4 if BOARD == 'carrier' else 0.6, 0.2, 0.6, 0.3, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'VSYS_3V8', 'VBAT_LTE', 'Net-(D103-K)',
-                                  'Net-(D202-K)', 'VBUCK_3V8', 'VCELL']),   # USB VBUS (<0.5 A) stays default class
+    # Vehicle-voltage nets (up to 30 V and more, and the buck's switch node) keep 0.2 mm clearance.
+    ('Power', 0.4 if BOARD == 'carrier' else 0.6, 0.2, 0.6, 0.3, ['OBD_VBAT', '*VBAT_F', 'VIN_PROT', 'Net-(D103-K)',
+                                  'Net-(D202-K)']),               # USB VBUS (<0.5 A) stays default class
+    # The 3.8 V supply nets only need the board's 0.15 mm.
+    ('PowerLV', 0.4 if BOARD == 'carrier' else 0.6, 0.15, 0.6, 0.3, ['VSYS_3V8', 'VBAT_LTE', 'VBUCK_3V8', 'VCELL']),
     # 50 ohm grounded coplanar (0.32 mm, 0.25 mm gap) over In1 on PCBWay's standard 1.6 mm 4-layer stack-up
     # (7628 prepreg 0.186 mm, Dk ~4.4-4.7): designed to the stack-up, no paid impedance control.
     # On the 2-layer upper board 0.32 / 0.25 is not 50 ohm; its RF runs are a few mm, keep them short.

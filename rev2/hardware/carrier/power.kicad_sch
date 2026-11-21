@@ -3608,18 +3608,6 @@
 		)
 		(uuid "db9d946c-3c29-5482-bff8-fc83f02ad5db")
 	)
-	(text "Battery sense (VSENSE = VIN / 11, full scale ~35 V)"
-		(exclude_from_sim no)
-		(at 208.28 111.76 0)
-		(effects
-			(font
-				(size 1.5 1.5)
-				(bold yes)
-			)
-			(justify left)
-		)
-		(uuid "dcf4f2ae-9ecc-51e1-bd29-3e0d272a579e")
-	)
 	(junction
 		(at 147.32 134.62)
 		(diameter 0)
@@ -3729,12 +3717,6 @@
 		(uuid "be41bf1a-e66e-5d80-9291-3a473df4caa0")
 	)
 	(junction
-		(at 233.68 132.08)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "c8fdcfff-bf15-5abd-8935-0236f4a31ce9")
-	)
-	(junction
 		(at 193.04 55.88)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3759,12 +3741,6 @@
 		(uuid "e1437a2c-4f6b-5b17-8f2a-923ead514bf3")
 	)
 	(junction
-		(at 223.52 132.08)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e2a654b9-121d-5f8d-b3d6-783f62e5470e")
-	)
-	(junction
 		(at 132.08 134.62)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -3779,16 +3755,6 @@
 	(no_connect
 		(at 55.88 127)
 		(uuid "d8e6ba8c-8235-57f1-aaff-deb989efec8d")
-	)
-	(wire
-		(pts
-			(xy 15.24 185.42) (xy 17.78 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "01ce1e98-5bfc-5ae5-a6c6-012a6c8cfd82")
 	)
 	(wire
 		(pts
@@ -3932,6 +3898,16 @@
 	)
 	(wire
 		(pts
+			(xy 15.24 185.42) (xy 17.78 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "33272910-7470-5f79-9391-4f03cdcf722c")
+	)
+	(wire
+		(pts
 			(xy 203.2 43.18) (xy 205.74 43.18)
 		)
 		(stroke
@@ -3959,16 +3935,6 @@
 			(type default)
 		)
 		(uuid "4c6ebd51-bc1d-5d2b-8fb4-a0662c35f544")
-	)
-	(wire
-		(pts
-			(xy 30.48 182.88) (xy 30.48 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4c947142-e2e4-564a-8a0e-687359f61794")
 	)
 	(wire
 		(pts
@@ -4029,6 +3995,16 @@
 			(type default)
 		)
 		(uuid "57a8ff75-4200-58f8-aba3-9677ac6a8e66")
+	)
+	(wire
+		(pts
+			(xy 45.72 182.88) (xy 45.72 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5d556ada-39f1-5a96-8b7f-211f2ff4a097")
 	)
 	(wire
 		(pts
@@ -4162,16 +4138,6 @@
 	)
 	(wire
 		(pts
-			(xy 233.68 132.08) (xy 243.84 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9aca6fa8-b546-5864-83e3-4d3bb7cab984")
-	)
-	(wire
-		(pts
 			(xy 213.36 40.64) (xy 223.52 40.64)
 		)
 		(stroke
@@ -4192,26 +4158,6 @@
 	)
 	(wire
 		(pts
-			(xy 60.96 182.88) (xy 60.96 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a3ef362d-1a3e-5cc6-8e04-1513785150f1")
-	)
-	(wire
-		(pts
-			(xy 45.72 182.88) (xy 45.72 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a4d592f7-6f6e-54b6-aae6-55917d48dd7d")
-	)
-	(wire
-		(pts
 			(xy 132.08 134.62) (xy 147.32 134.62)
 		)
 		(stroke
@@ -4219,16 +4165,6 @@
 			(type default)
 		)
 		(uuid "a62afce8-9444-5f11-b349-61acd6319f77")
-	)
-	(wire
-		(pts
-			(xy 223.52 129.54) (xy 223.52 134.62)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a6c7b487-5774-5b43-90b6-92e0cc0e9109")
 	)
 	(wire
 		(pts
@@ -4249,16 +4185,6 @@
 			(type default)
 		)
 		(uuid "ac94aa36-e9e4-5eb9-9d54-41817dcb287d")
-	)
-	(wire
-		(pts
-			(xy 223.52 132.08) (xy 233.68 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "b2a79657-31ed-526b-a194-6718deeb1c4e")
 	)
 	(wire
 		(pts
@@ -4362,6 +4288,16 @@
 	)
 	(wire
 		(pts
+			(xy 30.48 182.88) (xy 30.48 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cba3094c-4431-5c97-8cd4-03d5a0dd40f8")
+	)
+	(wire
+		(pts
 			(xy 147.32 134.62) (xy 147.32 139.7)
 		)
 		(stroke
@@ -4462,16 +4398,6 @@
 	)
 	(wire
 		(pts
-			(xy 15.24 182.88) (xy 15.24 185.42)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "ed9b5f21-60ba-53aa-9aca-27eeb3dfc19d")
-	)
-	(wire
-		(pts
 			(xy 66.04 124.46) (xy 73.66 124.46)
 		)
 		(stroke
@@ -4512,6 +4438,16 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 182.88) (xy 60.96 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f7193840-234e-530f-980a-71b9b56971d7")
+	)
+	(wire
+		(pts
 			(xy 152.4 124.46) (xy 162.56 124.46)
 		)
 		(stroke
@@ -4519,6 +4455,16 @@
 			(type default)
 		)
 		(uuid "f7a308cf-32d6-58b1-a0d9-c646a0bf1946")
+	)
+	(wire
+		(pts
+			(xy 15.24 182.88) (xy 15.24 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fb630d55-ff6f-5e96-a7cf-43a58f00e1cd")
 	)
 	(wire
 		(pts
@@ -4600,6 +4546,16 @@
 		)
 		(uuid "aca8d946-922c-5884-970e-d5cd3422d22d")
 	)
+	(label "LTE_PWR_ON_N"
+		(at 127 134.62 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "e5b10d1f-6505-5861-a1ef-ade499251404")
+	)
 	(label "BUCK_FB"
 		(at 243.84 50.8 180)
 		(effects
@@ -4619,28 +4575,6 @@
 			(justify left)
 		)
 		(uuid "faa74baa-5ac1-58aa-aa53-26cc1fe98cf7")
-	)
-	(global_label "VSENSE"
-		(shape output)
-		(at 243.84 132.08 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "02c692dd-cb35-5422-89cb-1fcfcdec49c4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 243.84 132.08 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
 	)
 	(global_label "OBD_VBAT"
 		(shape input)
@@ -4698,28 +4632,6 @@
 		(uuid "5899292f-4857-510f-8e72-272c5180d176")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 109.22 17.78 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-	)
-	(global_label "LTE_PWR_ON_N"
-		(shape output)
-		(at 127 134.62 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "e5b10d1f-6505-5861-a1ef-ade499251404")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 127 134.62 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5007,8 +4919,8 @@
 		)
 	)
 	(symbol
-		(lib_id "obd-v2x:VIN_PROT")
-		(at 30.48 185.42 180)
+		(lib_id "power:GND")
+		(at 76.2 182.88 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5018,7 +4930,7 @@
 		(dnp no)
 		(uuid "0c4330fa-846c-5d1b-b171-709d4e3fc231")
 		(property "Reference" "#PWRP029"
-			(at 30.48 185.42 0)
+			(at 76.2 182.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5028,8 +4940,8 @@
 				)
 			)
 		)
-		(property "Value" "VIN_PROT"
-			(at 30.48 188.976 0)
+		(property "Value" "GND"
+			(at 76.2 186.69 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5039,7 +4951,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 30.48 185.42 0)
+			(at 76.2 182.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5050,7 +4962,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 30.48 185.42 0)
+			(at 76.2 182.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5061,7 +4973,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 30.48 185.42 0)
+			(at 76.2 182.88 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -5305,82 +5217,6 @@
 			(project "obd-v2x-carrier"
 				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
 					(reference "#PWRP021")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "obd-v2x:VBAT_LTE")
-		(at 60.96 185.42 180)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "14487885-a07b-5a65-9770-fc5ce3b85890")
-		(property "Reference" "#PWRP031"
-			(at 60.96 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VBAT_LTE"
-			(at 60.96 188.976 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 60.96 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 60.96 185.42 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "2f50ec90-94c6-5031-b3c8-0d2eaad58c8a")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "#PWRP031")
 					(unit 1)
 				)
 			)
@@ -6244,7 +6080,7 @@
 	)
 	(symbol
 		(lib_id "obd-v2x:VIN_PROT")
-		(at 223.52 121.92 0)
+		(at 30.48 185.42 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6254,7 +6090,7 @@
 		(dnp no)
 		(uuid "377b77e5-b18a-5c7c-b41a-98e8e4b178f0")
 		(property "Reference" "#PWRP026"
-			(at 223.52 121.92 0)
+			(at 30.48 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6265,7 +6101,7 @@
 			)
 		)
 		(property "Value" "VIN_PROT"
-			(at 223.52 118.364 0)
+			(at 30.48 188.976 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6275,7 +6111,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 223.52 121.92 0)
+			(at 30.48 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6286,7 +6122,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 223.52 121.92 0)
+			(at 30.48 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6297,7 +6133,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 223.52 121.92 0)
+			(at 30.48 185.42 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6475,8 +6311,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 233.68 139.7 0)
+		(lib_id "obd-v2x:VBAT_LTE")
+		(at 60.96 185.42 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6486,7 +6322,7 @@
 		(dnp no)
 		(uuid "467e1c8d-e936-579e-b118-f46d459de930")
 		(property "Reference" "#PWRP028"
-			(at 233.68 139.7 0)
+			(at 60.96 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6496,8 +6332,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 233.68 143.51 0)
+		(property "Value" "VBAT_LTE"
+			(at 60.96 188.976 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6507,7 +6343,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 233.68 139.7 0)
+			(at 60.96 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6518,7 +6354,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 233.68 139.7 0)
+			(at 60.96 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6529,7 +6365,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 233.68 139.7 0)
+			(at 60.96 185.42 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6761,82 +6597,6 @@
 		)
 	)
 	(symbol
-		(lib_id "obd-v2x:VBUCK_3V8")
-		(at 45.72 185.42 180)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "47fa7563-319e-53ac-8e6d-43db501251ee")
-		(property "Reference" "#PWRP030"
-			(at 45.72 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "VBUCK_3V8"
-			(at 45.72 188.976 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 45.72 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 45.72 185.42 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 45.72 185.42 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "45072dd4-8d8f-5bf6-aafe-016193a30502")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "#PWRP030")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 134.62 48.26 0)
 		(unit 1)
@@ -6913,8 +6673,8 @@
 		)
 	)
 	(symbol
-		(lib_id "power:GND")
-		(at 223.52 142.24 0)
+		(lib_id "obd-v2x:VBUCK_3V8")
+		(at 45.72 185.42 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6924,7 +6684,7 @@
 		(dnp no)
 		(uuid "4bd6e319-f821-5d83-9db5-f77eee16771e")
 		(property "Reference" "#PWRP027"
-			(at 223.52 142.24 0)
+			(at 45.72 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6934,8 +6694,8 @@
 				)
 			)
 		)
-		(property "Value" "GND"
-			(at 223.52 146.05 0)
+		(property "Value" "VBUCK_3V8"
+			(at 45.72 188.976 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -6945,7 +6705,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 223.52 142.24 0)
+			(at 45.72 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6956,7 +6716,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 223.52 142.24 0)
+			(at 45.72 185.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6967,7 +6727,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 223.52 142.24 0)
+			(at 45.72 185.42 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -7063,82 +6823,6 @@
 			(project "obd-v2x-carrier"
 				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
 					(reference "C102")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 76.2 182.88 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "4d32aca0-8ac1-5ab9-a7d1-454770f7dbdd")
-		(property "Reference" "#PWRP032"
-			(at 76.2 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "GND"
-			(at 76.2 186.69 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 76.2 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 76.2 182.88 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 76.2 182.88 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "cf883957-ae82-57c8-b3d4-7fa231637ca0")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "#PWRP032")
 					(unit 1)
 				)
 			)
@@ -8422,86 +8106,6 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 233.68 135.89 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "9234062c-8918-5bd3-8ee4-4b1409d9f3ae")
-		(property "Reference" "C111"
-			(at 235.712 134.62 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100nF"
-			(at 235.712 137.16 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 233.68 135.89 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 233.68 135.89 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 233.68 135.89 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "61f57962-f09e-51ce-ab58-645f3432d8a5")
-		)
-		(pin "2"
-			(uuid "0eab86fd-25bf-50fe-91ac-02b049c7005d")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "C111")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:C")
 		(at 35.56 133.35 0)
 		(unit 1)
 		(body_style 1)
@@ -9249,86 +8853,6 @@
 	)
 	(symbol
 		(lib_id "Device:R")
-		(at 223.52 125.73 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "b0c050e8-2823-5368-84b9-ba9a5a873df1")
-		(property "Reference" "R109"
-			(at 225.552 124.46 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100k"
-			(at 225.552 127 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 223.52 125.73 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 223.52 125.73 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 223.52 125.73 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "e656f8a4-b2f5-5a80-b927-da12b179863d")
-		)
-		(pin "2"
-			(uuid "447aebbd-ceb0-5509-bee3-ac7ac3e30578")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "R109")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
 		(at 167.64 44.45 0)
 		(unit 1)
 		(body_style 1)
@@ -9858,86 +9382,6 @@
 			(project "obd-v2x-carrier"
 				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
 					(reference "C105")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 223.52 138.43 0)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "dee3f037-2822-5df8-84ba-414d151cd252")
-		(property "Reference" "R110"
-			(at 225.552 137.16 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 225.552 139.7 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 223.52 138.43 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 223.52 138.43 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 223.52 138.43 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "255795db-552f-536a-b33c-0f1be1a473de")
-		)
-		(pin "2"
-			(uuid "e772038f-6ddc-52b8-8851-e3880f7d3a4d")
-		)
-		(instances
-			(project "obd-v2x-carrier"
-				(path "/f12ceced-dd56-52a2-855a-812d205783b2/b5225a07-588b-569e-a1a7-ca74e2622722"
-					(reference "R110")
 					(unit 1)
 				)
 			)
