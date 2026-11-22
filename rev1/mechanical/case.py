@@ -64,7 +64,7 @@ WALL = 2.0                       # side / rear wall
 FLOOR = 2.0
 ROOF = 2.5                       # 2.0 + 0.5 so the rounded top edge leaves a lip above the plug key slot
 GAP = 0.3                        # board edge to wall
-FIT = 0.1                        # rib clearance in the groove (per side)
+FIT = 0.2                        # rib clearance in the groove (per side): 0.1 was too tight on the first print
 Z_IN_BOT = -11.0                 # inner floor: room for the JST-PH lead on J501 and the cell
 Z_IN_TOP = PLUG_Z0 + PLUG_H + KEY_H + 0.3
 EDGE_R = 3.0                     # vertical outer edge radius
@@ -88,7 +88,7 @@ SPLIT = BT
 # screws: ST2.2 x 9.5 DIN 7981 pan head (head 4.2 mm), from below, beside the plug flange, just in front of
 # the board edge; bosses in both shells (the bottom one reaches under the board corner)
 SCREWS = [(103.3, -58.05), (148.7, -58.05)]  # shank 0.2 mm clear of the board edge, 0.4 mm wall in front of the head
-SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 1.8, 2.5, 4.6
+SCREW_PILOT, SCREW_CLEAR, SCREW_HEAD = 1.8, 2.5, 4.4   # head 4.2: keeps the 0.4 mm front wall with FIT 0.2
 SCREW_HEAD_TOP = -2.5            # counterbore from below up to here
 SCREW_BOSS_BOT, SCREW_BOSS_LID = 3.1, 2.4   # boss radius in the bottom shell / lid
 

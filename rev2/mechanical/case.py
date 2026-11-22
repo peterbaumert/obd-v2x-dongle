@@ -43,7 +43,7 @@ DX, DY = S.BX0 - 100.0, S.BYF + 50.0
 box, prism = rev1.box, rev1.prism
 
 WALL, FLOOR, ROOF, GAP = S.WALL, S.FLOOR, S.ROOF, S.GAP
-FIT = 0.1                           # rib clearance in the groove (per side)
+FIT = 0.2                           # rib clearance in the groove (per side): 0.1 was too tight on the first print
 EDGE_R, EDGE_R_H = 3.0, 1.5         # vertical / horizontal outer edge radius
 X_IN0, X_IN1 = S.BX0 - GAP, S.BX1 + GAP
 Y_IN_REAR = S.BYR - 0.5 - GAP       # USB-C overhangs the rear edge by 0.5 mm
