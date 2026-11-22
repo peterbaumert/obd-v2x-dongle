@@ -253,7 +253,7 @@ def build(parts):
     # front bottom edge stays square: the wall in front of the screw head counterbores is only 0.4 mm, the
     # rounding would open the counterbores to the outside (it sits on the print bed, so it prints clean anyway)
     vert = fillet(box(X_OUT0, X_OUT1, Y_OUT_REAR, FRONT_OUT, Z_OUT_BOT, Z_OUT_TOP).edges().filter_by(Axis.Z), EDGE_R)
-    outer += vert & box(X_OUT0, X_OUT1, FRONT_OUT - EDGE_R_H, FRONT_OUT, Z_OUT_BOT, Z_OUT_BOT + EDGE_R_H)
+    outer += vert & box(X_OUT0 + EDGE_R_H, X_OUT1 - EDGE_R_H, FRONT_OUT - EDGE_R_H, FRONT_OUT, Z_OUT_BOT, Z_OUT_BOT + EDGE_R_H)   # not into the side roundings
     # grip grooves: constant depth, also around the rounded top / bottom edges
     for i in range(GRIP_N):
         y = Y_OUT_REAR + GRIP_REAR + i * GRIP_PITCH
