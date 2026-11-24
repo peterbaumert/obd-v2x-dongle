@@ -8,7 +8,8 @@
   change run `check_stack.py` and `check_vs_rev1.py` (both in `rev2/hardware/tools`) and ERC on both (expect 0 / 0).
   Boards: `<KiCad>/bin/python rev2/hardware/tools/gen_pcb.py carrier|upper` (first-pass placement, unrouted;
   `--force` loses routing). Keep `rev2/mechanical/stack.py` in step with the big parts' positions.
-  Order files: `<KiCad>/bin/python rev2/hardware/tools/fab.py`; notes and stock in `rev2/docs/bom-notes.md`.
+  Order files: `<KiCad>/bin/python rev2/hardware/tools/panel.py` (assembly panel of both boards, regenerate after
+  board changes), then `fab.py` (-> `rev2/hardware/fab/panel/`); notes and stock in `rev2/docs/bom-notes.md`.
   Both rev 2 boards are 4 layers (In1 GND plane) and fully routed after the 2026-11-21 layout review (0 unconnected,
   no rule errors, parity 0), with hand edits: the `.kicad_pcb` files are the source, do not run `gen_pcb.py --force`.
   Last connections and local fixes: by hand (KiCad MCP or pcbnew), checking the other side's pads first (the modem

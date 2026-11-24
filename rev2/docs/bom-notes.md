@@ -7,17 +7,28 @@ pick any in-stock part (as in rev 1).
 
 ## Order files
 
-`<KiCad>/bin/python rev2/hardware/tools/fab.py` writes one set per board to `rev2/hardware/fab/<board>/`
-(git-ignored): Gerber zip, assembly BOM, pick-and-place file (origin = board bottom-left corner).
+Ordered as **one panel**: one carrier and one upper board side by side in a 5 mm frame
+(`rev2/hardware/tools/panel.py` -> `rev2/hardware/panel/obd-v2x-panel.kicad_pcb`). One PCB order and one assembly
+job instead of two each: on 2026-11-24 PCBWay quoted $217.65 for 5 panels + 2 assembled panels against $300.08 for
+the two boards separately (before parts).
 
-Two PCB orders and two assembly jobs, same settings for both:
+`<KiCad>/bin/python rev2/hardware/tools/fab.py` writes the order files to `rev2/hardware/fab/panel/` (and one set per
+board to `fab/carrier/`, `fab/upper/`; all git-ignored): Gerber zip, assembly BOM (both boards' parts, unique
+designators), pick-and-place file (origin = bottom-left corner of the panel, or of the board).
 
 | Setting | Value |
 |---|---|
-| Size | 45 × 45 mm, 4 layers, 1.6 mm, 1 oz outer / 1 oz inner, standard stack-up |
+| Panel | 106 × 59 mm, panel by customer, 2 different designs, X-outs not accepted |
+| Board | 4 layers, 1.6 mm, 1 oz outer / 1 oz inner, standard stack-up, 5/5 mil, 0.3 mm min. hole |
 | Finish | ENIG (flat pads for the modem, the 0.5 mm-pitch QFNs and the SKY65943-11) |
 | Impedance control | none: the RF lines are drawn for the standard stack-up (see `rev2/README.md`) |
-| Assembly | double-sided on both boards |
+| Assembly | turnkey, double-sided, panelized PCBs (quantity = single boards: 2 panels = 4) |
+
+The panel: 2 mm milled gaps, 9 tabs with mouse bites (0.5 mm holes) placed only where no part comes within 1.5 mm
+of the edge (the carrier's front edge between the OBD plug's legs, the upper board clear of the USB-C and the SIM
+holder, which both overhang their edges), 3 fiducials per side and 4 tooling holes on the frame. The bites sit just
+outside the board edge: after breaking out, file the stubs flush (the case leaves 0.3 mm around the boards, and the
+OBD plug sits 0.35 mm in front of the carrier's front edge), then fit the plug.
 
 ## Not fitted by PCBWay
 

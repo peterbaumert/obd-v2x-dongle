@@ -1,8 +1,8 @@
 """Fabrication + assembly outputs for PCBWay, one set per rev 2 board (run with KiCad's Python).
 
-    <KiCad>/bin/python rev2/hardware/tools/fab.py [carrier|upper]     (default: both)
+    <KiCad>/bin/python rev2/hardware/tools/fab.py [carrier|upper|panel]     (default: all three)
 
-Writes rev2/hardware/fab/<board>/ (git-ignored):
+Writes rev2/hardware/fab/<board>/ (git-ignored; "panel" = both boards in one assembly panel, made by panel.py):
   obd-v2x-<board>-gerber.zip   Gerber X2 (4 copper, mask, paste, silk, edge) + Excellon PTH/NPTH drill + drill map
   obd-v2x-<board>-cpl.csv      pick & place, both sides, mm, origin = board bottom-left (drill/place origin)
   obd-v2x-<board>-bom.csv      assembly BOM: parts PCBWay fits (no DNP, no J201, no test pads / mounting holes)
@@ -38,11 +38,34 @@ def cli(*args):
     subprocess.run([str(kicad_env.CLI), *args], check=True, stdout=subprocess.DEVNULL)
 
 
+def full_bom(board):
+    """rev2/docs/bom-<board>.csv from the board's schematic; returns its rows"""
+    full = DOCS / f'bom-{board}.csv'
+    DOCS.mkdir(exist_ok=True)
+    cli('sch', 'export', 'bom', '--fields', 'Reference,Value,Footprint,MPN,Manufacturer,LCSC,${QUANTITY},${DNP}',
+        '--labels', 'Reference,Value,Footprint,MPN,Manufacturer,LCSC,Qty,DNP',
+        '--group-by', 'Value,Footprint,MPN,${DNP}', '--ref-range-delimiter', '', '-o', str(full),
+        str(HW / board / f'obd-v2x-{board}.kicad_sch'))
+    return list(csv.DictReader(full.open(newline='')))
+
+
 def build(board):
     name = f'obd-v2x-{board}'
     pcb = HW / board / f'{name}.kicad_pcb'
-    sch = HW / board / f'{name}.kicad_sch'
     out = HW / 'fab' / board
+    if board == 'panel':        # rev2/hardware/panel/, made by panel.py: both boards' parts in one BOM
+        rows_bom = []
+        merged = {}
+        for b in BOARDS:
+            for r in full_bom(b):
+                key = (r['Value'], r['Footprint'], r['MPN'], r['Manufacturer'], r['LCSC'], r['DNP'])
+                if key in merged:
+                    merged[key]['Reference'] += ',' + r['Reference']
+                else:
+                    merged[key] = dict(r)
+                    rows_bom.append(merged[key])
+    else:
+        rows_bom = full_bom(board)
     if out.exists():
         shutil.rmtree(out)
     gdir = out / 'gerber'
@@ -80,18 +103,13 @@ def build(board):
             w.writerow([r['Ref'], r['PosX'], r['PosY'], 'Top' if r['Side'] == 'top' else 'Bottom', r['Rot'],
                         r['Val'], r['Package']])
 
-    # BOM (full, for docs) and assembly BOM
-    full = DOCS / f'bom-{board}.csv'
-    DOCS.mkdir(exist_ok=True)
-    cli('sch', 'export', 'bom', '--fields', 'Reference,Value,Footprint,MPN,Manufacturer,LCSC,${QUANTITY},${DNP}',
-        '--labels', 'Reference,Value,Footprint,MPN,Manufacturer,LCSC,Qty,DNP',
-        '--group-by', 'Value,Footprint,MPN,${DNP}', '--ref-range-delimiter', '', '-o', str(full), str(sch))
+    # assembly BOM
     n = 0
-    with full.open(newline='') as f, (out / f'{name}-bom.csv').open('w', newline='') as g:
+    with (out / f'{name}-bom.csv').open('w', newline='') as g:
         w = csv.writer(g)
         w.writerow(['Item', 'Designator', 'Qty', 'Value', 'Manufacturer', 'Manufacturer Part Number', 'LCSC',
                     'Package', 'Type', 'Side', 'Note'])
-        for r in csv.DictReader(f):
+        for r in rows_bom:
             if r['DNP']:
                 continue
             refs = [x for x in r['Reference'].split(',') if placed(x)]
@@ -105,11 +123,11 @@ def build(board):
             w.writerow([n, ' '.join(refs), len(refs), r['Value'], r['Manufacturer'], r['MPN'], r['LCSC'],
                         r['Footprint'].split(':')[-1], ' / '.join(sorted({kind(x) for x in refs})), ' / '.join(side), note])
     print(f'{board}: {n} BOM lines, {sum(1 for r in rows if placed(r["Ref"]))} placements ->',
-          ', '.join(p.name for p in sorted(out.iterdir()) if p.is_file()), f'+ rev2/docs/{full.name}')
+          ', '.join(p.name for p in sorted(out.iterdir()) if p.is_file()))
 
 
 def main():
-    for b in [a for a in sys.argv[1:] if a in BOARDS] or BOARDS:
+    for b in [a for a in sys.argv[1:] if a in BOARDS + ('panel',)] or BOARDS + ('panel',):
         build(b)
 
 

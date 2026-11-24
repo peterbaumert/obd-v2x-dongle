@@ -221,6 +221,7 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 | `widen.py` | widens supply tracks (and necked-down RF lines back to 0.32 mm) wherever the clearance allows |
 | `fab.py` | order files per board: Gerber zip, assembly BOM, pick-and-place file; full BOMs to `docs/` |
 | `check_stock.py` | LCSC stock of every part with an MPN, from the BOMs that `fab.py` writes |
+| `panel.py` | assembly panel: both boards in a 5 mm frame, tab-routed (`hardware/panel/`, regenerate after board changes) |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
@@ -363,8 +364,8 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
 
 - Order files: `<KiCad>/bin/python rev2/hardware/tools/fab.py` (both boards, `rev2/hardware/fab/`), stock:
   `python rev2/hardware/tools/check_stock.py`; settings and notes for PCBWay in `docs/bom-notes.md`.
-- Two boards mean two PCB orders and two assembly jobs. Get a quote before committing (the refund of the cancelled
-  rev 1 order sits in the PCBWay balance).
+- Ordered as one panel (both boards, `tools/panel.py`): one PCB order and one assembly job, about a quarter cheaper
+  than two of each (`docs/bom-notes.md`). The refund of the cancelled rev 1 order sits in the PCBWay balance.
 - Rev 1 was never built: there are no bring-up fixes to carry over, so the first rev 2 boards are also the first test
   of the shared circuit.
 
