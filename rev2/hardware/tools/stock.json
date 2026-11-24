@@ -1,0 +1,362 @@
+[
+ {
+  "board": "carrier",
+  "refs": "C401",
+  "mpn": "T520V227M006ATE015",
+  "lcsc": "C696810",
+  "lcsc_mpn": "T520V227M006ATE015",
+  "stock": 488
+ },
+ {
+  "board": "carrier",
+  "refs": "C417",
+  "mpn": "0402CG330J500NT",
+  "lcsc": "C1562",
+  "lcsc_mpn": "0402CG330J500NT",
+  "stock": 1658984
+ },
+ {
+  "board": "carrier",
+  "refs": "C506",
+  "mpn": "T495D227K006ATE100",
+  "lcsc": "C2798131",
+  "lcsc_mpn": "T495D227K006ATE100",
+  "stock": 378
+ },
+ {
+  "board": "carrier",
+  "refs": "D101",
+  "mpn": "SMCJ33CA",
+  "lcsc": "C310048",
+  "lcsc_mpn": "SMCJ33CA/TR13",
+  "stock": 91351
+ },
+ {
+  "board": "carrier",
+  "refs": "D102",
+  "mpn": "SS14",
+  "lcsc": "C2480",
+  "lcsc_mpn": "SS14",
+  "stock": 1128748
+ },
+ {
+  "board": "carrier",
+  "refs": "D103",
+  "mpn": "B560C-13-F",
+  "lcsc": "C85100",
+  "lcsc_mpn": "B560C-13-F",
+  "stock": 31131
+ },
+ {
+  "board": "carrier",
+  "refs": "D201",
+  "mpn": "SZNUP2105LT1G",
+  "lcsc": "C233494",
+  "lcsc_mpn": "SZNUP2105LT1G",
+  "stock": 178832
+ },
+ {
+  "board": "carrier",
+  "refs": "D203",
+  "mpn": "PESD1LIN,115",
+  "lcsc": "C58901",
+  "lcsc_mpn": "PESD1LIN,115",
+  "stock": 96599
+ },
+ {
+  "board": "carrier",
+  "refs": "F101",
+  "mpn": "0466002.NRHF",
+  "lcsc": "C3105",
+  "lcsc_mpn": "0466002.NRHF",
+  "stock": 47729
+ },
+ {
+  "board": "carrier",
+  "refs": "J201",
+  "mpn": "CR-PG001 (OBD2 male 90deg PCB, hand-fitted)",
+  "lcsc": "",
+  "lcsc_mpn": null,
+  "stock": 0
+ },
+ {
+  "board": "carrier",
+  "refs": "J402",
+  "mpn": "U.FL-R-SMT-1(10)",
+  "lcsc": "C88373",
+  "lcsc_mpn": "U.FL-R-SMT-1(10)",
+  "stock": 33371
+ },
+ {
+  "board": "carrier",
+  "refs": "J403",
+  "mpn": "U.FL-R-SMT-1(10)",
+  "lcsc": "C88373",
+  "lcsc_mpn": "U.FL-R-SMT-1(10)",
+  "stock": 33371
+ },
+ {
+  "board": "carrier",
+  "refs": "J501",
+  "mpn": "S2B-PH-SM4-TB(LF)(SN)",
+  "lcsc": "C295747",
+  "lcsc_mpn": "S2B-PH-SM4-TB(LF)(SN)",
+  "stock": 14157
+ },
+ {
+  "board": "carrier",
+  "refs": "J601,J602",
+  "mpn": "HX PM2.54-2x8P TP",
+  "lcsc": "C41427537",
+  "lcsc_mpn": "HX PM2.54-2x8P TP",
+  "stock": 5060
+ },
+ {
+  "board": "carrier",
+  "refs": "L101",
+  "mpn": "MWSA0605S-6R8MT",
+  "lcsc": "C408466",
+  "lcsc_mpn": "MWSA0605S-6R8MT",
+  "stock": 3333
+ },
+ {
+  "board": "carrier",
+  "refs": "Q101",
+  "mpn": "PSMN7R0-60YS,115",
+  "lcsc": "C478143",
+  "lcsc_mpn": "PSMN7R0-60YS,115",
+  "stock": 684
+ },
+ {
+  "board": "carrier",
+  "refs": "Q102",
+  "mpn": "AO3401A",
+  "lcsc": "C15127",
+  "lcsc_mpn": "AO3401A",
+  "stock": 1093588
+ },
+ {
+  "board": "carrier",
+  "refs": "Q103",
+  "mpn": "2N7002",
+  "lcsc": "C8545",
+  "lcsc_mpn": "2N7002",
+  "stock": 6032556
+ },
+ {
+  "board": "carrier",
+  "refs": "U101",
+  "mpn": "LM74700QDBVRQ1",
+  "lcsc": "C2941042",
+  "lcsc_mpn": "LM74700QDBVRQ1",
+  "stock": 8080
+ },
+ {
+  "board": "carrier",
+  "refs": "U102",
+  "mpn": "TPS54360DDAR",
+  "lcsc": "C44377",
+  "lcsc_mpn": "TPS54360DDAR",
+  "stock": 56265
+ },
+ {
+  "board": "carrier",
+  "refs": "U103",
+  "mpn": "TLV75733PDBVR",
+  "lcsc": "C485517",
+  "lcsc_mpn": "TLV75733PDBVR",
+  "stock": 41559
+ },
+ {
+  "board": "carrier",
+  "refs": "U401",
+  "mpn": "EC200UEUAA-N05-SGNSA",
+  "lcsc": "C2942341",
+  "lcsc_mpn": "EC200UEUAA-N05-SGNSA",
+  "stock": 50
+ },
+ {
+  "board": "carrier",
+  "refs": "U402",
+  "mpn": "TXS0108EPWR",
+  "lcsc": "C17206",
+  "lcsc_mpn": "TXS0108EPWR",
+  "stock": 73585
+ },
+ {
+  "board": "carrier",
+  "refs": "U502",
+  "mpn": "TPS2121RUXR",
+  "lcsc": "C485916",
+  "lcsc_mpn": "TPS2121RUXR",
+  "stock": 30402
+ },
+ {
+  "board": "upper",
+  "refs": "AE801",
+  "mpn": "CGGBP.25.4.A.02",
+  "lcsc": "C6881901",
+  "lcsc_mpn": "CGGBP.25.4.A.02",
+  "stock": 0
+ },
+ {
+  "board": "upper",
+  "refs": "C801",
+  "mpn": "0402CG330J500NT",
+  "lcsc": "C1562",
+  "lcsc_mpn": "0402CG330J500NT",
+  "stock": 1658984
+ },
+ {
+  "board": "upper",
+  "refs": "D202",
+  "mpn": "B0540WS-7",
+  "lcsc": "C52754523",
+  "lcsc_mpn": "B0540WS-7-HXY",
+  "stock": 785
+ },
+ {
+  "board": "upper",
+  "refs": "D301",
+  "mpn": "SK6812MINI-HS",
+  "lcsc": "C2922787",
+  "lcsc_mpn": "SK6812MINI-HS",
+  "stock": 80001
+ },
+ {
+  "board": "upper",
+  "refs": "D501",
+  "mpn": "SMF24A",
+  "lcsc": "C315999",
+  "lcsc_mpn": "SMF24A",
+  "stock": 10164
+ },
+ {
+  "board": "upper",
+  "refs": "J301",
+  "mpn": "TYPE-C-31-M-12",
+  "lcsc": "C165948",
+  "lcsc_mpn": "TYPE-C-31-M-12",
+  "stock": 446800
+ },
+ {
+  "board": "upper",
+  "refs": "J401",
+  "mpn": "0786463001",
+  "lcsc": "C6376818",
+  "lcsc_mpn": "0786463001",
+  "stock": 0
+ },
+ {
+  "board": "upper",
+  "refs": "J801",
+  "mpn": "U.FL-R-SMT-1(10)",
+  "lcsc": "C88373",
+  "lcsc_mpn": "U.FL-R-SMT-1(10)",
+  "stock": 33371
+ },
+ {
+  "board": "upper",
+  "refs": "L801",
+  "mpn": "LQW15AN9N1J00D",
+  "lcsc": "C437364",
+  "lcsc_mpn": "LQW15AN9N1J00D",
+  "stock": 4299
+ },
+ {
+  "board": "upper",
+  "refs": "Q401,Q402",
+  "mpn": "MMBT3904",
+  "lcsc": "C20526",
+  "lcsc_mpn": "MMBT3904(RANGE:100-300)",
+  "stock": 4129762
+ },
+ {
+  "board": "upper",
+  "refs": "RT501",
+  "mpn": "SDNT1608X103F3435FTF",
+  "lcsc": "C525660",
+  "lcsc_mpn": "SDNT1608X103F3435FTF",
+  "stock": 58620
+ },
+ {
+  "board": "upper",
+  "refs": "SW301",
+  "mpn": "TL3342F450QG",
+  "lcsc": "C2886897",
+  "lcsc_mpn": "TL3342F450QG",
+  "stock": 11
+ },
+ {
+  "board": "upper",
+  "refs": "SW302",
+  "mpn": "TL3342F450QG",
+  "lcsc": "C2886897",
+  "lcsc_mpn": "TL3342F450QG",
+  "stock": 11
+ },
+ {
+  "board": "upper",
+  "refs": "U201",
+  "mpn": "TCAN334DR",
+  "lcsc": "C2871143",
+  "lcsc_mpn": "TCAN334DR",
+  "stock": 388
+ },
+ {
+  "board": "upper",
+  "refs": "U202",
+  "mpn": "TJA1021T/20/CM,118",
+  "lcsc": "C128810",
+  "lcsc_mpn": "TJA1021T/20/CM,118",
+  "stock": 15739
+ },
+ {
+  "board": "upper",
+  "refs": "U301",
+  "mpn": "ESP32-C5-WROOM-1U-N16R8-V1.2",
+  "lcsc": "C54951857",
+  "lcsc_mpn": "ESP32-C5-WROOM-1U-N16R8-V1.2",
+  "stock": 494
+ },
+ {
+  "board": "upper",
+  "refs": "U302",
+  "mpn": "USBLC6-2SC6",
+  "lcsc": "C2827654",
+  "lcsc_mpn": "USBLC6-2SC6",
+  "stock": 185851
+ },
+ {
+  "board": "upper",
+  "refs": "U501",
+  "mpn": "BQ25171QWDRCRQ1",
+  "lcsc": "C2861221",
+  "lcsc_mpn": "BQ25171QWDRCRQ1",
+  "stock": 322
+ },
+ {
+  "board": "upper",
+  "refs": "U801",
+  "mpn": "SKY65943-11",
+  "lcsc": "C2654442",
+  "lcsc_mpn": "SKY65943-11",
+  "stock": 280
+ },
+ {
+  "board": "extra",
+  "refs": "C32713288",
+  "mpn": "C32713288",
+  "lcsc": "C32713288",
+  "lcsc_mpn": "HX PZ2.54-2x8P TP",
+  "stock": 38065
+ },
+ {
+  "board": "extra",
+  "refs": "C22436156",
+  "mpn": "C22436156",
+  "lcsc": "C22436156",
+  "lcsc_mpn": "HC-PM254-8.5H-2x8PS",
+  "stock": 2430
+ }
+]

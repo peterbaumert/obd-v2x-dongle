@@ -35,3 +35,4 @@ firmware/.esphome/
 
 # OBD probe logs (may contain the VIN)
 firmware/tools/probe-logs/
+rev2/hardware/fab/

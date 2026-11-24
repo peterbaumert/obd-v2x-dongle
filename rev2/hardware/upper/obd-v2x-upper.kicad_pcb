@@ -12240,7 +12240,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm"
+		(property "MPN" "HX PZ2.54-2x8P ZZ"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)
@@ -12253,7 +12253,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Manufacturer" "generic"
+		(property "Manufacturer" "Hanxia"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)
@@ -12266,7 +12266,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C32713281"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)
@@ -14550,7 +14550,7 @@
 				(justify mirror)
 			)
 		)
-		(property "MPN" "2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm"
+		(property "MPN" "HX PZ2.54-2x8P ZZ"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)
@@ -14563,7 +14563,7 @@
 				(justify mirror)
 			)
 		)
-		(property "Manufacturer" "generic"
+		(property "Manufacturer" "Hanxia"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)
@@ -14576,7 +14576,7 @@
 				(justify mirror)
 			)
 		)
-		(property "LCSC" ""
+		(property "LCSC" "C32713281"
 			(at 0 0 0)
 			(layer "B.SilkS")
 			(hide yes)

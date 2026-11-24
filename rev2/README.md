@@ -1,8 +1,10 @@
 # Rev 2: two stacked boards in a 25 mm case
 
 Status: **both boards placed and routed after a layout review (2026-11-21): nothing unconnected, no rule errors,
-schematic parity 0; stack model and case check pass.** Not ordered: rev 1 gets brought up first, and nothing of
-rev 2 has been printed or built. Rev 1 (`../rev1/`) is the board in production and stays as it is.
+schematic parity 0; stack model and case check pass; case fit tests printed (2026-11-22).** Order files, stock
+check and order notes are ready (2026-11-24, [`docs/bom-notes.md`](docs/bom-notes.md)); not ordered yet. The rev 1
+order (`../rev1/`) was cancelled on 2026-11-24 in favour of rev 2, so the shared circuit has not been tested on a
+built board.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
 shared.
 
@@ -217,6 +219,8 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 | `swapfp.py` | replaces placed footprints with the library version, or with another footprint (`REF=Lib:Name`) |
 | `silk.py` | puts each reference beside its part where it is clear of pads and other silkscreen, or hides it |
 | `widen.py` | widens supply tracks (and necked-down RF lines back to 0.32 mm) wherever the clearance allows |
+| `fab.py` | order files per board: Gerber zip, assembly BOM, pick-and-place file; full BOMs to `docs/` |
+| `check_stock.py` | LCSC stock of every part with an MPN, from the BOMs that `fab.py` writes |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
@@ -266,7 +270,7 @@ printed.
 | ESP32-C5 module antenna socket | On the shield side, in the corner 3 mm from one long edge and 2.4 mm from the end opposite the pad row. Mated, it is no higher than the shield | Espressif data sheet v1.3, Fig. 10-2 / 10-3 |
 | Battery connector | S2B-PH-SM4-TB is 5.5 mm tall; the plug goes in parallel to the board and sticks out 3.6 mm beyond the header, plus the wires | JST PH catalogue |
 
-LCSC stock on 2026-11-20: header C32713288 37,645; socket C41427537 5,064; second-source socket C22436156 2,494 and
+LCSC stock on 2026-11-20 (current figures: `docs/bom-notes.md`): header C32713288 37,645 (that is the SMD version; the board uses the through-hole HX PZ2.54-2x8P ZZ, C32713281); socket C41427537 5,064; second-source socket C22436156 2,494 and
 header C42163086 290; SKY65943-11 C2654442 338; S2B-PH-SM4-TB C295747 13,090; U.FL C88373 35,470; ESP32-C5 module
 C54951857 496; BQ25171 C2861221 346; 9.1 nH LQW15AN9N1J00D C437364 4,060. The modem (C2942341) is not listed at
 LCSC, only at JLCPCB (50). Digi-Key: Molex 0786463001 113,150 and Taoglas CGGBP.25.4.A.02 6,403, both active.
@@ -355,11 +359,14 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
 - **5.9 GHz and LTE antennas:** flex antennas on the case walls as in rev 1. The space is tighter, so check that
   they fit and stay away from the modem shield.
 
-## Before any layout
+## Before ordering
 
-- Bring up the rev 1 boards (expected mid-December 2026) and carry every fix into rev 2.
-- Confirm the parts under "Parts found" against their drawings and current stock.
-- Two boards mean two PCB orders and two assembly jobs. Get a quote before committing.
+- Order files: `<KiCad>/bin/python rev2/hardware/tools/fab.py` (both boards, `rev2/hardware/fab/`), stock:
+  `python rev2/hardware/tools/check_stock.py`; settings and notes for PCBWay in `docs/bom-notes.md`.
+- Two boards mean two PCB orders and two assembly jobs. Get a quote before committing (the refund of the cancelled
+  rev 1 order sits in the PCBWay balance).
+- Rev 1 was never built: there are no bring-up fixes to carry over, so the first rev 2 boards are also the first test
+  of the shared circuit.
 
 ## Parts found (web research, 2026-11-20)
 
@@ -374,7 +381,7 @@ Mouser, LCSC) or a regular shop, and standard formats with more than one maker. 
 | Board | Part | Notes |
 |---|---|---|
 | carrier | **2 × 8 SMD socket, 2.54 mm, 8.5 mm insulator:** Hanxia HX PM2.54-2x8P TP (LCSC C41427537); second source Hong Cheng HC-PM254-8.5H-2x8PS (C22436156) | Top 8.9 ± 0.2 mm above the board (Hanxia drawing). 3 A per pin |
-| upper | **2 × 8 through-hole pin header, 2.54 mm**, 2.5 mm base, 6 mm pins | A generic part with many makers; pick one in stock at order time. Its base sits flat on the board |
+| upper | **2 × 8 through-hole pin header, 2.54 mm**, 2.5 mm base, 6 mm pins: Hanxia HX PZ2.54-2x8P ZZ (LCSC C32713281); second source HCTL PZ254-2-08-Z-8.5 (C2894969) | Its base sits flat on the board |
 | both | **M2.5 × 12 mm female-female spacers** | A standard length. Friction alone does not hold the connectors in a car |
 
 Why not the surface-mount header I first picked (Hanxia HX PZ2.54-2x8P TP): its insulator top is 3.2 mm above the

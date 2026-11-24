@@ -83,9 +83,9 @@ SOURCING = {
     'J801': ('U.FL-R-SMT-1(10)', 'Hirose', 'C88373'),
     'J601': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),  # 2 x 8 socket, 8.5 mm, SMD
     'J602': ('HX PM2.54-2x8P TP', 'Hanxia', 'C41427537'),
-    # 2 x 8 through-hole pin header, 2.54 mm, 2.5 mm base, 6 mm pins: a generic part, pick one in stock at order time
-    'J701': ('2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm', 'generic', ''),
-    'J702': ('2x8 pin header 2.54 mm THT, 2.5 / 6.0 mm', 'generic', ''),
+    # 2 x 8 through-hole pin header, 2.54 mm, 2.5 mm base, 6 mm pins (not the SMD HX PZ2.54-2x8P TP, C32713288)
+    'J701': ('HX PZ2.54-2x8P ZZ', 'Hanxia', 'C32713281'),  # 2 x 8 header, THT, 2.5 mm base, 6 mm pins (2nd: HCTL PZ254-2-08-Z-8.5, C2894969)
+    'J702': ('HX PZ2.54-2x8P ZZ', 'Hanxia', 'C32713281'),
     'U405': ('TPS2552DBVR-1', 'TI', 'C140331'),          # latch-off current-limited switch, GNSS antenna bias
     'L401': ('LQG15HS27NJ02D', 'Murata', 'C12669'),      # 27 nH RF choke (SRF ~1.7 GHz)
     'C417': ('0402CG330J500NT', 'FH', 'C1562'),          # 33 pF C0G DC block to the modem's GNSS input
