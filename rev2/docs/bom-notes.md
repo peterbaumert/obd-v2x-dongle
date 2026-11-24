@@ -37,7 +37,7 @@ OBD plug sits 0.35 mm in front of the carrier's front edge), then fit the plug.
 | J201 | OBD-II plug CR-PG001 (carrier) | Not stocked by LCSC or Digi-Key. Hand-solder after assembly; see `rev1/docs/bom-notes.md` |
 | H601, H602, H701, H702 | M2.5 holes | Two M2.5 × 12 mm spacers and four M2.5 × 5 mm pan-head screws join the boards (and the case): bought separately |
 | Cell | 1S LiPo with protection, JST-PH lead (pin 1 = +) | Bought separately; see `rev2/README.md` |
-| GNSS jumper | U.FL plug to U.FL plug, 50 mm: **Cinch 415-0086-050** (1.13 mm cable, 6 GHz, active, Digi-Key about 12,800 in stock, $4.05, 2026-11-25) | Carrier J403 (top) to upper J801 (bottom): 15 mm apart sideways, 12 mm in height. Second source Cinch 415-0088-050 (1.37 mm, Digi-Key J946-ND) or Hirose U.FL-2LP-088K1T-A-(50) (RS 685-1037, pack of 5). Not an "extension" cable (plug to jack): both board connectors are jacks |
+| GNSS jumper | U.FL plug to U.FL plug, 50 mm: **Hirose U.FL-2LPHF6-088N1T-AC-50** (LCSC C26098117, 35 in stock 2026-11-25; or U.FL-2LPHF6-088N1T-A-50, C18106195): PCBWay buys it with the parts and ships it loose with the panels (Digi-Key alone would cost 25 € shipping) | Carrier J403 (top) to upper J801 (bottom): 15 mm apart sideways, 12 mm in height. Digi-Key alternatives: Cinch 415-0086-050 (1.13 mm) or 415-0088-050. Not an "extension" cable (plug to jack): both board connectors are jacks |
 
 Test pads and DNP parts are not in the assembly BOM or the pick-and-place file.
 
