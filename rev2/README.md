@@ -2,7 +2,8 @@
 
 Status: **both boards placed and routed after a layout review (2026-11-21): nothing unconnected, no rule errors,
 schematic parity 0; stack model and case check pass; case fit tests printed (2026-11-22).** Order files, stock
-check and order notes are ready (2026-11-24, [`docs/bom-notes.md`](docs/bom-notes.md)); not ordered yet. The rev 1
+check and order notes are ready (2026-11-24, [`docs/bom-notes.md`](docs/bom-notes.md)). **Ordered from PCBWay on
+2026-11-26** (one panel, 5 bare + 2 assembled, i.e. two dongles; 25-27 days). The rev 1
 order (`../rev1/`) was cancelled on 2026-11-24 in favour of rev 2, so the shared circuit has not been tested on a
 built board.
 Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
@@ -360,12 +361,13 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
 - **5.9 GHz and LTE antennas:** flex antennas on the case walls as in rev 1. The space is tighter, so check that
   they fit and stay away from the modem shield.
 
-## Before ordering
+## Ordering
 
 - Order files: `<KiCad>/bin/python rev2/hardware/tools/fab.py` (both boards, `rev2/hardware/fab/`), stock:
   `python rev2/hardware/tools/check_stock.py`; settings and notes for PCBWay in `docs/bom-notes.md`.
 - Ordered as one panel (both boards, `tools/panel.py`): one PCB order and one assembly job, about a quarter cheaper
-  than two of each (`docs/bom-notes.md`). The refund of the cancelled rev 1 order sits in the PCBWay balance.
+  than two of each (`docs/bom-notes.md`). Paid 2026-11-26: $318 for boards, assembly and parts, $394 with shipping
+  and import VAT. Bought separately: GNSS jumper cable, spacers and screws, cell, LED light rod.
 - Rev 1 was never built: there are no bring-up fixes to carry over, so the first rev 2 boards are also the first test
   of the shared circuit.
 
