@@ -35,11 +35,24 @@ OBD plug sits 0.35 mm in front of the carrier's front edge), then fit the plug.
 | Ref | Part | Why |
 |---|---|---|
 | J201 | OBD-II plug CR-PG001 (carrier) | Not stocked by LCSC or Digi-Key. Hand-solder after assembly; see `rev1/docs/bom-notes.md` |
-| H601, H602, H701, H702 | M2.5 holes | Two M2.5 × 12 mm female-female spacers join the boards; per spacer one M2.5 × 8 from below (bottom shell + carrier) and one M2.5 × 10 from above (lid + upper board). Head at most 4.5 mm across and 1.7 mm high (cheese head ISO 14580 / DIN 84; a DIN 7985 pan head is 5 mm and too wide for the Ø5.0 counterbore). Bought separately |
+| H601, H602, H701, H702 | M2.5 holes | Two M2.5 × 12 mm female-female spacers join the boards; per spacer one M2.5 × 8 from below (bottom shell + carrier) and one M2.5 × 10 from above (lid + upper board). DIN 7985 pan head (5.0 mm across, 2.0 high; the case counterbore is Ø5.6 × 2.2). Bought separately, see "Bought separately" below |
 | Cell | 1S LiPo with protection, JST-PH lead (pin 1 = +) | Bought separately; see `rev2/README.md` |
 | GNSS jumper | U.FL plug to U.FL plug, 50 mm: **Hirose U.FL-2LPHF6-088N1T-AC-50** (LCSC C26098117, 35 in stock 2026-11-25; or U.FL-2LPHF6-088N1T-A-50, C18106195), or any U.FL / IPEX MHF1 plug-to-plug cable of 30 to 100 mm. Bought separately: PCBWay only buys parts that go on the board (asked 2026-11-25), and Digi-Key alone would cost 25 € shipping | Carrier J403 (top) to upper J801 (bottom): 15 mm apart sideways, 12 mm in height. Digi-Key alternatives: Cinch 415-0086-050 (1.13 mm) or 415-0088-050. Not an "extension" cable (plug to jack): both board connectors are jacks |
 
 Test pads and DNP parts are not in the assembly BOM or the pick-and-place file.
+
+## Bought separately (German shops, checked 2026-11-26)
+
+Per dongle; no single shop had everything in stock.
+
+| Part | Shop, article | Note |
+|---|---|---|
+| GNSS jumper, U.FL plug to plug, 10 cm | Conrad 3384122 (Delock 89607) | BerryBase lists it too (D89607), out of stock |
+| 2 × spacer M2.5 × 12 mm, female-female | BerryBase TFF-M2.5 (length 12 mm) | |
+| 2 × screw M2.5 × 8, DIN 7985 pan head (from below) | BerryBase D7988 | |
+| 2 × screw M2.5 × 10, DIN 7985 pan head (from above) | BerryBase M25X10D7985 | |
+| Cell, 1S LiPo, JST-PH | Eckstein ZB07003 (PKNERGY LP521630, 5.2 × 16 × 30 mm, 250 mAh) | Check the polarity before plugging in (pin 1 = +) |
+| LED light rod, 3 mm clear acrylic, cut to length | not found at these shops | Optional: the 3 mm hole alone shows the LED |
 
 ## Fitted by PCBWay, by hand
 

@@ -60,7 +60,7 @@ GRIP_N, GRIP_PITCH, GRIP_W, GRIP_D, GRIP_REAR = 6, 3.0, 1.2, 0.5, 9.0
 
 # spacer screws (board frame: x from the left edge, y behind the front edge) -> model coordinates
 SPACERS = [(S.BX0 + 3.5, S.BYF - 4.0), (S.BX1 - 3.5, S.BYF - 4.0)]
-M25_CLEAR, M25_HEAD, HEAD_DEPTH = 2.8, 5.0, 2.0     # pan head 4.5 mm, 1.7 high
+M25_CLEAR, M25_HEAD, HEAD_DEPTH = 2.8, 5.6, 2.2     # DIN 7985 pan head: 5.0 mm, 2.0 high
 BOSS_R = 3.2
 
 # openings
