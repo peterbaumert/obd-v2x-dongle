@@ -24,7 +24,7 @@ mm, tomm = pcbnew.FromMM, pcbnew.ToMM
 BX0, BY0, BS = 100.0, 50.0, 45.0     # both boards: outline (100, 50)..(145, 95) in their own files
 GAP, FRAME = 2.0, 5.0                 # milled gap around the boards, frame width
 DX = BS + GAP                         # upper board offset (x) in the panel
-BITE_D, BITE_PITCH, BITE_OUT = 0.5, 0.75, 0.25   # mouse bites: hole, pitch, centre this far outside the board edge
+BITE_D, BITE_PITCH, BITE_OUT = 0.5, 1.0, 0.25    # mouse bites: hole, pitch (0.75 was too tight for PCBWay), centre outside the edge
 
 # tabs: (board, edge, position along the edge in board mm (from the left / from the front), width)
 # free stretches (no pad / courtyard within 1.5 mm): carrier top 8-37, bottom 0-10.3, left 30.4-34.9, right none;
@@ -108,8 +108,8 @@ def hole_fp(b, ref, x, y, d):
     p.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
     p.SetSize(V(d, d))
     p.SetDrillSize(V(d, d))
-    ls = pcbnew.LSET.AllCuMask()
-    ls.AddLayer(pcbnew.F_Mask)
+    ls = pcbnew.LSET(pcbnew.LSET.AllCuMask())   # a copy: AllCuMask() is KiCad's shared set, and changing it made
+    ls.AddLayer(pcbnew.F_Mask)                   # the saved file write "*.Cu" for every through-hole pad (no mask)
     ls.AddLayer(pcbnew.B_Mask)
     p.SetLayerSet(ls)
     fp.Add(p)
