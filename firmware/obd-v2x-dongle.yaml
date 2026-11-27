@@ -9,7 +9,8 @@
 # OBD-II requests are only sent while the engine runs (charging voltage): on cars like the Mercedes W205
 # the gateway sleeps with the ignition off, and requests would wake the bus and drain the battery.
 #
-# Pin map: rev1/hardware/tools/gen_schematic.py, sheet "MCU" (module pin -> GPIO in the comments).
+# Pin map: rev2/hardware/tools/gen_schematic.py, upper board, sheet "mcu" (module pin -> GPIO in the comments);
+# identical to rev 1 except IO12 (rev 1: SIM switch, rev 2: spare test pad, not used).
 
 substitutions:
   name: obd-v2x-dongle
@@ -62,9 +63,6 @@ output:
   - platform: gpio            # IO3 (pin 5): Q402 open collector, high = modem RESET_N pulled low
     id: lte_reset
     pin: GPIO3
-  - platform: gpio            # IO12 (pin 24): U404 FSA2567, low = nano-SIM J401, high = eSIM U403
-    id: sim_sel
-    pin: GPIO12
   - platform: gpio            # IO7 (pin 9): TJA1021 SLP_N, low = sleep
     id: kline_slp_n
     pin: GPIO7
@@ -219,25 +217,6 @@ switch:
       - lambda: id(console).set_enabled(true);
     turn_off_action:
       - lambda: id(console).set_enabled(false);
-  - platform: template
-    name: "Use eSIM"
-    icon: mdi:sim
-    entity_category: config
-    optimistic: true
-    restore_mode: RESTORE_DEFAULT_OFF
-    # Only switch SIMs while the modem's SIM interface is idle: drop the connection first
-    turn_on_action:
-      - modem.disable:
-      - delay: 2s
-      - output.turn_on: sim_sel
-      - delay: 1s
-      - modem.enable:
-    turn_off_action:
-      - modem.disable:
-      - delay: 2s
-      - output.turn_off: sim_sel
-      - delay: 1s
-      - modem.enable:
 
 mqtt:
   id: mqtt_client

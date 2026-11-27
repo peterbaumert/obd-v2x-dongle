@@ -1,4 +1,4 @@
-# Bring-up firmware for a new obd-v2x-dongle rev 1 board (no network, no secrets needed).
+# Bring-up firmware for a new obd-v2x-dongle board (rev 2) (no network, no secrets needed).
 # Steps and expected results: rev1/docs/bring-up.md. Flash over USB-C:
 #   esphome run firmware/bringup.yaml        (then watch the log: esphome logs firmware/bringup.yaml)
 #
@@ -7,7 +7,7 @@
 #   115200 baud (identity, SIM, signal, network, supply voltage, GNSS on). After that, every 20 s: signal, network
 #   registration and a GNSS position. Modem answers appear as "uart_debug" lines (<<<).
 # CAN stays in standby and the K-line transceiver asleep: this firmware never sends anything on the car's bus.
-# Pin map: rev1/hardware/tools/gen_schematic.py, sheet "MCU"; same as obd-v2x-dongle.yaml.
+# Pin map: rev2/hardware/tools/gen_schematic.py, upper board, sheet "mcu"; same as obd-v2x-dongle.yaml.
 
 esphome:
   name: obd-v2x-bringup
@@ -20,7 +20,6 @@ esphome:
         - output.turn_off: lte_reset
         - output.turn_on: can_standby
         - output.turn_off: kline_slp_n
-        - output.turn_off: sim_sel
         - output.turn_off: lte_rts
     - priority: -100
       then:
@@ -57,9 +56,6 @@ output:
   - platform: gpio            # IO7: TJA1021 SLP_N, low = sleep
     id: kline_slp_n
     pin: GPIO7
-  - platform: gpio            # IO12: U404 FSA2567, low = nano-SIM J401, high = eSIM U403
-    id: sim_sel
-    pin: GPIO12
   - platform: gpio            # IO26: MCU_RTS_LTE held low (= ready); ignored while flow control is off (default)
     id: lte_rts
     pin: GPIO26

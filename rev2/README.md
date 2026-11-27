@@ -362,8 +362,9 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
   they fit and stay away from the modem shield.
 - **Bring-up:** rev 1's procedure ([`../rev1/docs/bring-up.md`](../rev1/docs/bring-up.md)) is the base, but its
   test points and part list are rev 1's; go through it against the rev 2 boards before powering the first one.
-- **Firmware for rev 2:** `firmware/` still drives rev 1's SIM switch on GPIO12 ("Use eSIM"). On rev 2 that pin is a
-  spare test pad, so the switch does nothing; check the whole pin map against the rev 2 schematics.
+- **Firmware pin map: checked 2026-11-27.** Every ESP32 pin carries the same net as on rev 1 except GPIO12 (rev 1's
+  SIM switch, now a spare test pad), and `check_vs_rev1.py` confirms the circuits behind them; the firmware's eSIM
+  switch is removed.
 
 ## Ordering
 

@@ -1,9 +1,8 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.7, compiles (ESPHome 2026.11.0b6). No board has run it yet.** Written for rev 1's pin map; rev 2 keeps
-the same GPIO assignment where possible, but has no eSIM: the "Use eSIM" switch (GPIO12) does nothing there. Check
-the pin map against the rev 2 schematics before the first rev 2 board runs it.
+**Status: v0.7, compiles (ESPHome 2026.11.0b6). No board has run it yet.** Pin map: rev 2
+(checked 2026-11-27, identical to rev 1 apart from GPIO12, rev 1's eSIM switch, now unused).
 
 | File | Purpose |
 |---|---|
@@ -147,7 +146,7 @@ engine load, fuel level (OBD), ECU voltage (OBD-II mode 01, CAN 11-bit 500 kbit/
 outside temperature, vehicle voltage, four tyre pressures, four doors, boot, locked, driver seatbelt, brake pedal,
 parking brake, A/C, ECO start/stop, light switch · firmware update, "Install updates automatically" · supply / backup cell voltage · LTE signal, LTE modem
 running · position (device tracker), latitude, longitude, altitude, GPS speed, course, HDOP, satellites ·
-V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Use eSIM" switch, "Remote console" switch · uptime.
+V2X packets received / dropped, V2X data sent, V2X upload dropped · status LED, "Remote console" switch · uptime.
 
 Status LED: red = no LTE, yellow = LTE but no MQTT, green = connected, blue flash = V2X frame.
 
