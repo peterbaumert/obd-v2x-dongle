@@ -1,7 +1,9 @@
 # Firmware (ESPHome)
 
 ESPHome configuration for the obd-v2x-dongle board (ESP32-C5-WROOM-1U-N16R8, Quectel EC200U-EU).
-**Status: v0.7, compiles (ESPHome 2026.11.0b6). No board has run it yet.**
+**Status: v0.7, compiles (ESPHome 2026.11.0b6). No board has run it yet.** Written for rev 1's pin map; rev 2 keeps
+the same GPIO assignment where possible, but has no eSIM: the "Use eSIM" switch (GPIO12) does nothing there. Check
+the pin map against the rev 2 schematics before the first rev 2 board runs it.
 
 | File | Purpose |
 |---|---|

@@ -10,6 +10,8 @@
   `--force` loses routing). Keep `rev2/mechanical/stack.py` in step with the big parts' positions.
   Order files: `<KiCad>/bin/python rev2/hardware/tools/panel.py` (assembly panel of both boards, regenerate after
   board changes), then `fab.py` (-> `rev2/hardware/fab/panel/`); notes and stock in `rev2/docs/bom-notes.md`.
+  Rev 2 was ordered 2026-11-26 (PCBWay, one panel per dongle). Before re-ordering, check that every through-hole pad
+  in the saved panel still has its mask openings (`*.Mask`): a panel.py bug once stripped them.
   Both rev 2 boards are 4 layers (In1 GND plane) and fully routed after the 2026-11-21 layout review (0 unconnected,
   no rule errors, parity 0), with hand edits: the `.kicad_pcb` files are the source, do not run `gen_pcb.py --force`.
   Last connections and local fixes: by hand (KiCad MCP or pcbnew), checking the other side's pads first (the modem

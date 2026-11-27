@@ -1,6 +1,10 @@
 # Rev 1 bring-up
 
-Step-by-step first power-on for a new rev 1 board (PCBWay order of 2026-11-20). Do the steps in order. Every step
+> Rev 1 was cancelled before production and never built. This procedure is the starting point for the first rev 2
+> boards; check its test points and part references against the rev 2 schematics first (`rev2/README.md`,
+> "Still open").
+
+Step-by-step first power-on for a new rev 1 board. Do the steps in order. Every step
 says what to measure and what counts as a pass; stop at the first failure and note it in the results table at the
 end. Part references, test points and nets: `rev1/docs/schematic.pdf`.
 

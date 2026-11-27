@@ -3,11 +3,11 @@
 Status: **both boards placed and routed after a layout review (2026-11-21): nothing unconnected, no rule errors,
 schematic parity 0; stack model and case check pass; case fit tests printed (2026-11-22).** Order files, stock
 check and order notes are ready (2026-11-24, [`docs/bom-notes.md`](docs/bom-notes.md)). **Ordered from PCBWay on
-2026-11-26** (one panel, 5 bare + 2 assembled, i.e. two dongles; 25-27 days). The rev 1
-order (`../rev1/`) was cancelled on 2026-11-24 in favour of rev 2, so the shared circuit has not been tested on a
-built board.
-Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/` once they exist). The firmware (`../firmware/`) is
-shared.
+2026-11-26** (one panel, 5 bare + 2 assembled, i.e. two dongles); PCBWay's engineering questions were answered on
+2026-11-27 (mouse-bite spacing, and solder-mask openings on the through-hole pads that the panel file had lost, see
+"Ordering"), so the boards are due around the turn of the year. The rev 1 order (`../rev1/`) was cancelled on
+2026-11-24 in favour of rev 2, so the shared circuit has not been tested on a built board.
+Rev 2 lives in this folder (`hardware/`, `mechanical/`, `docs/`). The firmware (`../firmware/`) is shared.
 
 ## Goal
 
@@ -129,11 +129,9 @@ Molex 78646-3001 micro-SIM holder, Skyworks SKY65943-11, Taoglas CGGBP.25.4.A.02
 
 Not done yet:
 
-- **Placement review and routing of both boards** (see "Boards"), including the copper clearances around the
-  patch's feed pin and ground vias under the front end.
 - **Footprint review against real parts:** the three new footprints come from the drawings and have not been
-  checked on paper prints or parts. The SKY65943-11's ground pad sizes and the patch's single 1.8 mm pad (the data
-  sheet asks for 1.2 mm on top, 2.2 mm on the bottom) are my choices.
+  checked on paper prints or parts (PCBWay's review saw them before assembly). The SKY65943-11's ground pad sizes
+  and the patch's feed pad (1.4 mm on top, 2.2 mm on the bottom) are my choices.
 - **GNSS details to confirm:** whether the SKY65943-11's RF pins carry DC (the data sheet does not say; a DC
   block sits on its output for that reason), and ESD protection at the patch (the part is rated only 250 V HBM).
 
@@ -147,10 +145,10 @@ outline, rules, all footprints with their nets, ground pours. `--force` regenera
 | carrier | 4 | The modem has pads under its body and the LTE antenna line needs a ground layer right below it |
 | upper | 4 | F.Cu under the GNSS patch has to stay solid ground (the patch's ground plane); with that, two layers left no room for the SIM lines and the rest. In1 GND plane, In2 routing |
 
-No paid impedance control: the antenna lines are designed to the fab's standard stack-up. ENIG on the carrier (flat
-pads for the modem); decide the upper board's finish from a quote.
+No paid impedance control: the antenna lines are designed to the fab's standard stack-up. ENIG on both boards (they
+are ordered as one panel; flat pads for the modem and the QFNs).
 
-Placement so far:
+Placement:
 
 - **The parts that define the stack are placed as in the stack model:** plug, connectors, spacer holes, modem,
   ESP32 module, USB-C, micro-SIM holder, GNSS patch and front end, and the carrier's tall parts (battery connector,
@@ -158,11 +156,11 @@ Placement so far:
 - **Every other part is placed automatically** next to a part it shares a net with, and only where it fits by
   height: at most 2.9 mm under the cell, 2.65 mm on the carrier's underside, 0.7 mm on the upper board's underside
   over the plug legs. The heights are a table in `gen_pcb.py` (by footprint): data-sheet maxima for the tall parts,
-  typical values for the rest. A starting point, not
-  a layout.
+  typical values for the rest. That was the starting point; the layout review and routing below moved many parts
+  by hand.
 - **Antenna sockets:** LTE and GNSS U.FL in the carrier's rear right corner, beside the cell.
 - **The lid side of the upper board carries what must be reached or seen:** the two buttons and the LED.
-  The case lid needs pin holes and a light pipe there.
+  The case lid has pin holes and a 3 mm hole for a light rod there.
 - **Changes the placement forced:** the connectors sit 0.6 mm inside the board edges (their SMD pads need 8.2 mm);
   the buck regulator uses the footprint without thermal vias, because the modem's pads are on the other side; the
   input TVS is on the carrier's underside beside the modem; the patch sits 1.5 mm left of centre so the USB-C
@@ -242,7 +240,8 @@ with `--fit-test`, `mechanical/out/fit_test_plug_end.stl` (front 12 mm only, to 
   into the bottom shell from above.
 - **Closing:** the two spacers between the boards hold everything. One M2.5 screw from below goes through the
   bottom shell and the carrier into each spacer (M2.5 × 8), one from above through the lid and the upper board
-  (M2.5 × 10). The spacers are M2.5 × 12 mm, female-female. No screws into plastic. Two hooks hold the lid at the rear, as in rev 1.
+  (M2.5 × 10), DIN 7985 pan heads in Ø5.6 × 2.2 mm counterbores. The spacers are M2.5 × 12 mm, female-female. No
+  screws into plastic. Two hooks hold the lid at the rear, as in rev 1.
 - **Plug:** a rib all around in its retention groove (bottom and sides in the bottom shell, top in the lid). The
   case front ends at the groove.
 - **USB-C:** an opening in the rear wall, 11 × 7 mm.
@@ -252,8 +251,9 @@ with `--fit-test`, `mechanical/out/fit_test_plug_end.stl` (front 12 mm only, to 
 - **Lid:** pin holes over RESET and BOOT (actuator top 1.5 mm above the board), a 3 mm hole over the LED (a short
   clear rod; rev 1's 10 mm light pipe does not fit), and a 1 mm pocket over the patch's feed-pin head.
 
-Not checked: the case is built against the stack model's boxes, not against routed boards, and nothing has been
-printed.
+Printed so far: the plug-end fit test (2026-11-22). The plug was hard to push in, so the groove rib is now 0.1 mm
+thinner per side (`FIT` 0.2); the screw holes also print cleaner with stepped bridge layers in the counterbores. The full case has not been printed yet; print it once the boards are here, after the last
+change (wider screw counterbores, 2026-11-26).
 
 ## Checked against sources (2026-11-20)
 
@@ -290,7 +290,7 @@ Three things this turned up:
 
 - **Backup battery: kept**, with a smaller cell (about 200 mAh, 5 mm thick) lying between the boards.
 - **K-line / LIN: kept.** The dongle stays a general OBD device, not CAN-only.
-- **eSIM: dropped.** No MFF2 footprint and no SIM switch (rev 1's U403, U404, SIM_SEL); the nano-SIM holder goes
+- **eSIM: dropped.** No MFF2 footprint and no SIM switch (rev 1's U403, U404, SIM_SEL); the SIM holder goes
   straight to the modem.
 - **SIM: micro-SIM (3FF), push-in holder at the board edge**, reachable through a slot in the case without
   opening it. Rev 1 has a nano-SIM holder.
@@ -360,6 +360,10 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
   on a built board.
 - **5.9 GHz and LTE antennas:** flex antennas on the case walls as in rev 1. The space is tighter, so check that
   they fit and stay away from the modem shield.
+- **Bring-up:** rev 1's procedure ([`../rev1/docs/bring-up.md`](../rev1/docs/bring-up.md)) is the base, but its
+  test points and part list are rev 1's; go through it against the rev 2 boards before powering the first one.
+- **Firmware for rev 2:** `firmware/` still drives rev 1's SIM switch on GPIO12 ("Use eSIM"). On rev 2 that pin is a
+  spare test pad, so the switch does nothing; check the whole pin map against the rev 2 schematics.
 
 ## Ordering
 
@@ -367,7 +371,13 @@ floating pad). `autoroute.py`, `maze.py` and `gen_pcb.py` treat both boards as 4
   `python rev2/hardware/tools/check_stock.py`; settings and notes for PCBWay in `docs/bom-notes.md`.
 - Ordered as one panel (both boards, `tools/panel.py`): one PCB order and one assembly job, about a quarter cheaper
   than two of each (`docs/bom-notes.md`). Paid 2026-11-26: $318 for boards, assembly and parts, $394 with shipping
-  and import VAT. Bought separately: GNSS jumper cable, spacers and screws, cell, LED light rod.
+  and import VAT. Bought separately: GNSS jumper cable, spacers and screws, cell, LED light rod (where:
+  `docs/bom-notes.md`).
+- PCBWay's review (2026-11-27) found two things in the panel: mouse bites too close together (they re-spaced them;
+  `panel.py` now uses a 1.0 mm pitch) and no solder-mask openings on any through-hole pad. The second was a bug in
+  `panel.py` (it changed KiCad's shared copper layer set, so the saved panel lost `*.Mask` on those pads); fixed,
+  and PCBWay opened the mask as designed. After any change to `panel.py`, check the panel's through-hole pads for
+  mask openings before ordering.
 - Rev 1 was never built: there are no bring-up fixes to carry over, so the first rev 2 boards are also the first test
   of the shared circuit.
 
@@ -423,14 +433,15 @@ GCT SIM7050-6-0-00-A is in stock but 2.45 mm tall.
 
 | Cell | Size (T × W × L) | Capacity | Connector | Notes |
 |---|---|---|---|---|
-| **Pick: PKCELL LP402025** (BerryBase, Tinytronics; Adafruit 1317 is the same format) | 4.05 × 20 × 25.5 mm | 150 mAh | JST-PH fitted | PCM with a named protection IC, about €3.30. Out of stock at both shops when checked |
-| Eckstein LP521630 (ZB07003) | 5.2 × 16 × 30 mm | 250 mAh | JST-PH fitted | In stock at the shop, from €4.95. 0.2 mm over the 5.0 mm target; the shop page does not state the PCM, so check on arrival |
+| **Bought: PKNERGY LP521630** (Eckstein ZB07003) | 5.2 × 16 × 30 mm | 250 mAh | JST-PH fitted, red on pin 1 | From €4.95. 0.2 mm over the 5.0 mm target (the battery space allows 5.2 mm); the shop page does not state the PCM, so check on arrival |
+| PKCELL LP402025 (BerryBase, Tinytronics; Adafruit 1317 is the same format) | 4.05 × 20 × 25.5 mm | 150 mAh | JST-PH fitted | PCM with a named protection IC, about €3.30. Out of stock at both shops (2026-11-20 and 2026-11-26) |
 | ampul.eu 502025 (AM5932) | 5.0 × 20 × 25 mm | 200 mAh | not stated | Protection chip, €6.70 |
 | Jauch LP402025JU + PCM (Digi-Key Marketplace) | 4.4 × 22 × 27 mm | 140 mAh | bare wires | About €10, ships separately |
 
 - **PCB connector: JST S2B-PH-SM4-TB** (side entry, 5.5 mm above the board, LCSC C295747) instead of rev 1's vertical
   header (about 10 mm mated). The cell lies beside it, not over it.
-- JST-PH polarity is not standardised: measure every cell before plugging it in (pin 1 = + on our board).
+- JST-PH polarity is not standardised (Adafruit and SparkFun put red on pin 1, as our board does): check every
+  cell's plug against J501's pin 1 before plugging it in.
 - Every cell found is a standard LiPo: charge 0–45 °C, discharge about −20 to 60 °C. No small cell rated for a hot
   cabin is buyable off the shelf. Keep rev 1's NTC charge window and 4.10 V float.
 - These cells and their protection circuits are rated for roughly 150–450 mA. Check that against the modem's peak
