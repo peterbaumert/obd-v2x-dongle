@@ -30,6 +30,23 @@ holder, which both overhang their edges), 3 fiducials per side and 4 tooling hol
 outside the board edge: after breaking out, file the stubs flush (the case leaves 0.3 mm around the boards, and the
 OBD plug sits 0.35 mm in front of the carrier's front edge), then fit the plug.
 
+## Cost (first build, November 2026)
+
+Two assembled dongles (one panel each) plus three bare panels from PCBWay, rounded, in USD:
+
+| Item | Total | Per dongle |
+|---|---|---|
+| PCBs, 5 panels | 130 | |
+| Assembly, 2 panels | 30 | |
+| Parts bought by PCBWay | 155 | 80 |
+| Shipping, import VAT, duty-paid fee, less discount | 75 | |
+| **PCBWay total** | **about 395** | **about 200** |
+| Off-board parts (GNSS jumper, spacers, screws, cell) | about €25 plus shipping | about €12 |
+
+The parts are mostly the LTE modem (about 17 each), the GNSS patch (11) and the ESP32-C5 module (7.50). The panel
+saved about 80 against ordering the two boards separately. Small-quantity prices: a larger batch costs much less
+per dongle, mainly because the PCB and setup costs are shared.
+
 ## Not fitted by PCBWay
 
 | Ref | Part | Why |
