@@ -6822,6 +6822,7 @@
 		(property "MPN" "T520V227M006ATE015"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f2841693-e850-4e52-95ee-a7803bcdcd47")
 			(effects
 				(font
@@ -6833,6 +6834,7 @@
 		(property "Manufacturer" "KEMET"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d889176f-a16f-4d8e-9aa2-98dbbdb5fc72")
 			(effects
 				(font
@@ -6844,6 +6846,7 @@
 		(property "LCSC" "C696810"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "fe4c9444-4ee2-4fbc-ba9e-2b7d78c096c2")
 			(effects
 				(font

@@ -37,6 +37,14 @@ Two stacked 45 × 45 mm boards (4 layers each, joined by 2 × 8 headers and two 
 **68.1 × 49.6 × 26.4 mm including the plug**. The carrier holds the plug, power and the LTE modem; the upper board the
 ESP32-C5, the transceivers, the SIM, the charger and the GNSS patch.
 
+| Carrier (plug, power, LTE modem underneath) | Upper board (ESP32-C5, transceivers, SIM, GNSS patch on top) |
+|---|---|
+| ![carrier](rev2/docs/img/carrier-iso.png) | ![upper board](rev2/docs/img/upper-iso.png) |
+| ![carrier underside](rev2/docs/img/carrier-bottom.png) | ![upper board underside](rev2/docs/img/upper-bottom.png) |
+
+Renders from KiCad (`rev2/hardware/tools/render.py`); the LTE modem and the GNSS patch have no 3D model, so only
+their pads show.
+
 ![rev 2 case](rev2/mechanical/out/case_closed.png)
 
 ## Repo layout

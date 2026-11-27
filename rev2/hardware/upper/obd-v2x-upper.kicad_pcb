@@ -2357,6 +2357,7 @@
 		(property "MPN" "CGGBP.25.4.A.02"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "cdd89ae9-b566-48ac-8f95-41d95b6f629c")
 			(effects
 				(font
@@ -2368,6 +2369,7 @@
 		(property "Manufacturer" "Taoglas"
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "69ef2eac-d436-4ab1-8c69-fa42a1aa33d1")
 			(effects
 				(font
@@ -2379,6 +2381,7 @@
 		(property "LCSC" ""
 			(at 0 0 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5f54829e-fbca-48a0-939a-9fdb6f5d5e08")
 			(effects
 				(font
@@ -10320,6 +10323,7 @@
 		(property "MPN" "SKY65943-11"
 			(at 0 0 180)
 			(layer "B.SilkS")
+			(hide yes)
 			(uuid "aff0c119-b40d-4b73-a447-aedfac5f0b00")
 			(effects
 				(font
@@ -10331,6 +10335,7 @@
 		(property "Manufacturer" "Skyworks"
 			(at 0 0 180)
 			(layer "B.SilkS")
+			(hide yes)
 			(uuid "1267bdf7-7364-4e04-a884-f1d88a69491c")
 			(effects
 				(font
@@ -10342,6 +10347,7 @@
 		(property "LCSC" "C2654442"
 			(at 0 0 180)
 			(layer "B.SilkS")
+			(hide yes)
 			(uuid "5cc0608e-2647-4951-82dc-151fcbc50393")
 			(effects
 				(font

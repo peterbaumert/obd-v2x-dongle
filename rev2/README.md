@@ -221,6 +221,7 @@ FREEROUTING_JAR=<freerouting-2.x.jar> <KiCad>/bin/python rev2/hardware/tools/aut
 | `fab.py` | order files per board: Gerber zip, assembly BOM, pick-and-place file; full BOMs to `docs/` |
 | `check_stock.py` | LCSC stock of every part with an MPN, from the BOMs that `fab.py` writes |
 | `panel.py` | assembly panel: both boards in a 5 mm frame, tab-routed (`hardware/panel/`, regenerate after board changes) |
+| `render.py` | 3D renders of both boards for the READMEs (`docs/img/`; system Python with Pillow) |
 
 State: schematic parity 0 on both boards and no courtyard overlaps.
 
